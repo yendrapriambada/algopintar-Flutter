@@ -1,3 +1,4 @@
+import 'package:algopintar/model/mata_pelajaran.dart';
 import 'package:flutter/material.dart';
 import 'package:algopintar/detail_materi.dart';
 
@@ -189,12 +190,12 @@ class HomepageMobile extends StatelessWidget {
                   physics: const ClampingScrollPhysics(),
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                  itemCount: 3,
                   itemBuilder: (BuildContext context, int index) {
+                    final Subjects subject = subjectsList[index];
                     return InkWell(
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context) {
-                          return DetailMateri();
+                          return DetailMateri(subject: subject);
                         }));
                       },
                       child: Card(
@@ -207,15 +208,15 @@ class HomepageMobile extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Hero(
-                                tag: "cover materi",
-                                child: Image.asset('images/img_cover_pemilihan.png', fit: BoxFit.cover,),
+                                tag: subject.name,
+                                child: Image.asset(subject.imageAsset, fit: BoxFit.cover,),
                               ),
                             ),
                             const SizedBox(height: 8),
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 4.0),
                               child: Text(
-                                "Algoritma Pemilihan",
+                                subject.name,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontFamily: 'Montserrat',
@@ -225,10 +226,10 @@ class HomepageMobile extends StatelessWidget {
                               ),
                             ),
 
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 10.0),
                               child: Text(
-                                "6 sub materi",
+                                subject.numOfSubs,
                                 style: TextStyle(
                                   fontFamily: 'Montserrat',
                                   fontSize: 14.0,
@@ -239,7 +240,8 @@ class HomepageMobile extends StatelessWidget {
                         ),
                       ),
                     );
-                  }
+                  },
+                  itemCount: subjectsList.length,
                 ),
               ),
             ),

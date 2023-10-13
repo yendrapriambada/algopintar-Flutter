@@ -1,5 +1,7 @@
+import 'package:algopintar/landing_page_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:algopintar/main_screen.dart';
+import 'package:algopintar/landing_page_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +16,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Algo Pintar',
       theme: ThemeData(),
-      home: MainScreen(),
+      home: LandingPage(),
+      // home: MainScreen(),
     );
   }
 }
