@@ -1,23 +1,62 @@
-import 'package:algopintar/landing_page_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:algopintar/main_screen.dart';
-import 'package:algopintar/landing_page_screen.dart';
+import 'dart:async';
 
-void main() {
+import 'package:algopintar/screens/landing_page_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:algopintar/screens/main_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'screens/splash_screen/splash_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/signup_screen.dart';
+import 'services/user_auth/firebase_auth/firebase_options.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Widget getInitialRoute() {
+    if (FirebaseAuth.instance.currentUser == null) {
+      print('user is null');
+      return LandingPage();  // User is signed out
+    } else {
+      print('user is not null');
+      return MainScreen();  // User is signed in
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      // initialRoute: FirebaseAuth.instance.currentUser == null ? '/login' : '/home',
       title: 'Algo Pintar',
       theme: ThemeData(),
-      home: LandingPage(),
-      // home: MainScreen(),
+      routes: {
+        '/': (context) => SplashScreen(
+              child: getInitialRoute(),
+        ),
+        '/landingPage': (context) => const LandingPage(),
+        '/login': (context) => const LoginScreen(),
+        '/signUp': (context) => const SignupScreen(),
+        '/home': (context) => const MainScreen(),
+      },
     );
   }
 }

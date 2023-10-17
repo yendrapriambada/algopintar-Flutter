@@ -1,6 +1,8 @@
-import 'package:algopintar/model/mata_pelajaran.dart';
+import 'package:algopintar/data/data_static_subjects.dart';
+import 'package:algopintar/models/mata_pelajaran_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:algopintar/detail_materi.dart';
+import 'package:algopintar/screens/detail_materi_screen.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -47,7 +49,22 @@ class HomepageMobile extends StatelessWidget {
                       backgroundImage: AssetImage('images/default_profilepic.png'),
                       radius: 30,
                     ),
-                    Image.asset('images/ic_menu.png', width: 70, height: 70),
+                    Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(17.0),
+                      ),
+                      elevation: 4,
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.logout,
+                          color: Colors.black,
+                        ),
+                        onPressed: () {
+                          FirebaseAuth.instance.signOut();
+                          Navigator.pushNamed(context, "/landingPage");
+                        },
+                      ),
+                    ),
                   ],
                 )
               ),

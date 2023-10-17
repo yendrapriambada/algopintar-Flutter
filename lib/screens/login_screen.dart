@@ -1,6 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:algopintar/signup_screen.dart';
+import 'package:algopintar/screens/signup_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -10,9 +11,9 @@ class LoginScreen extends StatelessWidget {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         if (constraints.maxWidth > 800) {
-          return LoginPageMobile();
+          return const LoginPageMobile();
         } else {
-          return LoginPageMobile();
+          return const LoginPageMobile();
         }
       },
     );
@@ -27,6 +28,18 @@ class LoginPageMobile extends StatefulWidget {
 }
 
 class _LoginPageMobileState extends State<LoginPageMobile> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool isButtonEnabled = false;
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +71,7 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20.0,
           ),
           Center(
@@ -75,7 +88,7 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
           ),
           Container(
             margin: const EdgeInsets.only(top: 16.0),
-            child: Text(
+            child: const Text(
               'Login',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -90,27 +103,25 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: <Widget>[
-                Align(
+                const Align(
                   alignment: Alignment.centerLeft,
-                  child: Container(
-                    child: Text(
-                      "E-mail",
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontFamily: 'Montserrat',
-                      ),
+                  child: Text(
+                    "E-mail",
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      fontFamily: 'Montserrat',
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8.0,
                 ),
                 Form(
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: TextFormField(
-                    validator: (value) => EmailValidator.validate(value!)
-                        ? null
-                        : "Please enter a valid email",
+                    controller: _emailController,
+                    onChanged: (value) => _validateForm(),
+                    validator: (value) => _errorTextEmail,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
@@ -120,55 +131,62 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
                   ),
                 ),
                 const SizedBox(height: 16.0),
-                Align(
+                const Align(
                   alignment: Alignment.centerLeft,
-                  child: Container(
-                    child: Text(
-                      "Password",
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontFamily: 'Montserrat',
-                      ),
+                  child: Text(
+                    "Password",
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      fontFamily: 'Montserrat',
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 8.0,
                 ),
-                TextField(
+                TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  controller: _passwordController,
                   obscureText: true,
+                  onChanged: (value) => _validateForm(),
+                  validator: (value) => _errorTextPassword,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     hintText: 'Masukkan password',
+                    // errorText: _errorText,
                   ),
                 ),
                 const SizedBox(height: 16.0),
                 Container(
                     width: 250,
                     height: 50,
-                    margin: EdgeInsets.only(top: 16),
+                    margin: const EdgeInsets.only(top: 16),
                     child: SizedBox(
                       width: 1,
                       height: 50,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => LoginScreen()),
-                          // );
-                        },
+                      child: ElevatedButton.icon(
+                        onPressed: (isButtonEnabled && !_isLoading) ? () => _signIn() : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF5D60E2),
                           shape: RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.circular(12), // <-- Radius
                           ),
-                          // padding: EdgeInsets.all(18),
                         ),
-                        child: const Text(
+                        icon: _isLoading
+                            ? Container(
+                                width: 24,
+                                height: 24,
+                                padding: const EdgeInsets.all(2.0),
+                                child: const CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 3,
+                                ),
+                              )
+                            : const SizedBox(),
+                        label: const Text(
                           'Login',
                           textAlign: TextAlign.start,
                           style: TextStyle(
@@ -197,8 +215,9 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context){
-                          return SignupScreen();
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return const SignupScreen();
                         }));
                       },
                       child: const Text('Signup'),
@@ -211,5 +230,98 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
         ],
       )),
     );
+  }
+
+
+
+
+  // Dear reviewer, saya masih belum tahu caranya agar kode bisa se OOP mungkin atau rapih dan efisien
+  // Dibawah ini code nya dikemanain dan bagaimana ya caranya supaya rapih nggak numpuk di satu file ini
+  // Terima kasih reviewer! tapi jangan dikurangin ya bintang nya karena requirement nya belum disuruh untuk best practice hehehe
+  void _signIn() async {
+    showLoading(true);
+
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    try {
+      await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      // print("User is successfully signedIn");
+      Navigator.pushNamed(context, "/home");
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: const Text('Berhasil Login!'),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+      ));
+    } on FirebaseAuthException catch (e) {
+      // print("flag: ${e.code}");
+      if (e.code == 'INVALID_LOGIN_CREDENTIALS') {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text('Email atau Password salah'),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+        ));
+      } else if (e.code == 'network-request-failed') {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text('Sinyal jaringan lemah'),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+        ));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text('Terdapat suatu masalah, coba lagi nanti'),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+        ));
+      }
+    }
+
+    showLoading(false);
+  }
+
+  String? get _errorTextEmail {
+    final textEmail = _emailController.value.text;
+    if (textEmail.isEmpty) {
+      return "Email tidak boleh kosong";
+    } else if (!EmailValidator.validate(textEmail)) {
+      return "Masukkan email yang valid";
+    }
+    return null;
+  }
+
+  String? get _errorTextPassword {
+    final textPassword = _passwordController.value.text;
+    if (textPassword.isEmpty) {
+      return "Password tidak boleh kosong";
+    } else if (textPassword.length < 6) {
+      return "Password terlalu pendek. Minimal 6 Huruf";
+    }
+    return null;
+  }
+
+  void _validateForm() {
+    // Validate both fields
+    final emailValid = _errorTextEmail == null;
+    final passwordValid = _errorTextPassword == null;
+
+    // Enable the button only if both fields are valid
+    setState(() {
+      isButtonEnabled = emailValid && passwordValid;
+    });
+  }
+
+  void showLoading(bool state) {
+    setState(() {
+      _isLoading = state;
+    });
   }
 }

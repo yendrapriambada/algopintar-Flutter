@@ -1,8 +1,8 @@
-import 'package:algopintar/login_screen.dart';
-import 'package:algopintar/signup_screen.dart';
+import 'package:algopintar/screens/login_screen.dart';
+import 'package:algopintar/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:algopintar/main_screen.dart';
-import 'package:algopintar/login_screen.dart';
+import 'package:algopintar/screens/main_screen.dart';
+import 'package:algopintar/screens/login_screen.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
@@ -48,6 +48,7 @@ class LandingPageMobile extends StatelessWidget {
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
+              fontFamily: 'Montserrat',
             ),
           ),
         ),
@@ -56,7 +57,8 @@ class LandingPageMobile extends StatelessWidget {
           child: Text(
             'AlgoPintar merupakan sebuah platform media pembelajaran bagi siswa yang ingin mempelajari dasar keilmuan pemrograman. Aplikasi ini dilengkapi dengan materi, latihan soal, progress belajar, dan papan peringkat.',
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 14,
+              fontFamily: 'Montserrat',
             ),
             textAlign: TextAlign.center,
           ),

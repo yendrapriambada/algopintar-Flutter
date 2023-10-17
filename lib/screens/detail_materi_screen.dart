@@ -1,4 +1,4 @@
-import 'package:algopintar/model/mata_pelajaran.dart';
+import 'package:algopintar/models/mata_pelajaran_model.dart';
 import 'package:flutter/material.dart';
 
 class DetailMateri extends StatelessWidget {
