@@ -1,8 +1,6 @@
 import 'package:algopintar/screens/login_screen.dart';
 import 'package:algopintar/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:algopintar/screens/main_screen.dart';
-import 'package:algopintar/screens/login_screen.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
@@ -12,9 +10,9 @@ class LandingPage extends StatelessWidget {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         if (constraints.maxWidth > 800) {
-          return LandingPageMobile();
+          return const LandingPageMobile();
         } else {
-          return LandingPageMobile();
+          return const LandingPageMobile();
         }
       },
     );
@@ -31,7 +29,7 @@ class LandingPageMobile extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Container(
+        SizedBox(
             height: 180,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(25.0),
@@ -42,8 +40,8 @@ class LandingPageMobile extends StatelessWidget {
             )
         ),
         Container(
-          margin: EdgeInsets.only(top: 16),
-          child: Text(
+          margin: const EdgeInsets.only(top: 16),
+          child: const Text(
             'Algo Pintar',
             style: TextStyle(
               fontSize: 24,
@@ -53,8 +51,8 @@ class LandingPageMobile extends StatelessWidget {
           ),
         ),
         Container(
-          margin: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-          child: Text(
+          margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          child: const Text(
             'AlgoPintar merupakan sebuah platform media pembelajaran bagi siswa yang ingin mempelajari dasar keilmuan pemrograman. Aplikasi ini dilengkapi dengan materi, latihan soal, progress belajar, dan papan peringkat.',
             style: TextStyle(
               fontSize: 14,
@@ -66,7 +64,7 @@ class LandingPageMobile extends StatelessWidget {
         Container(
           width: 250,
           height: 50,
-          margin: EdgeInsets.only(top: 16),
+          margin: const EdgeInsets.only(top: 16),
           child: SizedBox(
             width: 1,
             height: 50,
@@ -74,7 +72,7 @@ class LandingPageMobile extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -100,7 +98,7 @@ class LandingPageMobile extends StatelessWidget {
         Container(
             width: 250,
             height: 50,
-            margin: EdgeInsets.only(top: 16),
+            margin: const EdgeInsets.only(top: 16),
             child: SizedBox(
               width: 1,
               height: 50,
@@ -108,16 +106,16 @@ class LandingPageMobile extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SignupScreen()),
+                    MaterialPageRoute(builder: (context) => const SignupScreen()),
                   );
                 },
-                child: Text('Signup'),
                 style: OutlinedButton.styleFrom(
-                  side: BorderSide(width: 1.0, color: const Color(0xFF5D60E2)),
+                  side: const BorderSide(width: 1.0, color: Color(0xFF5D60E2)),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
+                child: const Text('Signup'),
               )
             )
         ),

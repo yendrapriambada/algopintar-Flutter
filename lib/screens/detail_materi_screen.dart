@@ -1,5 +1,7 @@
 import 'package:algopintar/models/mata_pelajaran_model.dart';
+import 'package:algopintar/screens/materi_screen.dart';
 import 'package:flutter/material.dart';
+
 
 class DetailMateri extends StatelessWidget {
   final Subjects subject;
@@ -109,33 +111,39 @@ class _DetailMobilePageState extends State<DetailMobilePage> {
             ),
           ),
           Container(
-            margin: const EdgeInsets.only(left: 16.0, right: 16.0),
-            child: SizedBox(
-              height: 300,
-              child: ListView(
-                scrollDirection: Axis.vertical,
-                children: widget.subject.materialList.map((url) {
-                  return ListTile(
-                    visualDensity:
-                        const VisualDensity(horizontal: 0, vertical: -4),
-                    leading: const Icon(Icons.check_circle_rounded,
-                        color: Colors.green),
-                    title: Text(
-                      url,
-                      style: const TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontSize: 14.0,
-                      ),
-                    ),
-                  );
-                }).toList(),
+            margin: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
+            child: const Text(
+              'Materi',
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                fontFamily: 'Montserrat',
+                fontSize: 14.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
+          Container(
+            margin: const EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
+            child: ListView.builder(
+              padding: const EdgeInsets.all(0),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: widget.subject.materialList.length,
+              itemBuilder: (context, index) {
+                return getListMateri(
+                    widget.subject.materialList[index], context, index);
+              },
+            ),
+          ),
+
+
+
+
+
 
           Container(
               margin: const EdgeInsets.only(
-                  top: 50.0, left: 16.0, right: 16.0, bottom: 16.0),
+                  top: 16.0, left: 16.0, right: 16.0, bottom: 16.0),
               child: SizedBox(
                 width: 1,
                 height: 50,
@@ -158,12 +166,37 @@ class _DetailMobilePageState extends State<DetailMobilePage> {
                     ),
                   ),
                 ),
-              )
-          )
+              ))
         ],
       )),
     );
   }
+}
+
+Widget getListMateri(String materi, BuildContext context, int index) {
+  return Card(
+    child: ListTile(
+        visualDensity:
+        const VisualDensity(horizontal: 0, vertical: -3),
+        leading: const Icon(Icons.check_circle_rounded,
+            color: Colors.green),
+        title: Text(
+          materi,
+          style: const TextStyle(
+            fontFamily: 'Montserrat',
+            fontSize: 14.0,
+          ),
+        ),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MateriScreen(),
+            ),
+          );
+        }
+    ),
+  );
 }
 
 class FavoriteButton extends StatefulWidget {

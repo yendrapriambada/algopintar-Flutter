@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:algopintar/screens/login_screen.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignupScreen extends StatelessWidget {
   const SignupScreen({super.key});
@@ -28,12 +30,15 @@ class SignupPageMobile extends StatefulWidget {
 }
 
 class _SignupPageMobileState extends State<SignupPageMobile> {
-  TextEditingController _fullNameController = TextEditingController();
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  FirebaseDatabase database = FirebaseDatabase.instance;
+
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   bool isButtonEnabled = false;
   bool _isLoading = false;
+
 
 
   @override
@@ -315,10 +320,32 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
     String email = _emailController.text;
     String password = _passwordController.text;
 
+    // Firebase Auth
     try {
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
-      // print("User is successfully signedIn");
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      // Get the user's UID
+      String userId = userCredential.user!.uid;
+
+      // // Create a reference to the user's data in the Realtime Database
+      DatabaseReference userRef = FirebaseDatabase.instance.ref().child('students').child(userId);
+
+      // Set the user's data in the database
+      userRef.set({
+        "fullName": fullName,
+        "username": username,
+        "email": email,
+        "password": password,
+      });
+
+      // also save the user's data locally
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('userId', userId);
+      prefs.setString('username', username);
+
       Navigator.pushNamed(context, "/home");
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text('Akun berhasil dibuat!'),

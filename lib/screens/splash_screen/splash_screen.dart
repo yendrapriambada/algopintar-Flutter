@@ -12,7 +12,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => widget.child!),
@@ -24,12 +24,12 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0XFF5D60E2),
+        backgroundColor: const Color(0XFF5D60E2),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                   height: 140,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(25.0),
@@ -39,8 +39,8 @@ class _SplashScreenState extends State<SplashScreen> {
                     ),
                   )),
               Container(
-                margin: EdgeInsets.only(top: 16),
-                child: Text(
+                margin: const EdgeInsets.only(top: 16),
+                child: const Text(
                   'Algo Pintar',
                   style: TextStyle(
                     fontSize: 24,
@@ -51,8 +51,8 @@ class _SplashScreenState extends State<SplashScreen> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(top: 6),
-                child: Text(
+                margin: const EdgeInsets.only(top: 6),
+                child: const Text(
                   'Raih Keahlian Algoritma dengan Cerdas',
                   style: TextStyle(
                     fontSize: 14,

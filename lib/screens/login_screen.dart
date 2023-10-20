@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:algopintar/screens/signup_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -243,11 +245,32 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
 
     String email = _emailController.text;
     String password = _passwordController.text;
+    String username = '';
 
     try {
-      await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      // print("User is successfully signedIn");
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+
+      String userId = userCredential.user!.uid;
+
+      final ref = FirebaseDatabase.instance.ref();
+      final snapshot = await ref.child('students/$userId').get();
+      if (snapshot.exists) {
+        print(snapshot.value);
+        Map data = snapshot.value as Map;
+        for (var key in data.keys) {
+          if (key == 'username') {
+            username = data[key];
+          }
+        }
+      } else {
+        print('No data available.');
+      }
+
+      // also save the user's data locally
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('userId', userId);
+      prefs.setString('username', username);
+
       Navigator.pushNamed(context, "/home");
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text('Berhasil Login!'),

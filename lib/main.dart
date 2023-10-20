@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:algopintar/screens/landing_page_screen.dart';
+import 'package:algopintar/screens/materi_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:algopintar/screens/main_screen.dart';
@@ -35,10 +36,10 @@ class _MyAppState extends State<MyApp> {
   Widget getInitialRoute() {
     if (FirebaseAuth.instance.currentUser == null) {
       print('user is null');
-      return LandingPage();  // User is signed out
+      return const LandingPage();  // User is signed out
     } else {
       print('user is not null');
-      return MainScreen();  // User is signed in
+      return const MainScreen();  // User is signed in
     }
   }
 
@@ -48,6 +49,7 @@ class _MyAppState extends State<MyApp> {
       // initialRoute: FirebaseAuth.instance.currentUser == null ? '/login' : '/home',
       title: 'Algo Pintar',
       theme: ThemeData(),
+      // home: MateriScreen(),
       routes: {
         '/': (context) => SplashScreen(
               child: getInitialRoute(),
@@ -56,6 +58,7 @@ class _MyAppState extends State<MyApp> {
         '/login': (context) => const LoginScreen(),
         '/signUp': (context) => const SignupScreen(),
         '/home': (context) => const MainScreen(),
+        '/materi': (context) => const MateriScreen(),
       },
     );
   }

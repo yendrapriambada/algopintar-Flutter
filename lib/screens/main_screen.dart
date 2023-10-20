@@ -3,6 +3,7 @@ import 'package:algopintar/models/mata_pelajaran_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:algopintar/screens/detail_materi_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
@@ -13,11 +14,11 @@ class MainScreen extends StatelessWidget {
         builder: (BuildContext context, BoxConstraints constraints) {
           if (constraints.maxWidth > 800) {
             // return Leaderboard();
-            return HomepageMobile();
+            return const HomepageMobile();
           }
           else {
             // return Leaderboard();
-            return HomepageMobile();
+            return const HomepageMobile();
             // return HomepageWeb();
           }
         },
@@ -25,9 +26,28 @@ class MainScreen extends StatelessWidget {
   }
 }
 
-class HomepageMobile extends StatelessWidget {
-
+class HomepageMobile extends StatefulWidget {
   const HomepageMobile({Key? key}) : super(key: key);
+
+  @override
+  State<HomepageMobile> createState() => _HomepageMobileState();
+}
+
+class _HomepageMobileState extends State<HomepageMobile> {
+  String _username = "null";
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDataAccount();
+  }
+
+  void _loadDataAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _username = prefs.getString('username') ?? "null";
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,15 +57,14 @@ class HomepageMobile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-
             SafeArea(
               child: Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(16.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    CircleAvatar(
+                    const CircleAvatar(
                       backgroundImage: AssetImage('images/default_profilepic.png'),
                       radius: 30,
                     ),
@@ -59,8 +78,11 @@ class HomepageMobile extends StatelessWidget {
                           Icons.logout,
                           color: Colors.black,
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           FirebaseAuth.instance.signOut();
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          prefs.remove('userId');
+                          prefs.remove('username');
                           Navigator.pushNamed(context, "/landingPage");
                         },
                       ),
@@ -72,10 +94,10 @@ class HomepageMobile extends StatelessWidget {
 
             Container(
               margin: const EdgeInsets.only(left: 16.0),
-              child: const Text(
-                "Halo, Ghani!",
+              child: Text(
+                "Halo, $_username!",
                 textAlign: TextAlign.start,
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Montserrat', // Use the font family name specified in pubspec.yaml
                   fontWeight: FontWeight.bold, // Set the fontWeight to bold
                   fontSize: 20, // Set the font size as needed
@@ -127,7 +149,7 @@ class HomepageMobile extends StatelessWidget {
                               child: Image.asset('images/img_cover_pemilihan.png'),
                             ),
                           ),
-                          SizedBox(width: 8),
+                          const SizedBox(width: 8),
                           const Expanded(
                             flex: 3,
                             child: Padding(
@@ -208,7 +230,9 @@ class HomepageMobile extends StatelessWidget {
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (BuildContext context, int index) {
+
                     final Subjects subject = subjectsList[index];
+
                     return InkWell(
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -231,11 +255,11 @@ class HomepageMobile extends StatelessWidget {
                             ),
                             const SizedBox(height: 8),
                             Padding(
-                              padding: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 4.0),
+                              padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 4.0),
                               child: Text(
                                 subject.name,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontFamily: 'Montserrat',
                                   fontSize: 14.0,
                                   fontWeight: FontWeight.bold,
@@ -244,10 +268,10 @@ class HomepageMobile extends StatelessWidget {
                             ),
 
                             Padding(
-                              padding: EdgeInsets.only(left: 8.0, right: 8.0, bottom: 10.0),
+                              padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 10.0),
                               child: Text(
                                 subject.numOfSubs,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontFamily: 'Montserrat',
                                   fontSize: 14.0,
                                 ),
@@ -279,7 +303,7 @@ class HomepageMobile extends StatelessWidget {
             Container(
               margin: const EdgeInsets.only(left: 16.0, bottom: 8.0),
               child: DataTable(
-                columns: [
+                columns: const [
                   DataColumn(label: Text(
                       'ID',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
@@ -293,7 +317,7 @@ class HomepageMobile extends StatelessWidget {
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
                   )),
                 ],
-                rows: [
+                rows: const [
                   DataRow(cells: [
                     DataCell(Text('1')),
                     DataCell(Text('Stephen')),
