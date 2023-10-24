@@ -33,18 +33,24 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
-  Widget getInitialRoute() {
-    if (FirebaseAuth.instance.currentUser == null) {
-      print('user is null');
-      return const LandingPage();  // User is signed out
+  Widget getInitialRoute(double screenWidth) {
+    if(screenWidth > 700) {
+      return const LoginScreen();
     } else {
-      print('user is not null');
-      return const MainScreen();  // User is signed in
+      if (FirebaseAuth.instance.currentUser == null) {
+        print('user is null');
+        return const LandingPage();  // User is signed out
+      } else {
+        print('user is not null');
+        return const MainScreen();  // User is signed in
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return MaterialApp(
       // initialRoute: FirebaseAuth.instance.currentUser == null ? '/login' : '/home',
       title: 'Algo Pintar',
@@ -52,7 +58,7 @@ class _MyAppState extends State<MyApp> {
       // home: MateriScreen(),
       routes: {
         '/': (context) => SplashScreen(
-              child: getInitialRoute(),
+              child: getInitialRoute(screenWidth),
         ),
         '/landingPage': (context) => const LandingPage(),
         '/login': (context) => const LoginScreen(),

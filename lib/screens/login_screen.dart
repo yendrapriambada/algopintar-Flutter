@@ -12,12 +12,79 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        if (constraints.maxWidth > 800) {
-          return const LoginPageMobile();
+        if (constraints.maxWidth > 700) {
+          return const LoginWebPage();
         } else {
           return const LoginPageMobile();
         }
       },
+    );
+  }
+}
+
+class LoginWebPage extends StatefulWidget {
+  const LoginWebPage({super.key});
+
+  @override
+  State<LoginWebPage> createState() => _LoginWebPageState();
+}
+
+class _LoginWebPageState extends State<LoginWebPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Row(
+        children: [
+          Expanded(
+            child: Container(
+              color: const Color(0xFF5D60E2),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                      height: 180,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(25.0),
+                        child: Image.asset(
+                          'images/app_icon.png',
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                  Container(
+                    margin: const EdgeInsets.only(top: 16),
+                    child: const Text(
+                      'Algo Pintar',
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Montserrat',
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 32, horizontal: 32),
+                    child: const Text(
+                      'AlgoPintar merupakan sebuah platform media pembelajaran bagi siswa yang ingin mempelajari dasar keilmuan pemrograman. Aplikasi ini dilengkapi dengan materi, latihan soal, progress belajar, dan papan peringkat.',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontFamily: 'Montserrat',
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: LoginPageMobile(),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -44,198 +111,186 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SingleChildScrollView(
+          child: Center(
+        child: SizedBox(
+          width: screenWidth <= 700 ? screenWidth : 450,
           child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: <Widget>[
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(17.0),
-                    ),
-                    elevation: 4,
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.black,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              BackButton(),
+
+              const SizedBox(
+                height: 20.0,
+              ),
+              Center(
+                child: SizedBox(
+                  height: 130,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(25.0),
+                    child: Image.asset(
+                      'images/app_icon.png',
+                      fit: BoxFit.cover,
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 20.0,
-          ),
-          Center(
-            child: SizedBox(
-              height: 130,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(25.0),
-                child: Image.asset(
-                  'images/app_icon.png',
-                  fit: BoxFit.cover,
                 ),
               ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 16.0),
-            child: const Text(
-              'Login',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Montserrat',
+              Container(
+                margin: const EdgeInsets.only(top: 16.0),
+                child: const Text(
+                  'Login',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Montserrat',
+                  ),
+                ),
               ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 16.0),
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: <Widget>[
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "E-mail",
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      fontFamily: 'Montserrat',
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 8.0,
-                ),
-                Form(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  child: TextFormField(
-                    controller: _emailController,
-                    onChanged: (value) => _validateForm(),
-                    validator: (value) => _errorTextEmail,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      hintText: 'Masukkan email',
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Password",
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      fontFamily: 'Montserrat',
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 8.0,
-                ),
-                TextFormField(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  controller: _passwordController,
-                  obscureText: true,
-                  onChanged: (value) => _validateForm(),
-                  validator: (value) => _errorTextPassword,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    hintText: 'Masukkan password',
-                    // errorText: _errorText,
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                Container(
-                    width: 250,
-                    height: 50,
-                    margin: const EdgeInsets.only(top: 16),
-                    child: SizedBox(
-                      width: 1,
-                      height: 50,
-                      child: ElevatedButton.icon(
-                        onPressed: (isButtonEnabled && !_isLoading) ? () => _signIn() : null,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF5D60E2),
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(12), // <-- Radius
-                          ),
-                        ),
-                        icon: _isLoading
-                            ? Container(
-                                width: 24,
-                                height: 24,
-                                padding: const EdgeInsets.all(2.0),
-                                child: const CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 3,
-                                ),
-                              )
-                            : const SizedBox(),
-                        label: const Text(
-                          'Login',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14.0,
-                          ),
-                        ),
-                      ),
-                    )),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Belum punya akun?",
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontFamily: 'Montserrat',
-                      ),
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        textStyle: const TextStyle(
+              Container(
+                margin: const EdgeInsets.only(top: 16.0),
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: <Widget>[
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "E-mail",
+                        style: TextStyle(
                           fontSize: 14.0,
                           fontFamily: 'Montserrat',
                         ),
                       ),
-                      onPressed: () {
-                        Navigator.pushReplacement(context,
-                            MaterialPageRoute(builder: (BuildContext context) {
-                          return const SignupScreen();
-                        }));
-                      },
-                      child: const Text('Signup'),
                     ),
+                    const SizedBox(
+                      height: 8.0,
+                    ),
+                    Form(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      child: TextFormField(
+                        controller: _emailController,
+                        onChanged: (value) => _validateForm(),
+                        validator: (value) => _errorTextEmail,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          hintText: 'Masukkan email',
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Password",
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontFamily: 'Montserrat',
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 8.0,
+                    ),
+                    TextFormField(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      controller: _passwordController,
+                      obscureText: true,
+                      onChanged: (value) => _validateForm(),
+                      validator: (value) => _errorTextPassword,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        hintText: 'Masukkan password',
+                        // errorText: _errorText,
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    Container(
+                        width: 250,
+                        height: 50,
+                        margin: const EdgeInsets.only(top: 16),
+                        child: SizedBox(
+                          width: 1,
+                          height: 50,
+                          child: ElevatedButton.icon(
+                            onPressed: (isButtonEnabled && !_isLoading)
+                                ? () => _signIn()
+                                : null,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF5D60E2),
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.circular(12), // <-- Radius
+                              ),
+                            ),
+                            icon: _isLoading
+                                ? Container(
+                                    width: 24,
+                                    height: 24,
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: const CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 3,
+                                    ),
+                                  )
+                                : const SizedBox(),
+                            label: const Text(
+                              'Login',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14.0,
+                              ),
+                            ),
+                          ),
+                        )),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Belum punya akun?",
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            textStyle: const TextStyle(
+                              fontSize: 14.0,
+                              fontFamily: 'Montserrat',
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder: (context, animation1, animation2) => SignupScreen(),
+                                transitionDuration: Duration.zero,
+                                reverseTransitionDuration: Duration.zero,
+                              ),
+                            );
+                          },
+                          child: const Text('Signup'),
+                        ),
+                      ],
+                    )
                   ],
-                )
-              ],
-            ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       )),
     );
   }
-
-
-
 
   // Dear reviewer, saya masih belum tahu caranya agar kode bisa se OOP mungkin atau rapih dan efisien
   // Dibawah ini code nya dikemanain dan bagaimana ya caranya supaya rapih nggak numpuk di satu file ini
@@ -248,7 +303,8 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
     String username = '';
 
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
 
       String userId = userCredential.user!.uid;
 
@@ -346,5 +402,47 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
     setState(() {
       _isLoading = state;
     });
+  }
+}
+
+class BackButton extends StatefulWidget {
+  const BackButton({Key? key}) : super(key: key);
+
+  @override
+  _BackButtonState createState() => _BackButtonState();
+}
+
+class _BackButtonState extends State<BackButton> {
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: <Widget>[
+            MediaQuery.of(context).size.width <= 700
+                ? Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(17.0),
+                    ),
+                    elevation: 4,
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.black,
+                      ),
+                      onPressed: () {
+                        Navigator.pushNamed(context, "/landingPage");
+                      },
+                    ),
+                  )
+                : const SizedBox(
+                    height: 64,
+                  ),
+          ],
+        ),
+      ),
+    );
   }
 }

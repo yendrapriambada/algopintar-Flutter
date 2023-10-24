@@ -1,3 +1,4 @@
+import 'package:algopintar/screens/landing_page_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
@@ -12,8 +13,8 @@ class SignupScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        if (constraints.maxWidth > 800) {
-          return const SignupPageMobile();
+        if (constraints.maxWidth > 700) {
+          return const SignupWebPage();
         } else {
           return const SignupPageMobile();
         }
@@ -21,6 +22,77 @@ class SignupScreen extends StatelessWidget {
     );
   }
 }
+
+class SignupWebPage extends StatefulWidget {
+  const SignupWebPage({super.key});
+
+  @override
+  State<SignupWebPage> createState() => _SignupWebPageState();
+}
+
+class _SignupWebPageState extends State<SignupWebPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Row(
+        children: [
+          Expanded(
+              child: Container(
+                color: const Color(0xFF5D60E2),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                        height: 180,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(25.0),
+                          child: Image.asset(
+                            'images/app_icon.png',
+                            fit: BoxFit.cover,
+                          ),
+                        )),
+                    Container(
+                      margin: const EdgeInsets.only(top: 16),
+                      child: const Text(
+                        'Algo Pintar',
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Montserrat',
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin:
+                      const EdgeInsets.symmetric(vertical: 32, horizontal: 32),
+                      child: const Text(
+                        'AlgoPintar merupakan sebuah platform media pembelajaran bagi siswa yang ingin mempelajari dasar keilmuan pemrograman. Aplikasi ini dilengkapi dengan materi, latihan soal, progress belajar, dan papan peringkat.',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontFamily: 'Montserrat',
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ),
+          Expanded(
+            child: SignupPageMobile(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+
 
 class SignupPageMobile extends StatefulWidget {
   const SignupPageMobile({super.key});
@@ -53,257 +125,246 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SingleChildScrollView(
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: <Widget>[
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(17.0),
-                    ),
-                    elevation: 4,
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.black,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 14.0,
-          ),
-          Center(
+          child: Center(
             child: SizedBox(
-              height: 130,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(25.0),
-                child: Image.asset(
-                  'images/app_icon.png',
-                  fit: BoxFit.cover,
+              width: screenWidth <= 700 ? screenWidth : 450,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+              BackButton(),
+              const SizedBox(
+                height: 14.0,
+              ),
+              Center(
+                child: SizedBox(
+                  height: 130,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(25.0),
+                    child: Image.asset(
+                      'images/app_icon.png',
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 16.0),
-            child: const Text(
-              'Signup',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Montserrat',
+              Container(
+                margin: const EdgeInsets.only(top: 16.0),
+                child: const Text(
+                  'Signup',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Montserrat',
+                  ),
+                ),
               ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 16.0),
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: <Widget>[
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    child: const Text(
-                      "Nama Lengkap",
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontFamily: 'Montserrat',
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 8.0,
-                ),
-                TextFormField(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  controller: _fullNameController,
-                  onChanged: (value) => _validateForm(),
-                  validator: (value) => _errorTextFullName,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    hintText: 'Masukkan nama lengkap',
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    child: const Text(
-                      "Username",
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontFamily: 'Montserrat',
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 8.0,
-                ),
-
-                TextFormField(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  controller: _usernameController,
-                  onChanged: (value) => _validateForm(),
-                  validator: (value) => _errorTextUsername,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    hintText: 'Masukkan username',
-                  ),
-                ),
-
-                const SizedBox(height: 16.0),
-
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    child: const Text(
-                      "E-mail",
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontFamily: 'Montserrat',
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 8.0,
-                ),
-                Form(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  child: TextFormField(
-                    controller: _emailController,
-                    onChanged: (value) => _validateForm(),
-                    validator: (value) => _errorTextEmail,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      hintText: 'Masukkan email',
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 16.0),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    child: const Text(
-                      "Password",
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontFamily: 'Montserrat',
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 8.0,
-                ),
-
-                TextFormField(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  controller: _passwordController,
-                  obscureText: true,
-                  onChanged: (value) => _validateForm(),
-                  validator: (value) => _errorTextPassword,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    hintText: 'Masukkan password',
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                Container(
-                    width: 250,
-                    height: 50,
-                    margin: const EdgeInsets.only(top: 16),
-                    child: SizedBox(
-                      width: 1,
-                      height: 50,
-                      child: ElevatedButton.icon(
-                        onPressed: (isButtonEnabled && !_isLoading) ? () => _signUp() : null,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF5D60E2),
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                            BorderRadius.circular(12), // <-- Radius
-                          ),
-                        ),
-                        icon: _isLoading
-                            ? Container(
-                          width: 24,
-                          height: 24,
-                          padding: const EdgeInsets.all(2.0),
-                          child: const CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 3,
-                          ),
-                        )
-                            : const SizedBox(),
-                        label: const Text(
-                          'Signup',
-                          textAlign: TextAlign.start,
+              Container(
+                margin: const EdgeInsets.only(top: 16.0),
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        child: const Text(
+                          "Nama Lengkap",
                           style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.bold,
                             fontSize: 14.0,
+                            fontFamily: 'Montserrat',
                           ),
                         ),
                       ),
-                    )),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      "Sudah punya akun?",
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        fontFamily: 'Montserrat',
+                    ),
+                    const SizedBox(
+                      height: 8.0,
+                    ),
+                    TextFormField(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      controller: _fullNameController,
+                      onChanged: (value) => _validateForm(),
+                      validator: (value) => _errorTextFullName,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        hintText: 'Masukkan nama lengkap',
                       ),
                     ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        textStyle: const TextStyle(
-                          fontSize: 14.0,
-                          fontFamily: 'Montserrat',
+                    const SizedBox(height: 16.0),
+
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        child: const Text(
+                          "Username",
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            fontFamily: 'Montserrat',
+                          ),
                         ),
                       ),
-                      onPressed: () {
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context){
-                          return const LoginScreen();
-                        }));
-                      },
-                      child: const Text('Login'),
                     ),
+                    const SizedBox(
+                      height: 8.0,
+                    ),
+
+                    TextFormField(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      controller: _usernameController,
+                      onChanged: (value) => _validateForm(),
+                      validator: (value) => _errorTextUsername,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        hintText: 'Masukkan username',
+                      ),
+                    ),
+
+                    const SizedBox(height: 16.0),
+
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        child: const Text(
+                          "E-mail",
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 8.0,
+                    ),
+                    Form(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      child: TextFormField(
+                        controller: _emailController,
+                        onChanged: (value) => _validateForm(),
+                        validator: (value) => _errorTextEmail,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          hintText: 'Masukkan email',
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16.0),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        child: const Text(
+                          "Password",
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 8.0,
+                    ),
+
+                    TextFormField(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      controller: _passwordController,
+                      obscureText: true,
+                      onChanged: (value) => _validateForm(),
+                      validator: (value) => _errorTextPassword,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        hintText: 'Masukkan password',
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    Container(
+                        width: 250,
+                        height: 50,
+                        margin: const EdgeInsets.only(top: 16),
+                        child: SizedBox(
+                          width: 1,
+                          height: 50,
+                          child: ElevatedButton.icon(
+                            onPressed: (isButtonEnabled && !_isLoading) ? () => _signUp() : null,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF5D60E2),
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                BorderRadius.circular(12), // <-- Radius
+                              ),
+                            ),
+                            icon: _isLoading
+                                ? Container(
+                              width: 24,
+                              height: 24,
+                              padding: const EdgeInsets.all(2.0),
+                              child: const CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 3,
+                              ),
+                            )
+                                : const SizedBox(),
+                            label: const Text(
+                              'Signup',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14.0,
+                              ),
+                            ),
+                          ),
+                        )),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Sudah punya akun?",
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            textStyle: const TextStyle(
+                              fontSize: 14.0,
+                              fontFamily: 'Montserrat',
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder: (context, animation1, animation2) => LoginScreen(),
+                                transitionDuration: Duration.zero,
+                                reverseTransitionDuration: Duration.zero,
+                              ),
+                            );
+                          },
+                          child: const Text('Login'),
+                        ),
+                      ],
+                    )
                   ],
-                )
-              ],
-            ),
-          ),
+                ),
+              ),
         ],
-      )),
+      ),
+            ),
+          )),
     );
   }
 
@@ -448,5 +509,44 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
     setState(() {
       _isLoading = state;
     });
+  }
+}
+
+
+class BackButton extends StatefulWidget {
+  const BackButton({Key? key}) : super(key: key);
+
+  @override
+  _BackButtonState createState() => _BackButtonState();
+}
+
+class _BackButtonState extends State<BackButton> {
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: <Widget>[
+            if (MediaQuery.of(context).size.width <= 700) Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(17.0),
+              ),
+              elevation: 4,
+              child: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, "/landingPage");
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

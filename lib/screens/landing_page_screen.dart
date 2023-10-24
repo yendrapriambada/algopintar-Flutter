@@ -9,13 +9,27 @@ class LandingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        if (constraints.maxWidth > 800) {
-          return const LandingPageMobile();
+        if (constraints.maxWidth > 700) {
+          return const LandingWebPage();
         } else {
           return const LandingPageMobile();
         }
       },
     );
+  }
+}
+
+class LandingWebPage extends StatefulWidget {
+  const LandingWebPage({super.key});
+
+  @override
+  State<LandingWebPage> createState() => _LandingWebPageState();
+}
+
+class _LandingWebPageState extends State<LandingWebPage> {
+  @override
+  Widget build(BuildContext context) {
+    return LoginScreen();
   }
 }
 
@@ -37,8 +51,7 @@ class LandingPageMobile extends StatelessWidget {
                 'images/app_icon.png',
                 fit: BoxFit.cover,
               ),
-            )
-        ),
+            )),
         Container(
           margin: const EdgeInsets.only(top: 16),
           child: const Text(
@@ -62,63 +75,62 @@ class LandingPageMobile extends StatelessWidget {
           ),
         ),
         Container(
-          width: 250,
-          height: 50,
-          margin: const EdgeInsets.only(top: 16),
-          child: SizedBox(
-            width: 1,
-            height: 50,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF5D60E2),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12), // <-- Radius
-                ),
-                // padding: EdgeInsets.all(18),
-              ),
-              child: const Text(
-                'Login',
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14.0,
-                ),
-              ),
-            ),
-          )
-        ),
-
-        Container(
             width: 250,
             height: 50,
             margin: const EdgeInsets.only(top: 16),
             child: SizedBox(
               width: 1,
               height: 50,
-              child: OutlinedButton(
+              child: ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SignupScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()),
                   );
                 },
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(width: 1.0, color: Color(0xFF5D60E2)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF5D60E2),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(12), // <-- Radius
+                  ),
+                  // padding: EdgeInsets.all(18),
+                ),
+                child: const Text(
+                  'Login',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14.0,
                   ),
                 ),
-                child: const Text('Signup'),
-              )
-            )
-        ),
+              ),
+            )),
+        Container(
+            width: 250,
+            height: 50,
+            margin: const EdgeInsets.only(top: 16),
+            child: SizedBox(
+                width: 1,
+                height: 50,
+                child: OutlinedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SignupScreen()),
+                    );
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side:
+                        const BorderSide(width: 1.0, color: Color(0xFF5D60E2)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: const Text('Signup'),
+                ))),
       ],
     ));
   }
