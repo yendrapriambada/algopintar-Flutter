@@ -50,9 +50,9 @@ class DefaultFirebaseOptions {
     apiKey: 'AIzaSyBCrL8knbWgiIyBLbpZE3RPlEyhMuNKl98',
     appId: '1:828960463204:web:31b693baf350a4a4068271',
     messagingSenderId: '828960463204',
-    databaseURL: 'https://algo-pintar-da344-default-rtdb.asia-southeast1.firebasedatabase.app/',
     projectId: 'algo-pintar-da344',
     authDomain: 'algo-pintar-da344.firebaseapp.com',
+    databaseURL: 'https://algo-pintar-da344-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'algo-pintar-da344.appspot.com',
     measurementId: 'G-15TGT4QM6F',
   );
@@ -61,8 +61,8 @@ class DefaultFirebaseOptions {
     apiKey: 'AIzaSyDMLdi3Iq-nXhky2eFwDwIE7oy30K1MfLo',
     appId: '1:828960463204:android:00c6e29b436b4e53068271',
     messagingSenderId: '828960463204',
-    databaseURL: 'https://algo-pintar-da344-default-rtdb.asia-southeast1.firebasedatabase.app/',
     projectId: 'algo-pintar-da344',
+    databaseURL: 'https://algo-pintar-da344-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'algo-pintar-da344.appspot.com',
   );
 
@@ -70,8 +70,8 @@ class DefaultFirebaseOptions {
     apiKey: 'AIzaSyCmfRRyIm93kjV9OAHPkMrHsXQQIWqudi4',
     appId: '1:828960463204:ios:7c0f38d50842d8ce068271',
     messagingSenderId: '828960463204',
-    databaseURL: 'https://algo-pintar-da344-default-rtdb.asia-southeast1.firebasedatabase.app/',
     projectId: 'algo-pintar-da344',
+    databaseURL: 'https://algo-pintar-da344-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'algo-pintar-da344.appspot.com',
     iosBundleId: 'com.yendrastudio.algopintar.algopintar',
   );

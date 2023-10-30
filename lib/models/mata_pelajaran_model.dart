@@ -3,7 +3,7 @@ class Subjects {
   String numOfSubs;
   String description;
   String imageAsset;
-  List<String> materialList;
+  List<Materi> materialList;
 
   Subjects({
     required this.name,
@@ -11,5 +11,15 @@ class Subjects {
     required this.description,
     required this.imageAsset,
     required this.materialList,
+  });
+}
+
+class Materi {
+  final String title;  // Nama materi
+  final String pdfUrl; // URL ke file PDF
+
+  Materi({
+    required this.title,
+    required this.pdfUrl,
   });
 }

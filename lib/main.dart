@@ -55,17 +55,16 @@ class _MyAppState extends State<MyApp> {
       // initialRoute: FirebaseAuth.instance.currentUser == null ? '/login' : '/home',
       title: 'Algo Pintar',
       theme: ThemeData(),
-      home: MateriScreen(),
-      // routes: {
-      //   '/': (context) => SplashScreen(
-      //         child: getInitialRoute(screenWidth),
-      //   ),
-      //   '/landingPage': (context) => const LandingPage(),
-      //   '/login': (context) => const LoginScreen(),
-      //   '/signUp': (context) => const SignupScreen(),
-      //   '/home': (context) => const MainScreen(),
-      //   '/materi': (context) => const MateriScreen(),
-      // },
+      // home: MateriScreen(),
+      routes: {
+        '/': (context) => SplashScreen(
+              child: getInitialRoute(screenWidth),
+        ),
+        '/landingPage': (context) => const LandingPage(),
+        '/login': (context) => const LoginScreen(),
+        '/signUp': (context) => const SignupScreen(),
+        '/home': (context) => const MainScreen(),
+      },
     );
   }
 }

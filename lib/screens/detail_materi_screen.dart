@@ -1,8 +1,6 @@
 import 'package:algopintar/models/mata_pelajaran_model.dart';
 import 'package:algopintar/screens/materi_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 
 class DetailMateri extends StatelessWidget {
@@ -39,21 +37,6 @@ class DetailWebPage extends StatefulWidget {
 }
 
 class _DetailWebPageState extends State<DetailWebPage> {
-  String _username = "null";
-
-  @override
-  void initState() {
-    super.initState();
-    _loadDataAccount();
-  }
-
-  void _loadDataAccount() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _username = prefs.getString('username') ?? "null";
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -179,8 +162,8 @@ class _DetailWebPageState extends State<DetailWebPage> {
                                       physics: const NeverScrollableScrollPhysics(),
                                       itemCount: widget.subject.materialList.length,
                                       itemBuilder: (context, index) {
-                                        return getListMateri(
-                                            widget.subject.materialList[index], context, index);
+                                        final Materi material = widget.subject.materialList[index];
+                                        return getListMateri(material, context);
                                       },
                                     ),
                                   ),
@@ -196,7 +179,7 @@ class _DetailWebPageState extends State<DetailWebPage> {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => const MateriScreen(),
+                                                builder: (context) => MateriScreen(materi: widget.subject.materialList[0]),
                                               ),
                                             );
                                           },
@@ -341,8 +324,8 @@ class _DetailMobilePageState extends State<DetailMobilePage> {
               physics: const NeverScrollableScrollPhysics(),
               itemCount: widget.subject.materialList.length,
               itemBuilder: (context, index) {
-                return getListMateri(
-                    widget.subject.materialList[index], context, index);
+                final Materi material = widget.subject.materialList[index];
+                return getListMateri(material, context);
               },
             ),
           ),
@@ -358,7 +341,7 @@ class _DetailMobilePageState extends State<DetailMobilePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const MateriScreen(),
+                        builder: (context) => MateriScreen(materi: widget.subject.materialList[0]),
                       ),
                     );
                   },
@@ -386,7 +369,7 @@ class _DetailMobilePageState extends State<DetailMobilePage> {
   }
 }
 
-Widget getListMateri(String materi, BuildContext context, int index) {
+Widget getListMateri(Materi materi, BuildContext context) {
   return Card(
     child: ListTile(
         visualDensity:
@@ -394,7 +377,7 @@ Widget getListMateri(String materi, BuildContext context, int index) {
         leading: const Icon(Icons.check_circle_rounded,
             color: Colors.green),
         title: Text(
-          materi,
+          materi.title,
           style: const TextStyle(
             fontFamily: 'Montserrat',
             fontSize: 14.0,
@@ -404,7 +387,7 @@ Widget getListMateri(String materi, BuildContext context, int index) {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const MateriScreen(),
+              builder: (context) => MateriScreen(materi: materi),
             ),
           );
         }
