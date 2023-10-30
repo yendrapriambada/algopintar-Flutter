@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
 
 class MateriScreen extends StatefulWidget {
   const MateriScreen({super.key});
@@ -28,13 +27,16 @@ class _MateriScreenState extends State<MateriScreen> {
         elevation: 1,
         title: const Text(
           'Materi',
-          style: TextStyle(
-              color: Color(0xff5D60E2),
-              fontWeight: FontWeight.w500),
+          style:
+              TextStyle(color: Color(0xff5D60E2), fontWeight: FontWeight.w500),
         ),
       ),
+      // body: SfPdfViewer.asset(
+      //   'assets/images/test.pdf',
+      // ),
       body: SfPdfViewer.network(
-          'https://cdn.syncfusion.com/content/PDFViewer/flutter-succinctly.pdf'),
+        'https://cdn.syncfusion.com/content/PDFViewer/flutter-succinctly.pdf',
+      ),
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         notchMargin: 5.0,
@@ -48,16 +50,14 @@ class _MateriScreenState extends State<MateriScreen> {
               IconButton(
                 icon: const Icon(Icons.arrow_left),
                 onPressed: () {
-                  setState(() {
-                  });
+                  setState(() {});
                 },
               ),
               const Text("Algoritma Pemilihan"),
               IconButton(
                 icon: const Icon(Icons.arrow_right),
                 onPressed: () {
-                  setState(() {
-                  });
+                  setState(() {});
                 },
               ),
             ],

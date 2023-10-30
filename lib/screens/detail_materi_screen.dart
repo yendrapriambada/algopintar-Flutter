@@ -1,6 +1,8 @@
 import 'package:algopintar/models/mata_pelajaran_model.dart';
 import 'package:algopintar/screens/materi_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class DetailMateri extends StatelessWidget {
@@ -13,7 +15,7 @@ class DetailMateri extends StatelessWidget {
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         if (constraints.maxWidth > 800) {
-          return DetailMobilePage(
+          return DetailWebPage(
             subject: subject,
           );
         } else {
@@ -22,6 +24,214 @@ class DetailMateri extends StatelessWidget {
           );
         }
       },
+    );
+  }
+}
+
+
+class DetailWebPage extends StatefulWidget {
+  final Subjects subject;
+
+  const DetailWebPage({Key? key, required this.subject}) : super(key: key);
+
+  @override
+  State<DetailWebPage> createState() => _DetailWebPageState();
+}
+
+class _DetailWebPageState extends State<DetailWebPage> {
+  String _username = "null";
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDataAccount();
+  }
+
+  void _loadDataAccount() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _username = prefs.getString('username') ?? "null";
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    return Scaffold(
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 16,
+              horizontal: 64,
+            ),
+            child: Center(
+              child: SizedBox(
+                width: screenWidth <= 1200 ? 800 : 1200,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const SizedBox(height: 32),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 4,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Card(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(17.0),
+                                        ),
+                                        elevation: 4,
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.arrow_back,
+                                            color: Colors.black,
+                                          ),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ),
+                                      Text(
+                                        widget.subject.name,
+                                        textAlign: TextAlign.start,
+                                        style: const TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const FavoriteButton()
+                                    ],
+                                  )
+                              ),
+
+                              Center(
+                                child: Hero(
+                                    tag: widget.subject.name,
+                                    child: SizedBox(
+                                      height: 325,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(25.0),
+                                        child: Image.asset(
+                                          widget.subject.imageAsset,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    )
+                                ),
+                              ),
+                              SizedBox(height: 16,),
+                              Container(
+                                margin: const EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
+                                child: Text(
+                                  widget.subject.description,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 14.0,
+                                  ),
+                                ),
+                              ),
+
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(width: 32),
+
+                        Expanded(
+                          flex: 2,
+                          child: Card(
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  Text(
+                                    "Sub Materi",
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 30.0,
+                                      fontFamily: 'Montserrat',
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 50,),
+
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
+                                    child: ListView.builder(
+                                      padding: const EdgeInsets.all(0),
+                                      shrinkWrap: true,
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      itemCount: widget.subject.materialList.length,
+                                      itemBuilder: (context, index) {
+                                        return getListMateri(
+                                            widget.subject.materialList[index], context, index);
+                                      },
+                                    ),
+                                  ),
+
+                                  Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 24.0, left: 16.0, right: 16.0, bottom: 16.0),
+                                      child: SizedBox(
+                                        width: 250,
+                                        height: 50,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => const MateriScreen(),
+                                              ),
+                                            );
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: const Color(0xFF5D60E2),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(12), // <-- Radius
+                                            ),
+                                            // padding: EdgeInsets.all(18),
+                                          ),
+                                          child: const Text(
+                                            'Lanjutkan Belajar',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14.0,
+                                            ),
+                                          ),
+                                        ),
+                                      ))
+
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        )
     );
   }
 }
@@ -122,6 +332,7 @@ class _DetailMobilePageState extends State<DetailMobilePage> {
               ),
             ),
           ),
+
           Container(
             margin: const EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
             child: ListView.builder(
@@ -136,11 +347,6 @@ class _DetailMobilePageState extends State<DetailMobilePage> {
             ),
           ),
 
-
-
-
-
-
           Container(
               margin: const EdgeInsets.only(
                   top: 16.0, left: 16.0, right: 16.0, bottom: 16.0),
@@ -148,7 +354,14 @@ class _DetailMobilePageState extends State<DetailMobilePage> {
                 width: 1,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MateriScreen(),
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF5D60E2),
                     shape: RoundedRectangleBorder(
@@ -157,8 +370,8 @@ class _DetailMobilePageState extends State<DetailMobilePage> {
                     // padding: EdgeInsets.all(18),
                   ),
                   child: const Text(
-                    'Mulai Belajar',
-                    textAlign: TextAlign.start,
+                    'Lanjutkan Belajar',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.bold,
