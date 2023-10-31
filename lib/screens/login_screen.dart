@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:algopintar/screens/signup_screen.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -30,6 +31,18 @@ class LoginWebPage extends StatefulWidget {
 }
 
 class _LoginWebPageState extends State<LoginWebPage> {
+
+  String nameKey = 'userId';
+  @override
+  void initState() {
+    super.initState();
+    const MethodChannel('plugins.flutter.io/shared_preferences').setMethodCallHandler((MethodCall call) async {
+      if (call.method == 'getAll') {
+        return {"flutter." + nameKey: "[No Name Saved]"}; // set initial values here if desired
+      }
+      return null;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -323,9 +336,9 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
       }
 
       // also save the user's data locally
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('userId', userId);
-      prefs.setString('username', username);
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // prefs.setString('userId', userId);
+      // prefs.setString('username', username);
 
       Navigator.pushNamed(context, "/home");
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

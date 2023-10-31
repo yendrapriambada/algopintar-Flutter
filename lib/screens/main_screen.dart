@@ -1,6 +1,8 @@
 import 'package:algopintar/data/data_static_subjects.dart';
 import 'package:algopintar/models/mata_pelajaran_model.dart';
+import 'package:algopintar/screens/landing_page_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:algopintar/screens/detail_materi_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -389,20 +391,59 @@ class HomepageMobile extends StatefulWidget {
 }
 
 class _HomepageMobileState extends State<HomepageMobile> {
-  String _username = "null";
+  // String _username = "null";
+  //
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _loadDataAccount();
+  // }
+  //
+  // void _loadDataAccount() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     _username = prefs.getString('username') ?? "null";
+  //   });
+  // }
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final DatabaseReference _database = FirebaseDatabase.instance.ref();
+
+  String username = 'kawan';
 
   @override
   void initState() {
     super.initState();
-    _loadDataAccount();
+    // Call a method to retrieve the username when the page loads.
+    getCurrentUsername();
   }
 
-  void _loadDataAccount() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _username = prefs.getString('username') ?? "null";
-    });
+  Future<void> getCurrentUsername() async {
+    User? user = _auth.currentUser;
+
+    if (user?.uid != null) {
+      final snapshot = await _database.child('students/${user?.uid}').get();
+      if (snapshot.exists) {
+        var userMap = snapshot.value as Map<dynamic, dynamic>?;
+        var usernameValue = userMap?['username'] as String?;
+
+        if (usernameValue != null) {
+          setState(() {
+            username = usernameValue;
+          });
+        }
+      } else {
+        print('No data available.');
+      }
+    }
+    else{
+      LandingPage();
+    }
   }
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -436,10 +477,10 @@ class _HomepageMobileState extends State<HomepageMobile> {
                           ),
                           onPressed: () async {
                             FirebaseAuth.instance.signOut();
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            prefs.remove('userId');
-                            prefs.remove('username');
+                            // SharedPreferences prefs =
+                            //     await SharedPreferences.getInstance();
+                            // prefs.remove('userId');
+                            // prefs.remove('username');
                             Navigator.pushNamed(context, "/landingPage");
                           },
                         ),
@@ -450,7 +491,7 @@ class _HomepageMobileState extends State<HomepageMobile> {
             Container(
               margin: const EdgeInsets.only(left: 16.0),
               child: Text(
-                "Halo, $_username!",
+                "Halo, $username!",
                 textAlign: TextAlign.start,
                 style: const TextStyle(
                   fontFamily: 'Montserrat',

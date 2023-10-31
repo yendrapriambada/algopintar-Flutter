@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
       // initialRoute: FirebaseAuth.instance.currentUser == null ? '/login' : '/home',
       title: 'Algo Pintar',
       theme: ThemeData(),
-      // home: MateriScreen(),
+      // home: LoginScreen(),
       routes: {
         '/': (context) => SplashScreen(
               child: getInitialRoute(screenWidth),
