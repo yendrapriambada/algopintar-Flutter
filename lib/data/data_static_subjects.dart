@@ -53,11 +53,6 @@ var subjectsList = [
         title: 'While-Do',
         pdfUrl: 'https://cdn.syncfusion.com/content/PDFViewer/flutter-succinctly.pdf',
       ),
-      // 'Pembukaan',
-      // 'For',
-      // 'While',
-      // 'Do-while',
-      // 'While-Do'
     ],
   ),
   Subjects(
@@ -99,14 +94,6 @@ var subjectsList = [
         title: 'Binary Search Tree',
         pdfUrl: 'https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf',
       ),
-      // 'Pembukaan',
-      // 'Linked List',
-      // 'Double Linked List',
-      // 'Stack',
-      // 'Queue',
-      // 'Tree',
-      // 'Binary Tree',
-      // 'Binary Search Tree'
     ],
   ),
   Subjects(
@@ -144,13 +131,6 @@ var subjectsList = [
         title: 'Array of Array',
         pdfUrl: 'https://s29.q4cdn.com/175625835/files/doc_downloads/test.pdf',
       ),
-      // 'Pembukaan',
-      // '2D Array',
-      // '3D Array',
-      // 'Array of Struct',
-      // 'Array of Pointer',
-      // 'Array of String',
-      // 'Array of Array'
     ],
   ),
 

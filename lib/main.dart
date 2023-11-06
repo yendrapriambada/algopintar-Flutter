@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:algopintar/screens/landing_page_screen.dart';
-import 'package:algopintar/screens/materi_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:algopintar/screens/main_screen.dart';
@@ -20,29 +19,19 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Widget getInitialRoute(double screenWidth) {
-    if(screenWidth > 700) {
+    if (screenWidth > 700) {
       return const LoginScreen();
     } else {
       if (FirebaseAuth.instance.currentUser == null) {
         print('user is null');
-        return const LandingPage();  // User is signed out
+        return const LandingPage(); // User is signed out
       } else {
         print('user is not null');
-        return const MainScreen();  // User is signed in
+        return const MainScreen(); // User is signed in
       }
     }
   }
@@ -59,7 +48,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/': (context) => SplashScreen(
               child: getInitialRoute(screenWidth),
-        ),
+            ),
         '/landingPage': (context) => const LandingPage(),
         '/login': (context) => const LoginScreen(),
         '/signUp': (context) => const SignupScreen(),

@@ -3,8 +3,6 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:algopintar/screens/signup_screen.dart';
-import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -23,77 +21,66 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-class LoginWebPage extends StatefulWidget {
+class LoginWebPage extends StatelessWidget {
   const LoginWebPage({super.key});
 
   @override
-  State<LoginWebPage> createState() => _LoginWebPageState();
-}
-
-class _LoginWebPageState extends State<LoginWebPage> {
-
-  String nameKey = 'userId';
-  @override
-  void initState() {
-    super.initState();
-    const MethodChannel('plugins.flutter.io/shared_preferences').setMethodCallHandler((MethodCall call) async {
-      if (call.method == 'getAll') {
-        return {"flutter." + nameKey: "[No Name Saved]"}; // set initial values here if desired
-      }
-      return null;
-    });
-  }
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Row(
         children: [
           Expanded(
             child: Container(
               color: const Color(0xFF5D60E2),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                      height: 180,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(25.0),
-                        child: Image.asset(
-                          'images/app_icon.png',
-                          fit: BoxFit.cover,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: SizedBox(
+                          height: 180,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(25.0),
+                            child: Image.asset(
+                              'images/app_icon.png',
+                              fit: BoxFit.cover,
+                            ),
+                          )),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 16),
+                      child: const Text(
+                        'Algo Pintar',
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Montserrat',
                         ),
-                      )),
-                  Container(
-                    margin: const EdgeInsets.only(top: 16),
-                    child: const Text(
-                      'Algo Pintar',
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Montserrat',
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                        vertical: 32, horizontal: 32),
-                    child: const Text(
-                      'AlgoPintar merupakan sebuah platform media pembelajaran bagi siswa yang ingin mempelajari dasar keilmuan pemrograman. Aplikasi ini dilengkapi dengan materi, latihan soal, progress belajar, dan papan peringkat.',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontFamily: 'Montserrat',
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 24),
+                      child: const Text(
+                        'AlgoPintar merupakan sebuah platform media pembelajaran bagi siswa yang ingin mempelajari dasar keilmuan pemrograman. Aplikasi ini dilengkapi dengan materi, latihan soal, progress belajar, dan papan peringkat.',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontFamily: 'Montserrat',
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-          Expanded(
+          const Expanded(
             child: LoginPageMobile(),
           ),
         ],
@@ -134,10 +121,9 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              BackButton(),
-
+              const BackButton(),
               const SizedBox(
-                height: 20.0,
+                height: 14.0,
               ),
               Center(
                 child: SizedBox(
@@ -285,7 +271,9 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
                             Navigator.pushReplacement(
                               context,
                               PageRouteBuilder(
-                                pageBuilder: (context, animation1, animation2) => SignupScreen(),
+                                pageBuilder:
+                                    (context, animation1, animation2) =>
+                                        const SignupScreen(),
                                 transitionDuration: Duration.zero,
                                 reverseTransitionDuration: Duration.zero,
                               ),
@@ -313,7 +301,6 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
 
     String email = _emailController.text;
     String password = _passwordController.text;
-    String username = '';
 
     try {
       UserCredential userCredential = await FirebaseAuth.instance
@@ -322,14 +309,12 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
       String userId = userCredential.user!.uid;
 
       final ref = FirebaseDatabase.instance.ref();
-      final snapshot = await ref.child('students/$userId').get();
+      final snapshot = await ref.child('users/$userId').get();
       if (snapshot.exists) {
-        print(snapshot.value);
+        // print(snapshot.value);
         Map data = snapshot.value as Map;
         for (var key in data.keys) {
-          if (key == 'username') {
-            username = data[key];
-          }
+          if (key == 'username') {}
         }
       } else {
         print('No data available.');
@@ -418,14 +403,8 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
   }
 }
 
-class BackButton extends StatefulWidget {
+class BackButton extends StatelessWidget {
   const BackButton({Key? key}) : super(key: key);
-
-  @override
-  _BackButtonState createState() => _BackButtonState();
-}
-
-class _BackButtonState extends State<BackButton> {
 
   @override
   Widget build(BuildContext context) {
@@ -434,25 +413,22 @@ class _BackButtonState extends State<BackButton> {
         padding: const EdgeInsets.all(16.0),
         child: Row(
           children: <Widget>[
-            MediaQuery.of(context).size.width <= 700
-                ? Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(17.0),
-                    ),
-                    elevation: 4,
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back,
-                        color: Colors.black,
-                      ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, "/landingPage");
-                      },
-                    ),
-                  )
-                : const SizedBox(
-                    height: 64,
+            if (MediaQuery.of(context).size.width <= 700)
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(17.0),
+                ),
+                elevation: 4,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.black,
                   ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/landingPage");
+                  },
+                ),
+              )
           ],
         ),
       ),

@@ -1,4 +1,3 @@
-import 'package:algopintar/screens/landing_page_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
@@ -23,35 +22,35 @@ class SignupScreen extends StatelessWidget {
   }
 }
 
-class SignupWebPage extends StatefulWidget {
+class SignupWebPage extends StatelessWidget {
   const SignupWebPage({super.key});
 
   @override
-  State<SignupWebPage> createState() => _SignupWebPageState();
-}
-
-class _SignupWebPageState extends State<SignupWebPage> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Row(
         children: [
           Expanded(
-              child: Container(
-                color: const Color(0xFF5D60E2),
+            child: Container(
+              color: const Color(0xFF5D60E2),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
-                        height: 180,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(25.0),
-                          child: Image.asset(
-                            'images/app_icon.png',
-                            fit: BoxFit.cover,
-                          ),
-                        )),
+                    Flexible(
+                      child: SizedBox(
+                          height: 180,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(25.0),
+                            child: Image.asset(
+                              'images/app_icon.png',
+                              fit: BoxFit.cover,
+                            ),
+                          )),
+                    ),
                     Container(
                       margin: const EdgeInsets.only(top: 16),
                       child: const Text(
@@ -65,8 +64,8 @@ class _SignupWebPageState extends State<SignupWebPage> {
                       ),
                     ),
                     Container(
-                      margin:
-                      const EdgeInsets.symmetric(vertical: 32, horizontal: 32),
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 24),
                       child: const Text(
                         'AlgoPintar merupakan sebuah platform media pembelajaran bagi siswa yang ingin mempelajari dasar keilmuan pemrograman. Aplikasi ini dilengkapi dengan materi, latihan soal, progress belajar, dan papan peringkat.',
                         style: TextStyle(
@@ -80,8 +79,9 @@ class _SignupWebPageState extends State<SignupWebPage> {
                   ],
                 ),
               ),
+            ),
           ),
-          Expanded(
+          const Expanded(
             child: SignupPageMobile(),
           ),
         ],
@@ -89,10 +89,6 @@ class _SignupWebPageState extends State<SignupWebPage> {
     );
   }
 }
-
-
-
-
 
 class SignupPageMobile extends StatefulWidget {
   const SignupPageMobile({super.key});
@@ -111,8 +107,6 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
   bool isButtonEnabled = false;
   bool _isLoading = false;
 
-
-
   @override
   void dispose() {
     _fullNameController.dispose();
@@ -122,20 +116,19 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SingleChildScrollView(
           child: Center(
-            child: SizedBox(
-              width: screenWidth <= 700 ? screenWidth : 450,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-              BackButton(),
+        child: SizedBox(
+          width: screenWidth <= 700 ? screenWidth : 450,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              const BackButton(),
               const SizedBox(
                 height: 14.0,
               ),
@@ -168,15 +161,13 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: <Widget>[
-                    Align(
+                    const Align(
                       alignment: Alignment.centerLeft,
-                      child: Container(
-                        child: const Text(
-                          "Nama Lengkap",
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontFamily: 'Montserrat',
-                          ),
+                      child: Text(
+                        "Nama Lengkap",
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontFamily: 'Montserrat',
                         ),
                       ),
                     ),
@@ -196,23 +187,19 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
                       ),
                     ),
                     const SizedBox(height: 16.0),
-
-                    Align(
+                    const Align(
                       alignment: Alignment.centerLeft,
-                      child: Container(
-                        child: const Text(
-                          "Username",
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontFamily: 'Montserrat',
-                          ),
+                      child: Text(
+                        "Username",
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontFamily: 'Montserrat',
                         ),
                       ),
                     ),
                     const SizedBox(
                       height: 8.0,
                     ),
-
                     TextFormField(
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       controller: _usernameController,
@@ -225,18 +212,14 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
                         hintText: 'Masukkan username',
                       ),
                     ),
-
                     const SizedBox(height: 16.0),
-
-                    Align(
+                    const Align(
                       alignment: Alignment.centerLeft,
-                      child: Container(
-                        child: const Text(
-                          "E-mail",
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontFamily: 'Montserrat',
-                          ),
+                      child: Text(
+                        "E-mail",
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontFamily: 'Montserrat',
                         ),
                       ),
                     ),
@@ -257,24 +240,20 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 16.0),
-                    Align(
+                    const Align(
                       alignment: Alignment.centerLeft,
-                      child: Container(
-                        child: const Text(
-                          "Password",
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            fontFamily: 'Montserrat',
-                          ),
+                      child: Text(
+                        "Password",
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontFamily: 'Montserrat',
                         ),
                       ),
                     ),
                     const SizedBox(
                       height: 8.0,
                     ),
-
                     TextFormField(
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       controller: _passwordController,
@@ -297,24 +276,26 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
                           width: 1,
                           height: 50,
                           child: ElevatedButton.icon(
-                            onPressed: (isButtonEnabled && !_isLoading) ? () => _signUp() : null,
+                            onPressed: (isButtonEnabled && !_isLoading)
+                                ? () => _signUp()
+                                : null,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF5D60E2),
                               shape: RoundedRectangleBorder(
                                 borderRadius:
-                                BorderRadius.circular(12), // <-- Radius
+                                    BorderRadius.circular(12), // <-- Radius
                               ),
                             ),
                             icon: _isLoading
                                 ? Container(
-                              width: 24,
-                              height: 24,
-                              padding: const EdgeInsets.all(2.0),
-                              child: const CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 3,
-                              ),
-                            )
+                                    width: 24,
+                                    height: 24,
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: const CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 3,
+                                    ),
+                                  )
                                 : const SizedBox(),
                             label: const Text(
                               'Signup',
@@ -348,7 +329,9 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
                             Navigator.pushReplacement(
                               context,
                               PageRouteBuilder(
-                                pageBuilder: (context, animation1, animation2) => LoginScreen(),
+                                pageBuilder:
+                                    (context, animation1, animation2) =>
+                                        const LoginScreen(),
                                 transitionDuration: Duration.zero,
                                 reverseTransitionDuration: Duration.zero,
                               ),
@@ -361,14 +344,12 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
                   ],
                 ),
               ),
-        ],
-      ),
-            ),
-          )),
+            ],
+          ),
+        ),
+      )),
     );
   }
-
-
 
   // Dear reviewer, saya masih belum tahu caranya agar kode bisa se OOP mungkin atau rapih dan efisien
   // Dibawah ini code nya dikemanain dan bagaimana ya caranya supaya rapih nggak numpuk di satu file ini
@@ -383,7 +364,8 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
 
     // Firebase Auth
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -392,7 +374,8 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
       String userId = userCredential.user!.uid;
 
       // // Create a reference to the user's data in the Realtime Database
-      DatabaseReference userRef = FirebaseDatabase.instance.ref().child('students').child(userId);
+      DatabaseReference userRef =
+          FirebaseDatabase.instance.ref().child('users').child(userId);
 
       // Set the user's data in the database
       userRef.set({
@@ -441,8 +424,7 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
             borderRadius: BorderRadius.circular(24),
           ),
         ));
-      }
-      else {
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: const Text('Terdapat suatu masalah, coba lagi nanti'),
           behavior: SnackBarBehavior.floating,
@@ -501,7 +483,8 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
 
     // Enable the button only if both fields are valid
     setState(() {
-      isButtonEnabled = fullNameValid && usernameValid && emailValid && passwordValid;
+      isButtonEnabled =
+          fullNameValid && usernameValid && emailValid && passwordValid;
     });
   }
 
@@ -512,15 +495,8 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
   }
 }
 
-
-class BackButton extends StatefulWidget {
+class BackButton extends StatelessWidget {
   const BackButton({Key? key}) : super(key: key);
-
-  @override
-  _BackButtonState createState() => _BackButtonState();
-}
-
-class _BackButtonState extends State<BackButton> {
 
   @override
   Widget build(BuildContext context) {
@@ -529,21 +505,22 @@ class _BackButtonState extends State<BackButton> {
         padding: const EdgeInsets.all(16.0),
         child: Row(
           children: <Widget>[
-            if (MediaQuery.of(context).size.width <= 700) Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(17.0),
-              ),
-              elevation: 4,
-              child: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.black,
+            if (MediaQuery.of(context).size.width <= 700)
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(17.0),
                 ),
-                onPressed: () {
-                  Navigator.pushNamed(context, "/landingPage");
-                },
-              ),
-            )
+                elevation: 4,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/landingPage");
+                  },
+                ),
+              )
           ],
         ),
       ),

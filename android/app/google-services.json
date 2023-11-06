@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "828960463204",
+    "firebase_url": "https://algo-pintar-da344-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "algo-pintar-da344",
+    "storage_bucket": "algo-pintar-da344.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:828960463204:android:a78541534cf1cdc0068271",
+        "android_client_info": {
+          "package_name": "com.google.firebase.presents.demo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMLdi3Iq-nXhky2eFwDwIE7oy30K1MfLo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:828960463204:android:00c6e29b436b4e53068271",
+        "android_client_info": {
+          "package_name": "com.yendrastudio.algopintar.algopintar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMLdi3Iq-nXhky2eFwDwIE7oy30K1MfLo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

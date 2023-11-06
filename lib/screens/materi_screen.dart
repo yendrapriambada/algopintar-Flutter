@@ -2,15 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../models/mata_pelajaran_model.dart';
 
-class MateriScreen extends StatefulWidget {
+class MateriScreen extends StatelessWidget {
   final Materi materi;
-   const MateriScreen({required this.materi, super.key});
 
-  @override
-  State<MateriScreen> createState() => _MateriScreenState();
-}
+  const MateriScreen({Key? key, required this.materi}) : super(key: key);
 
-class _MateriScreenState extends State<MateriScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +32,7 @@ class _MateriScreenState extends State<MateriScreen> {
       // body: SfPdfViewer.asset(
       //   'assets/images/test.pdf',
       // ),
-      body: SfPdfViewer.network(widget.materi.pdfUrl),
+      body: SfPdfViewer.network(materi.pdfUrl),
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         notchMargin: 5.0,
@@ -49,16 +45,12 @@ class _MateriScreenState extends State<MateriScreen> {
             children: <Widget>[
               IconButton(
                 icon: const Icon(Icons.arrow_left),
-                onPressed: () {
-                  setState(() {});
-                },
+                onPressed: () {},
               ),
-              Text(widget.materi.title),
+              Text(materi.title),
               IconButton(
                 icon: const Icon(Icons.arrow_right),
-                onPressed: () {
-                  setState(() {});
-                },
+                onPressed: () {},
               ),
             ],
           ),
