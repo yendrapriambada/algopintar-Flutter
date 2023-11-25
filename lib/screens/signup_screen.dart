@@ -383,6 +383,7 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
         "username": username,
         "email": email,
         "password": password,
+        "role": "siswa",
       });
 
       // also save the user's data locally

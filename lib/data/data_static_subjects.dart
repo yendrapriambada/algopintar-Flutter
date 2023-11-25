@@ -133,5 +133,4 @@ var subjectsList = [
       ),
     ],
   ),
-
 ];

@@ -42,6 +42,9 @@ dependencies:
   firebase_database: ^10.3.1
   shared_preferences: ^2.1.0
   syncfusion_flutter_pdfviewer: ^21.2.10
+  flutter_svg: ^0.22.0
+  fl_chart: ^0.36.1
+  provider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
@@ -66,6 +69,9 @@ flutter:
   uses-material-design: true
   assets:
     - images/
+    - assets/images/
+    - assets/icons/
+
 
   fonts:
     - family: Montserrat

@@ -3,6 +3,7 @@ import 'package:algopintar/models/mata_pelajaran_model.dart';
 import 'package:algopintar/screens/landing_page_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:algopintar/screens/detail_materi_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -324,7 +325,7 @@ class _HomepageWebState extends State<HomepageWeb> {
                             mainAxisSize: MainAxisSize.max,
                             children: <Widget>[
                               const Text(
-                                "Mata Pelajaran",
+                                "Pertemuan",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 30.0,
@@ -340,50 +341,56 @@ class _HomepageWebState extends State<HomepageWeb> {
                                   children: [
                                     SizedBox(
                                       height: 500,
-                                      child: ListView.builder(
-                                        shrinkWrap: true,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          final Subjects subject =
-                                              subjectsList[index];
-                                          return InkWell(
-                                              onTap: () {
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
-                                                  return DetailMateri(
-                                                      subject: subject);
-                                                }));
-                                              },
+                                      child: FirebaseAnimatedList(
+                                          padding: const EdgeInsets.only(top: 0),
+                                          query: FirebaseDatabase.instance.ref('pertemuan'),
+                                          itemBuilder: (context, snapshot, animation, index) {
+                                            Map<dynamic, dynamic>? dataPertemuan = snapshot.value as Map<dynamic, dynamic>?;
+
+                                            return Card(
                                               child: ListTile(
                                                 leading: Hero(
-                                                  tag: subject.name,
-                                                  child: Image.asset(
-                                                    subject.imageAsset,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                                title: Text(
-                                                  subject.name,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                    fontFamily: 'Montserrat',
-                                                    fontSize: 14.0,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                subtitle: Text(
-                                                  subject.numOfSubs,
-                                                  style: const TextStyle(
-                                                    fontFamily: 'Montserrat',
-                                                    fontSize: 14.0,
-                                                  ),
-                                                ),
-                                              ));
-                                        },
-                                        itemCount: subjectsList.length,
-                                      ),
+                                                    tag: dataPertemuan?['name'],
+                                                    child: Stack(
+                                                        alignment: Alignment.center,
+                                                        children: <Widget>[
+                                                          ClipRRect(
+                                                            borderRadius: BorderRadius.circular(10.0),
+                                                            child: Image.asset(
+                                                              dataPertemuan?['imageAsset'],
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding: const EdgeInsets.only(top: 8.0),
+                                                            child: Text(
+                                                              dataPertemuan?['name'][10],
+                                                              textAlign: TextAlign.center,
+                                                              style: const TextStyle(
+                                                                fontFamily: 'Montserrat',
+                                                                fontSize: 12.0,
+                                                                color: Colors.white,
+                                                                fontWeight: FontWeight.bold,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ]
+                                                    )),
+                                                title: Text(dataPertemuan?['name'] as String),
+                                                subtitle: Text(dataPertemuan?['numOfSubs'] as String),
+                                                trailing: Icon(Icons.navigate_next),
+                                                onTap: () {
+                                                  Navigator.push(context,
+                                                      MaterialPageRoute(builder: (context) {
+                                                        return DetailMateri(dataPertemuan: dataPertemuan);
+                                                      }
+                                                      )
+                                                  );
+                                                },
+                                              ),
+                                            );
+                                          }
+                                      )
                                     ),
                                   ]),
                             ],
@@ -572,7 +579,7 @@ class _HomepageMobileState extends State<HomepageMobile> {
             Container(
               margin: const EdgeInsets.only(top: 8.0, left: 16.0, bottom: 8.0),
               child: const Text(
-                "Mata Pelajaran",
+                "Pertemuan",
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontFamily: 'Montserrat',
@@ -582,72 +589,59 @@ class _HomepageMobileState extends State<HomepageMobile> {
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(left: 16.0, bottom: 8.0),
+              margin: const EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
               child: SizedBox(
-                height: 250.0,
-                child: ListView.builder(
-                  physics: const ClampingScrollPhysics(),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (BuildContext context, int index) {
-                    final Subjects subject = subjectsList[index];
+                height: 280.0,
+                child: FirebaseAnimatedList(
+                  padding: const EdgeInsets.only(top: 0),
+                  query: FirebaseDatabase.instance.ref('pertemuan'),
+                  itemBuilder: (context, snapshot, animation, index) {
+                    Map<dynamic, dynamic>? dataPertemuan = snapshot.value as Map<dynamic, dynamic>?;
 
-                    return InkWell(
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return DetailMateri(subject: subject);
-                        }));
-                      },
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        elevation: 2,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Hero(
-                                tag: subject.name,
-                                child: Image.asset(
-                                  subject.imageAsset,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8.0, right: 8.0, bottom: 4.0),
-                              child: Text(
-                                subject.name,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8.0, right: 8.0, bottom: 10.0),
-                              child: Text(
-                                subject.numOfSubs,
-                                style: const TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                    return Card(
+                      child: ListTile(
+                        leading: Hero(
+                            tag: dataPertemuan?['name'],
+                            child: Stack(
+                                alignment: Alignment.center,
+                                children: <Widget>[
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: Image.asset(
+                                      dataPertemuan?['imageAsset'],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      dataPertemuan?['name'][10],
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        fontSize: 12.0,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ]
+                            )),
+                        title: Text(dataPertemuan?['name'] as String),
+                        subtitle: Text(dataPertemuan?['numOfSubs'] as String),
+                        trailing: Icon(Icons.navigate_next),
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                                return DetailMateri(dataPertemuan: dataPertemuan);
+                              }
+                              )
+                          );
+                        },
                       ),
                     );
-                  },
-                  itemCount: subjectsList.length,
-                ),
+                  }
+                )
               ),
             ),
             Container(

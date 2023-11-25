@@ -3,9 +3,9 @@ import 'package:algopintar/screens/materi_screen.dart';
 import 'package:flutter/material.dart';
 
 class DetailMateri extends StatelessWidget {
-  final Subjects subject;
+  final Map<dynamic, dynamic>? dataPertemuan;
 
-  const DetailMateri({Key? key, required this.subject}) : super(key: key);
+  const DetailMateri({Key? key, required this.dataPertemuan}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +13,11 @@ class DetailMateri extends StatelessWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         if (constraints.maxWidth > 800) {
           return DetailWebPage(
-            subject: subject,
+            dataPertemuan: dataPertemuan,
           );
         } else {
           return DetailMobilePage(
-            subject: subject,
+            dataPertemuan: dataPertemuan,
           );
         }
       },
@@ -26,9 +26,9 @@ class DetailMateri extends StatelessWidget {
 }
 
 class DetailWebPage extends StatelessWidget {
-  final Subjects subject;
+  final Map<dynamic, dynamic>? dataPertemuan;
 
-  const DetailWebPage({Key? key, required this.subject}) : super(key: key);
+  const DetailWebPage({Key? key, required this.dataPertemuan}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +72,7 @@ class DetailWebPage extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            subject.name,
+                            dataPertemuan?['nama'],
                             textAlign: TextAlign.start,
                             style: const TextStyle(
                               fontFamily: 'Montserrat',
@@ -85,13 +85,13 @@ class DetailWebPage extends StatelessWidget {
                       ),
                       Center(
                         child: Hero(
-                            tag: subject.name,
+                            tag: dataPertemuan?['nama'],
                             child: SizedBox(
                               height: 325,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(25.0),
                                 child: Image.asset(
-                                  subject.imageAsset,
+                                  dataPertemuan?['imageAsset'],
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -104,7 +104,7 @@ class DetailWebPage extends StatelessWidget {
                         margin: const EdgeInsets.only(
                             top: 8.0, left: 16.0, right: 16.0),
                         child: Text(
-                          subject.description,
+                         dataPertemuan?['description'],
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontFamily: 'Montserrat',
@@ -145,10 +145,10 @@ class DetailWebPage extends StatelessWidget {
                               padding: const EdgeInsets.all(0),
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
-                              itemCount: subject.materialList.length,
+                              itemCount: dataPertemuan?['materialList'].length,
                               itemBuilder: (context, index) {
-                                final Materi material =
-                                    subject.materialList[index];
+                                final Map<dynamic, dynamic>? material =
+                                dataPertemuan?['materialList'][index];
                                 return getListMateri(material, context);
                               },
                             ),
@@ -168,7 +168,7 @@ class DetailWebPage extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => MateriScreen(
-                                            materi: subject.materialList[0]),
+                                            materi: dataPertemuan?['materialList'][0]),
                                       ),
                                     );
                                   },
@@ -206,9 +206,9 @@ class DetailWebPage extends StatelessWidget {
 }
 
 class DetailMobilePage extends StatelessWidget {
-  final Subjects subject;
+  final Map<dynamic, dynamic>? dataPertemuan;
 
-  const DetailMobilePage({Key? key, required this.subject}) : super(key: key);
+  const DetailMobilePage({Key? key, required this.dataPertemuan}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -222,16 +222,34 @@ class DetailMobilePage extends StatelessWidget {
               children: <Widget>[
                 Center(
                   child: Hero(
-                      tag: subject.name,
+                      tag: dataPertemuan?['name'],
                       child: SizedBox(
                         height: 325,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(25.0),
-                          child: Image.asset(
-                            subject.imageAsset,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: <Widget>[
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(25.0),
+                              child: Image.asset(
+                                dataPertemuan?['imageAsset'],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 32.0),
+                              child: Text(
+                                dataPertemuan?['name'][10],
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontSize: 82.0,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ]
+                        )
                       )),
                 ),
                 Padding(
@@ -264,7 +282,7 @@ class DetailMobilePage extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
             child: Text(
-              subject.name,
+              dataPertemuan?['name'],
               textAlign: TextAlign.start,
               style: const TextStyle(
                 fontFamily: 'Montserrat',
@@ -276,7 +294,7 @@ class DetailMobilePage extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
             child: Text(
-              subject.description,
+              dataPertemuan?['description'],
               textAlign: TextAlign.start,
               style: const TextStyle(
                 fontFamily: 'Montserrat',
@@ -302,9 +320,9 @@ class DetailMobilePage extends StatelessWidget {
               padding: const EdgeInsets.all(0),
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: subject.materialList.length,
+              itemCount: dataPertemuan?['materialList'].length,
               itemBuilder: (context, index) {
-                final Materi material = subject.materialList[index];
+                final Map<dynamic, dynamic>? material = dataPertemuan?['materialList'][index];
                 return getListMateri(material, context);
               },
             ),
@@ -321,7 +339,7 @@ class DetailMobilePage extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            MateriScreen(materi: subject.materialList[0]),
+                            MateriScreen(materi: dataPertemuan?['materialList'][0]),
                       ),
                     );
                   },
@@ -349,13 +367,13 @@ class DetailMobilePage extends StatelessWidget {
   }
 }
 
-Widget getListMateri(Materi materi, BuildContext context) {
+Widget getListMateri(Map<dynamic, dynamic>? materi, BuildContext context) {
   return Card(
     child: ListTile(
         visualDensity: const VisualDensity(horizontal: 0, vertical: -3),
         leading: const Icon(Icons.check_circle_rounded, color: Colors.green),
         title: Text(
-          materi.title,
+          materi?['title'],
           style: const TextStyle(
             fontFamily: 'Montserrat',
             fontSize: 14.0,
@@ -368,7 +386,8 @@ Widget getListMateri(Materi materi, BuildContext context) {
               builder: (context) => MateriScreen(materi: materi),
             ),
           );
-        }),
+        }
+        ),
   );
 }
 

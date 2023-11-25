@@ -311,10 +311,16 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
       final ref = FirebaseDatabase.instance.ref();
       final snapshot = await ref.child('users/$userId').get();
       if (snapshot.exists) {
-        // print(snapshot.value);
+        print(snapshot.value);
+
         Map data = snapshot.value as Map;
-        for (var key in data.keys) {
-          if (key == 'username') {}
+        String userRole = data['role'] ?? '';
+
+        if(userRole == "student"){
+          Navigator.pushNamed(context, "/home");
+        }
+        else{
+          Navigator.pushNamed(context, "/adminHome");
         }
       } else {
         print('No data available.');
@@ -325,7 +331,7 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
       // prefs.setString('userId', userId);
       // prefs.setString('username', username);
 
-      Navigator.pushNamed(context, "/home");
+      // Navigator.pushNamed(context, "/home");
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text('Berhasil Login!'),
         behavior: SnackBarBehavior.floating,
