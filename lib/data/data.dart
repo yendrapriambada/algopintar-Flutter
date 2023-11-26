@@ -7,26 +7,26 @@ import 'package:algopintar/models/referal_info_model.dart';
 
 List analyticData = [
   AnalyticInfo(
-    title: "Subscribers",
-    count: 720,
-    svgSrc: "assets/icons/Subscribers.svg",
+    title: "Siswa",
+    count: 37,
+    svgSrc: "assets/icons/Post.svg",
     color: primaryColor,
   ),
   AnalyticInfo(
-    title: "Post",
-    count: 820,
-    svgSrc: "assets/icons/Post.svg",
+    title: "Guru",
+    count: 4,
+    svgSrc: "assets/icons/Subscribers.svg",
     color: purple,
   ),
   AnalyticInfo(
-    title: "Pages",
-    count: 920,
+    title: "Pertemuan",
+    count: 4,
     svgSrc: "assets/icons/Pages.svg",
     color: orange,
   ),
   AnalyticInfo(
-    title: "Comments",
-    count: 920,
+    title: "Telah Selesai Belajar",
+    count: 21,
     svgSrc: "assets/icons/Comments.svg",
     color: green,
   ),
@@ -67,9 +67,9 @@ List discussionData = [
 
 List referalData = [
   ReferalInfoModel(
-    title: "Facebook",
+    title: "Fricilla",
     count: 234,
-    svgSrc: "assets/icons/Facebook.svg",
+    svgSrc: "assets/icons/photo1.jpg",
     color: primaryColor,
   ),
   ReferalInfoModel(

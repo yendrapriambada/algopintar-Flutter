@@ -4,7 +4,8 @@ import 'package:algopintar/constants/constants.dart';
 import 'package:algopintar/constants/responsive.dart';
 
 class ProfileInfo extends StatelessWidget {
-  const ProfileInfo({Key? key}) : super(key: key);
+  final String username;
+  const ProfileInfo({Key? key, required this.username}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +43,8 @@ class ProfileInfo extends StatelessWidget {
           child: Row(
             children: [
               ClipRRect(
-                child: Image.asset(
-                  'assets/images/photo3.jpg',
+                child: Image.network(
+                  'https://api.dicebear.com/7.x/adventurer/png?seed=${username}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf',
                   height: 38,
                   width: 38,
                   fit: BoxFit.cover,
@@ -53,7 +54,7 @@ class ProfileInfo extends StatelessWidget {
               if(!Responsive.isMobile(context))
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: appPadding / 2),
-                child: Text('Hii, Arinalis',style: TextStyle(
+                child: Text('Halo, ${username}',style: TextStyle(
                   color: textColor,
                   fontWeight: FontWeight.w800,
                 ),),

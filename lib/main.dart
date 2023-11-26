@@ -71,17 +71,22 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      // home: LoginScreen(),
-      routes: {
-        '/': (context) => SplashScreen(
-              child: getInitialRoute(screenWidth),
-            ),
-        '/landingPage': (context) => const LandingPage(),
-        '/login': (context) => const LoginScreen(),
-        '/signUp': (context) => const SignupScreen(),
-        '/home': (context) => preventAccessRight('/home'),
-        '/adminHome': (context) => preventAccessRight('/adminHome'),
-      },
+      home: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => Controller(),)
+        ],
+        child: DashBoardScreen(),
+      ),
+      // routes: {
+      //   '/': (context) => SplashScreen(
+      //         child: getInitialRoute(screenWidth),
+      //       ),
+      //   '/landingPage': (context) => const LandingPage(),
+      //   '/login': (context) => const LoginScreen(),
+      //   '/signUp': (context) => const SignupScreen(),
+      //   '/home': (context) => preventAccessRight('/home'),
+      //   '/adminHome': (context) => preventAccessRight('/adminHome'),
+      // },
     );
   }
 }

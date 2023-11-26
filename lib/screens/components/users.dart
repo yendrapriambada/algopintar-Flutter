@@ -1,10 +1,12 @@
+import 'package:algopintar/screens/components/students_table.dart';
 import 'package:flutter/material.dart';
 import 'package:algopintar/constants/constants.dart';
 
 import 'bar_chart_users.dart';
 
 class Users extends StatelessWidget {
-  const Users({Key? key}) : super(key: key);
+  final List<Map<dynamic, dynamic>> students;
+  const Users({Key? key, required this.students}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class Users extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Users",
+            "Data Siswa",
             style: TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 15,
@@ -28,7 +30,7 @@ class Users extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: BarChartUsers(),
+            child: StudentsTable(students: students),
           )
         ],
       ),
