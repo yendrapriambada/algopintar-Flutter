@@ -11,8 +11,9 @@ import 'package:provider/provider.dart';
 import '../landing_page_screen.dart';
 
 class CustomAppbar extends StatefulWidget {
-  const CustomAppbar({Key? key}) : super(key: key);
+  const CustomAppbar({Key? key, required this.pageName}) : super(key: key);
 
+  final String pageName;
   @override
   State<CustomAppbar> createState() => _CustomAppbarState();
 }
@@ -67,7 +68,7 @@ class _CustomAppbarState extends State<CustomAppbar> {
             child: Padding(
               padding: const EdgeInsets.only(right: 30.0),
               child: Text(
-                'Dashboard Guru',
+                widget.pageName,
                 style: TextStyle(
                     color: textColor,
                     fontSize: 20,

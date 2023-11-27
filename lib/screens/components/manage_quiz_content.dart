@@ -13,14 +13,14 @@ import 'package:firebase_database/firebase_database.dart';
 
 import 'leaderboard.dart';
 
-class DashboardContent extends StatefulWidget {
-  const DashboardContent({Key? key}) : super(key: key);
+class ManageQuizContent extends StatefulWidget {
+  const ManageQuizContent({Key? key}) : super(key: key);
 
   @override
-  State<DashboardContent> createState() => _DashboardContentState();
+  State<ManageQuizContent> createState() => _DashboardContentState();
 }
 
-class _DashboardContentState extends State<DashboardContent> {
+class _DashboardContentState extends State<ManageQuizContent> {
   late DatabaseReference _studentsRef;
   List<Map<dynamic, dynamic>> _students = [];
 
@@ -59,7 +59,7 @@ class _DashboardContentState extends State<DashboardContent> {
         padding: EdgeInsets.all(appPadding),
         child: Column(
           children: [
-            CustomAppbar(pageName: "Dashboard Guru",),
+            CustomAppbar(pageName: "Kelola Quiz",),
             SizedBox(
               height: appPadding,
             ),
@@ -96,59 +96,6 @@ class _DashboardContentState extends State<DashboardContent> {
                       ),
                   ],
                 ),
-                // Row(
-                //   crossAxisAlignment: CrossAxisAlignment.start,
-                //   children: [
-                //     Expanded(
-                //       flex: 5,
-                //       child: Column(
-                //         children: [
-                //           SizedBox(
-                //             height: appPadding,
-                //           ),
-                //           Row(
-                //             children: [
-                //               if(!Responsive.isMobile(context))
-                //                 Expanded(
-                //                   child: TopReferals(),
-                //                   flex: 2,
-                //                 ),
-                //               if(!Responsive.isMobile(context))
-                //                 SizedBox(width: appPadding,),
-                //               Expanded(
-                //                 flex: 3,
-                //                 child: Viewers(),
-                //               ),
-                //             ],
-                //             crossAxisAlignment: CrossAxisAlignment.start,
-                //           ),
-                //           SizedBox(
-                //             height: appPadding,
-                //           ),
-                //           if (Responsive.isMobile(context))
-                //             SizedBox(
-                //               height: appPadding,
-                //             ),
-                //           if (Responsive.isMobile(context)) TopReferals(),
-                //           if (Responsive.isMobile(context))
-                //             SizedBox(
-                //               height: appPadding,
-                //             ),
-                //           if (Responsive.isMobile(context)) UsersByDevice(),
-                //         ],
-                //       ),
-                //     ),
-                //     if (!Responsive.isMobile(context))
-                //       SizedBox(
-                //         width: appPadding,
-                //       ),
-                //     if (!Responsive.isMobile(context))
-                //       Expanded(
-                //         flex: 2,
-                //         child: UsersByDevice(),
-                //       ),
-                //   ],
-                // ),
               ],
             ),
 

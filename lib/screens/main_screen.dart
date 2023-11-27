@@ -357,7 +357,7 @@ class _HomepageWebState extends State<HomepageWeb> {
                                                           ClipRRect(
                                                             borderRadius: BorderRadius.circular(10.0),
                                                             child: Image.asset(
-                                                              dataPertemuan?['imageAsset'],
+                                                              'images/pertemuan.png',
                                                               fit: BoxFit.cover,
                                                             ),
                                                           ),

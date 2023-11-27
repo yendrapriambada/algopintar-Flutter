@@ -46,12 +46,33 @@ class MyApp extends StatelessWidget {
     } else {
       if (route == '/home') {
         return const MainScreen();
-      } else if (route == '/adminHome') {
+      } else if (route == '/teacherHome') {
         return MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (context) => Controller(),)
           ],
-          child: DashBoardScreen(),
+          child: DashBoardScreen(contentType: ContentType.Dashboard,),
+        );
+      } else if (route == '/manageMaterial') {
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (context) => Controller(),)
+          ],
+          child: DashBoardScreen(contentType: ContentType.Material,)
+        );
+      } else if (route == '/manageQuiz') {
+        return MultiProvider(
+            providers: [
+              ChangeNotifierProvider(create: (context) => Controller(),)
+            ],
+            child: DashBoardScreen(contentType: ContentType.Quiz,)
+        );
+      } else if (route == '/manageListMaterial') {
+        return MultiProvider(
+            providers: [
+              ChangeNotifierProvider(create: (context) => Controller(),)
+            ],
+            child: DashBoardScreen(contentType: ContentType.ManageListMaterial,)
         );
       } else {
         return const MainScreen(); // User is signed in
@@ -71,22 +92,26 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => Controller(),)
-        ],
-        child: DashBoardScreen(),
-      ),
-      // routes: {
-      //   '/': (context) => SplashScreen(
-      //         child: getInitialRoute(screenWidth),
-      //       ),
-      //   '/landingPage': (context) => const LandingPage(),
-      //   '/login': (context) => const LoginScreen(),
-      //   '/signUp': (context) => const SignupScreen(),
-      //   '/home': (context) => preventAccessRight('/home'),
-      //   '/adminHome': (context) => preventAccessRight('/adminHome'),
-      // },
+      // home: MultiProvider(
+      //   providers: [
+      //     ChangeNotifierProvider(create: (context) => Controller(),)
+      //   ],
+      //   child: DashBoardScreen(contentType: ContentType.Material,),
+      // ),
+      routes: {
+        '/': (context) => SplashScreen(
+              child: getInitialRoute(screenWidth),
+            ),
+        '/landingPage': (context) => const LandingPage(),
+        '/login': (context) => const LoginScreen(),
+        '/signUp': (context) => const SignupScreen(),
+        '/home': (context) => preventAccessRight('/home'),
+        '/teacherHome': (context) => preventAccessRight('/teacherHome'),
+        '/manageMaterial': (context) => preventAccessRight('/manageMaterial'),
+        '/manageQuiz': (context) => preventAccessRight('/manageQuiz'),
+        '/manageListMaterial': (context) => preventAccessRight('/manageListMaterial'),
+
+      },
     );
   }
 }

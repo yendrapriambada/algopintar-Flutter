@@ -320,7 +320,7 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
           Navigator.pushNamed(context, "/home");
         }
         else{
-          Navigator.pushNamed(context, "/adminHome");
+          Navigator.pushNamed(context, "/teacherHome");
         }
       } else {
         print('No data available.');
