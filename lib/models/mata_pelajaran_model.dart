@@ -67,3 +67,60 @@ class MateriModel {
     };
   }
 }
+
+
+class Quizmodel {
+  final String id;
+  final String nomorSoal;
+  final String soal;
+  final String pilganA;
+  final String pilganB;
+  final String pilganC;
+  final String pilganD;
+  final String pilganE;
+  final String kunciJawaban;
+  final String idPertemuan; // ID pertemuan
+
+  Quizmodel({
+    required this.id,
+    required this.nomorSoal,
+    required this.soal,
+    required this.pilganA,
+    required this.pilganB,
+    required this.pilganC,
+    required this.pilganD,
+    required this.pilganE,
+    required this.kunciJawaban,
+    required this.idPertemuan,
+  });
+
+  factory Quizmodel.fromJson(Map<String, dynamic> json, String id) {
+    return Quizmodel(
+      id: id,
+      nomorSoal: json['nomorSoal'] ?? '',
+      soal: json['soal'] ?? '',
+      pilganA: json['pilganA'] ?? '',
+      pilganB: json['pilganB'] ?? '',
+      pilganC: json['pilganC'] ?? '',
+      pilganD: json['pilganD'] ?? '',
+      pilganE: json['pilganE'] ?? '',
+      kunciJawaban: json['kunciJawaban'] ?? '',
+      idPertemuan: json['idPertemuan'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'nomorSoal': nomorSoal,
+      'soal': soal,
+      'pilganA': pilganA,
+      'pilganB': pilganB,
+      'pilganC': pilganC,
+      'pilganD': pilganD,
+      'pilganE': pilganE,
+      'kunciJawaban': kunciJawaban,
+      'idPertemuan': idPertemuan,
+    };
+  }
+}

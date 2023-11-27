@@ -10,50 +10,51 @@ import '../../controllers/controller.dart';
 import '../../models/mata_pelajaran_model.dart';
 import '../dash_board_screen.dart';
 import 'list_materi.dart';
+import 'list_quiz.dart';
 
 
-class ManageListMaterialContent extends StatefulWidget {
+class ManageListQuizContent extends StatefulWidget {
   final String idPertemuan;
-  const ManageListMaterialContent({Key? key, required this.idPertemuan}) : super(key: key);
+  const ManageListQuizContent({Key? key, required this.idPertemuan}) : super(key: key);
 
   @override
-  State<ManageListMaterialContent> createState() => _ManageListMaterialContentState();
+  State<ManageListQuizContent> createState() => _ManageListQuizContentState();
 }
 
-class _ManageListMaterialContentState extends State<ManageListMaterialContent> {
-  late DatabaseReference _listMateriRef;
-  List<MateriModel> _listMateri = [];
+class _ManageListQuizContentState extends State<ManageListQuizContent> {
+  late DatabaseReference _listQuizRef;
+  List<Quizmodel> _listQuiz = [];
 
   @override
   void initState() {
     super.initState();
-    _listMateriRef = FirebaseDatabase.instance.ref().child('materialList');
+    _listQuizRef = FirebaseDatabase.instance.ref().child('soalQuizList');
     _initializeDatabase();
   }
 
   Future<void> _initializeDatabase() async {
     await Firebase.initializeApp();
-    _listMateriRef.onChildRemoved.listen((event) {
-      _listMateri.clear();
+    _listQuizRef.onChildRemoved.listen((event) {
+      _listQuiz.clear();
       setState(() {}); // Trigger widget rebuild after updating data
     });
 
-    _listMateriRef.orderByChild('idPertemuan').equalTo(widget.idPertemuan).onValue.listen((event) {
+    _listQuizRef.orderByChild('idPertemuan').equalTo(widget.idPertemuan).onValue.listen((event) {
       if (event.snapshot.value != null) {
-        Map<String, dynamic> listMateriMap = event.snapshot.value as Map<String, dynamic>;
-        _updateListMateri(listMateriMap);
+        Map<String, dynamic> listQuizMap = event.snapshot.value as Map<String, dynamic>;
+        _updateListQuiz(listQuizMap);
       }
     });
   }
 
-  void _updateListMateri(Map<String, dynamic> listMateriMap) {
-    _listMateri.clear();
-    listMateriMap.forEach((key, value) {
-      Map<String, dynamic> listMateriData = value as Map<String, dynamic>;
-      MateriModel materi = MateriModel.fromJson(listMateriData, key);
-      _listMateri.add(materi);
+  void _updateListQuiz(Map<String, dynamic> listQuizMap) {
+    _listQuiz.clear();
+    listQuizMap.forEach((key, value) {
+      Map<String, dynamic> listQuizData = value as Map<String, dynamic>;
+      Quizmodel quiz = Quizmodel.fromJson(listQuizData, key);
+      _listQuiz.add(quiz);
     });
-    _listMateri.sort((a, b) => a.urutanMateri.compareTo(b.urutanMateri));
+    _listQuiz.sort((a, b) => a.nomorSoal.compareTo(b.nomorSoal));
 
     setState(() {}); // Trigger widget rebuild after updating data
   }
@@ -65,7 +66,7 @@ class _ManageListMaterialContentState extends State<ManageListMaterialContent> {
         padding: EdgeInsets.all(appPadding),
         child: Column(
           children: [
-            CustomAppbar(pageName: "Kelola List Materi",),
+            CustomAppbar(pageName: "Kelola Soal Quiz",),
             const BackButton(),
             SizedBox(
               height: appPadding,
@@ -79,7 +80,7 @@ class _ManageListMaterialContentState extends State<ManageListMaterialContent> {
                       flex: 5,
                       child: Column(
                         children: [
-                          ListMateri(listMateri: _listMateri, idPertemuan: widget.idPertemuan,),
+                          ListQuiz(listQuiz: _listQuiz, idPertemuan: widget.idPertemuan,),
                         ],
                       ),
                     ),
@@ -115,7 +116,7 @@ class BackButton extends StatelessWidget {
                             providers: [
                               ChangeNotifierProvider(create: (context) => Controller(),)
                             ],
-                            child: DashBoardScreen(contentType: ContentType.Material,)
+                            child: DashBoardScreen(contentType: ContentType.Quiz,)
                         ),
                     transitionDuration: Duration.zero,
                     reverseTransitionDuration: Duration.zero,

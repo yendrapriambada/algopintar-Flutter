@@ -1,17 +1,14 @@
+import 'package:algopintar/screens/components/pertemuan.dart';
+import 'package:algopintar/screens/components/quiz_pertemuan.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:algopintar/constants/constants.dart';
-import 'package:algopintar/constants/responsive.dart';
-import 'package:algopintar/screens/components/analytic_cards.dart';
 import 'package:algopintar/screens/components/custom_appbar.dart';
-import 'package:algopintar/screens/components/top_referals.dart';
-import 'package:algopintar/screens/components/users.dart';
-import 'package:algopintar/screens/components/users_by_device.dart';
-import 'package:algopintar/screens/components/viewers.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-import 'leaderboard.dart';
+import '../../models/mata_pelajaran_model.dart';
+
 
 class ManageQuizContent extends StatefulWidget {
   const ManageQuizContent({Key? key}) : super(key: key);
@@ -21,8 +18,8 @@ class ManageQuizContent extends StatefulWidget {
 }
 
 class _DashboardContentState extends State<ManageQuizContent> {
-  late DatabaseReference _studentsRef;
-  List<Map<dynamic, dynamic>> _students = [];
+  late DatabaseReference _pertemuanRef;
+  List<PertemuanModel> _pertemuan = [];
 
   @override
   void initState() {
@@ -32,23 +29,32 @@ class _DashboardContentState extends State<ManageQuizContent> {
 
   Future<void> _initializeDatabase() async {
     await Firebase.initializeApp();
-    _studentsRef = FirebaseDatabase.instance.ref().child('users');
+    _pertemuanRef = FirebaseDatabase.instance.ref().child('pertemuan');
 
-    _studentsRef.onValue.listen((event) {
+    _pertemuanRef.onChildRemoved.listen((event) {
+      _pertemuan.clear();
+      setState(() {}); // Trigger widget rebuild after updating data
+    });
+
+    _pertemuanRef.onValue.listen((event) {
       if (event.snapshot.value != null) {
-        Map<dynamic, dynamic> studentsMap = event.snapshot.value as Map<dynamic, dynamic>;
-        _updateStudentsList(studentsMap);
+        print("data ada");
+        Map<String, dynamic> pertemuanMap = event.snapshot.value as Map<String, dynamic>;
+        _updatePertemuanList(pertemuanMap);
       }
     });
   }
 
-  void _updateStudentsList(Map<dynamic, dynamic> studentsMap) {
-    _students.clear();
-    studentsMap.forEach((key, value) {
-      if (value['role'] == 'student') {
-        _students.add(value);
-      }
+  void _updatePertemuanList(Map<String, dynamic> pertemuanMap) {
+    _pertemuan.clear();
+    pertemuanMap.forEach((key, value) {
+      Map<String, dynamic> pertemuanData = value as Map<String, dynamic>;
+      PertemuanModel pertemuan = PertemuanModel.fromJson(pertemuanData, key);
+      _pertemuan.add(pertemuan);
     });
+    _pertemuan.sort((a, b) => a.namaPertemuan.compareTo(b.namaPertemuan));
+
+    print("Lenght: ${_pertemuan.length}");
     setState(() {}); // Trigger widget rebuild after updating data
   }
 
@@ -72,33 +78,14 @@ class _DashboardContentState extends State<ManageQuizContent> {
                       flex: 5,
                       child: Column(
                         children: [
-                          AnalyticCards(studentCount: _students.length,),
-                          SizedBox(
-                            height: appPadding,
-                          ),
-                          Users(students: _students,),
-                          if (Responsive.isMobile(context))
-                            SizedBox(
-                              height: appPadding,
-                            ),
-                          if (Responsive.isMobile(context)) Leaderboard(students: _students,),
+                          QuizPertemuan(pertemuan: _pertemuan),
                         ],
                       ),
                     ),
-                    if (!Responsive.isMobile(context))
-                      SizedBox(
-                        width: appPadding,
-                      ),
-                    if (!Responsive.isMobile(context))
-                      Expanded(
-                        flex: 2,
-                        child: Leaderboard(students: _students,),
-                      ),
                   ],
                 ),
               ],
             ),
-
           ],
         ),
       ),

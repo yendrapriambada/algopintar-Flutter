@@ -1,3 +1,4 @@
+import 'package:algopintar/screens/components/quiz_pertemuan_table.dart';
 import 'package:flutter/services.dart';
 import 'package:algopintar/models/mata_pelajaran_model.dart';
 import 'package:algopintar/screens/components/pertemuan_table.dart';
@@ -5,32 +6,26 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:algopintar/constants/constants.dart';
 
-import 'list_materi_table.dart';
+class QuizPertemuan extends StatefulWidget {
+  final List<PertemuanModel> pertemuan;
 
-class ListMateri extends StatefulWidget {
-  final List<MateriModel> listMateri;
-  final String idPertemuan;
-
-  const ListMateri(
-      {Key? key, required this.listMateri, required this.idPertemuan})
-      : super(key: key);
+  const QuizPertemuan({Key? key, required this.pertemuan}) : super(key: key);
 
   @override
-  State<ListMateri> createState() => _ListMateriState();
+  State<QuizPertemuan> createState() => _QuizPertemuanState();
 }
 
-class _ListMateriState extends State<ListMateri> {
-  late DatabaseReference _listMateriRef;
-  final TextEditingController _urutanMateriController = TextEditingController();
-  final TextEditingController _namaMateriController = TextEditingController();
-  final TextEditingController _linkPDFController = TextEditingController();
+class _QuizPertemuanState extends State<QuizPertemuan> {
+  late DatabaseReference _pertemuanRef;
+  final TextEditingController _namapertemuanController =
+      TextEditingController();
+  final TextEditingController _deskripsiController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
-    _urutanMateriController.dispose();
-    _namaMateriController.dispose();
-    _linkPDFController.dispose();
+    _namapertemuanController.dispose();
+    _deskripsiController.dispose();
     super.dispose();
   }
 
@@ -50,7 +45,7 @@ class _ListMateriState extends State<ListMateri> {
           Row(
             children: [
               Text(
-                "Data Materi",
+                "Data Pertemuan",
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 15,
@@ -63,7 +58,7 @@ class _ListMateriState extends State<ListMateri> {
                   _showSimpleModalDialog(context);
                 },
                 child: Text(
-                  "Tambah Materi",
+                  "Tambah Pertemuan",
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
@@ -84,7 +79,7 @@ class _ListMateriState extends State<ListMateri> {
             ],
           ),
           Expanded(
-            child: ListMateriTable(listMateri: widget.listMateri),
+            child: QuizPertemuanTable(pertemuan: widget.pertemuan),
           )
         ],
       ),
@@ -92,9 +87,8 @@ class _ListMateriState extends State<ListMateri> {
   }
 
   _showSimpleModalDialog(context) {
-    _urutanMateriController.clear();
-    _namaMateriController.clear();
-    _linkPDFController.clear();
+    _namapertemuanController.clear();
+    _deskripsiController.clear();
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -118,7 +112,7 @@ class _ListMateriState extends State<ListMateri> {
                           Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Text(
-                              "Tambah Materi",
+                              "Tambah Pertemuan",
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 16,
@@ -129,13 +123,13 @@ class _ListMateriState extends State<ListMateri> {
                           Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: TextFormField(
-                              controller: _urutanMateriController,
+                              controller: _namapertemuanController,
                               keyboardType: TextInputType.number,
                               inputFormatters: <TextInputFormatter>[
                                 FilteringTextInputFormatter.digitsOnly
                               ],
                               decoration: InputDecoration(
-                                labelText: "Urutan Materi (angka)",
+                                labelText: "Pertemuan Ke- (angka)",
                                 border: OutlineInputBorder(),
                               ),
                               validator: (value) {
@@ -149,25 +143,9 @@ class _ListMateriState extends State<ListMateri> {
                           Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: TextFormField(
-                              controller: _namaMateriController,
+                              controller: _deskripsiController,
                               decoration: InputDecoration(
-                                labelText: "Nama Materi",
-                                border: OutlineInputBorder(),
-                              ),
-                              validator: (value) {
-                                if (value!.isEmpty)
-                                  return 'Please enter a value';
-                                else
-                                  return null;
-                              },
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: TextFormField(
-                              controller: _linkPDFController,
-                              decoration: InputDecoration(
-                                labelText: "Link PDF Materi (cdn url)",
+                                labelText: "Deskripsi Pertemuan",
                                 border: OutlineInputBorder(),
                               ),
                               maxLines: 4,
@@ -201,11 +179,11 @@ class _ListMateriState extends State<ListMateri> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
-                                      _addMateriCheck();
+                                      _addPertemuan();
                                     }
                                   },
                                   child: const Text(
-                                    'Tambah Materi',
+                                    'Tambah Pertemuan',
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
                                       fontFamily: 'Montserrat',
@@ -233,62 +211,52 @@ class _ListMateriState extends State<ListMateri> {
         });
   }
 
-  void _addMateriCheck() async {
-    String urutan = _urutanMateriController.text;
-    String name = _namaMateriController.text;
-    String linkPdf = _linkPDFController.text;
+  Future<void> _addPertemuan() async {
+    String name = _namapertemuanController.text;
+    String deskripsi = _deskripsiController.text;
 
-    _listMateriRef = FirebaseDatabase.instance.ref().child('materialList');
+    _pertemuanRef = FirebaseDatabase.instance.ref().child('pertemuan');
+    final snapshot =
+        await _pertemuanRef.orderByChild('namaPertemuan').equalTo(name).get();
 
-    if (widget.listMateri.isEmpty) {
-      print("Belum ada data materi");
-      _saveMateri(urutan, name, linkPdf);
-    } else {
-      if (widget.listMateri.any((element) => element.urutanMateri == urutan)) {
-        // print(snapshot.value);
-        print("Urutan Materi Ke-${urutan} sudah ada");
+    if (snapshot.exists) {
+      // print(snapshot.value);
+      print("Data Pertemuan ${name} sudah ada");
 
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Urutan Materi Ke-${urutan} sudah ada'),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-        ));
-        Navigator.pop(context);
-      } else {
-        print('No data available.');
-        _saveMateri(urutan, name, linkPdf);
-      }
-    }
-  }
-
-  void _saveMateri(String urutan, String name, String linkPdf) async {
-    _listMateriRef.push().set({
-      'urutanMateri': urutan,
-      'namaMateri': name,
-      'linkPdf': linkPdf,
-      'idPertemuan': widget.idPertemuan,
-    }).then((_) {
-      // Data saved successfully!
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text('Data Materi berhasil ditambah!'),
+        content: Text('Data Pertemuan ${name} sudah ada!'),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
       ));
       Navigator.pop(context);
-    }).catchError((error) {
-      // The write failed...
-      print(error);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text('Data Materi gagal ditambah!'),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ),
-      ));
-    });
+    } else {
+      print('No data available.');
+      _pertemuanRef.push().set({
+        'namaPertemuan': name,
+        'description': deskripsi,
+      }).then((_) {
+        // Data saved successfully!
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text('Data Pertemuan berhasil ditambah!'),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+        ));
+        Navigator.pop(context);
+      }).catchError((error) {
+        // The write failed...
+        print(error);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: const Text('Data Pertemuan gagal ditambah!'),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+        ));
+      });
+    }
   }
 }

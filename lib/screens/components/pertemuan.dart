@@ -19,6 +19,7 @@ class _PertemuanState extends State<Pertemuan> {
   final TextEditingController _namapertemuanController =
       TextEditingController();
   final TextEditingController _deskripsiController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -102,102 +103,107 @@ class _PertemuanState extends State<Pertemuan> {
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Text(
-                            "Tambah Pertemuan",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 16,
-                              color: textColor,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: TextFormField(
-                            controller: _namapertemuanController,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            decoration: InputDecoration(
-                              labelText: "Pertemuan Ke- (angka)",
-                              border: OutlineInputBorder(),
-                            ),
-                            validator: (value) {
-                              if (value!.isEmpty)
-                                return 'Please enter a value';
-                              else
-                                return null;
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: TextFormField(
-                            controller: _deskripsiController,
-                            decoration: InputDecoration(
-                              labelText: "Deskripsi Pertemuan",
-                              border: OutlineInputBorder(),
-                            ),
-                            maxLines: 4,
-                            minLines: 3,
-                            validator: (value) {
-                              if (value!.isEmpty)
-                                return 'Please enter a value';
-                              else
-                                return null;
-                            },
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.circular(8), // <-- Radius
-                                ),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Text(
+                              "Tambah Pertemuan",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 16,
+                                color: textColor,
                               ),
-                              child: Text('Batal',
-                                  style: TextStyle(color: primaryColor)),
-                              onPressed: () {
-                                Navigator.pop(context);
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: TextFormField(
+                              controller: _namapertemuanController,
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                              decoration: InputDecoration(
+                                labelText: "Pertemuan Ke- (angka)",
+                                border: OutlineInputBorder(),
+                              ),
+                              validator: (value) {
+                                if (value!.isEmpty)
+                                  return 'Please enter a value';
+                                else
+                                  return null;
                               },
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  _addPertemuan();
-                                },
-                                child: const Text(
-                                  'Tambah Pertemuan',
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14.0,
-                                  ),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF5D60E2),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: TextFormField(
+                              controller: _deskripsiController,
+                              decoration: InputDecoration(
+                                labelText: "Deskripsi Pertemuan",
+                                border: OutlineInputBorder(),
+                              ),
+                              maxLines: 4,
+                              minLines: 3,
+                              validator: (value) {
+                                if (value!.isEmpty)
+                                  return 'Please enter a value';
+                                else
+                                  return null;
+                              },
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              OutlinedButton(
+                                style: OutlinedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
                                     borderRadius:
-                                        BorderRadius.circular(8), // <-- Radius
+                                    BorderRadius.circular(8), // <-- Radius
+                                  ),
+                                ),
+                                child: Text('Batal',
+                                    style: TextStyle(color: primaryColor)),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      _addPertemuan();
+                                    }
+                                  },
+                                  child: const Text(
+                                    'Tambah Pertemuan',
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14.0,
+                                    ),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF5D60E2),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                      BorderRadius.circular(8), // <-- Radius
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
                   ),
                 )),
           );

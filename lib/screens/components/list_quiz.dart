@@ -1,36 +1,44 @@
 import 'package:flutter/services.dart';
 import 'package:algopintar/models/mata_pelajaran_model.dart';
-import 'package:algopintar/screens/components/pertemuan_table.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:algopintar/constants/constants.dart';
+import 'list_quiz_table.dart';
 
-import 'list_materi_table.dart';
-
-class ListMateri extends StatefulWidget {
-  final List<MateriModel> listMateri;
+class ListQuiz extends StatefulWidget {
+  final List<Quizmodel> listQuiz;
   final String idPertemuan;
 
-  const ListMateri(
-      {Key? key, required this.listMateri, required this.idPertemuan})
+  const ListQuiz(
+      {Key? key, required this.listQuiz, required this.idPertemuan})
       : super(key: key);
 
   @override
-  State<ListMateri> createState() => _ListMateriState();
+  State<ListQuiz> createState() => _ListQuizState();
 }
 
-class _ListMateriState extends State<ListMateri> {
-  late DatabaseReference _listMateriRef;
-  final TextEditingController _urutanMateriController = TextEditingController();
-  final TextEditingController _namaMateriController = TextEditingController();
-  final TextEditingController _linkPDFController = TextEditingController();
+class _ListQuizState extends State<ListQuiz> {
+  late DatabaseReference _listQuizRef;
+  final TextEditingController _nomorSoalController = TextEditingController();
+  final TextEditingController _soalController = TextEditingController();
+  final TextEditingController _pilganAController = TextEditingController();
+  final TextEditingController _pilganBController = TextEditingController();
+  final TextEditingController _pilganCController = TextEditingController();
+  final TextEditingController _pilganDController = TextEditingController();
+  final TextEditingController _pilganEController = TextEditingController();
+  final TextEditingController _kunciJawabanController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
-    _urutanMateriController.dispose();
-    _namaMateriController.dispose();
-    _linkPDFController.dispose();
+    _nomorSoalController.dispose();
+    _soalController.dispose();
+    _pilganAController.dispose();
+    _pilganBController.dispose();
+    _pilganCController.dispose();
+    _pilganDController.dispose();
+    _pilganEController.dispose();
+    _kunciJawabanController.dispose();
     super.dispose();
   }
 
@@ -50,7 +58,7 @@ class _ListMateriState extends State<ListMateri> {
           Row(
             children: [
               Text(
-                "Data Materi",
+                "Data Soal Quiz tiap Pertemuan",
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 15,
@@ -63,7 +71,7 @@ class _ListMateriState extends State<ListMateri> {
                   _showSimpleModalDialog(context);
                 },
                 child: Text(
-                  "Tambah Materi",
+                  "Tambah Soal",
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
@@ -84,7 +92,7 @@ class _ListMateriState extends State<ListMateri> {
             ],
           ),
           Expanded(
-            child: ListMateriTable(listMateri: widget.listMateri),
+            child: ListQuizTable(listQuiz: widget.listQuiz),
           )
         ],
       ),
@@ -92,9 +100,15 @@ class _ListMateriState extends State<ListMateri> {
   }
 
   _showSimpleModalDialog(context) {
-    _urutanMateriController.clear();
-    _namaMateriController.clear();
-    _linkPDFController.clear();
+    _nomorSoalController.clear();
+    _soalController.clear();
+    _pilganAController.clear();
+    _pilganBController.clear();
+    _pilganCController.clear();
+    _pilganDController.clear();
+    _pilganEController.clear();
+    _kunciJawabanController.clear();
+
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -118,7 +132,7 @@ class _ListMateriState extends State<ListMateri> {
                           Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Text(
-                              "Tambah Materi",
+                              "Tambah Soal",
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 16,
@@ -129,13 +143,13 @@ class _ListMateriState extends State<ListMateri> {
                           Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: TextFormField(
-                              controller: _urutanMateriController,
+                              controller: _nomorSoalController,
                               keyboardType: TextInputType.number,
                               inputFormatters: <TextInputFormatter>[
                                 FilteringTextInputFormatter.digitsOnly
                               ],
                               decoration: InputDecoration(
-                                labelText: "Urutan Materi (angka)",
+                                labelText: "Nomor Soal (angka)",
                                 border: OutlineInputBorder(),
                               ),
                               validator: (value) {
@@ -149,9 +163,9 @@ class _ListMateriState extends State<ListMateri> {
                           Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: TextFormField(
-                              controller: _namaMateriController,
+                              controller: _soalController,
                               decoration: InputDecoration(
-                                labelText: "Nama Materi",
+                                labelText: "Soal",
                                 border: OutlineInputBorder(),
                               ),
                               validator: (value) {
@@ -165,9 +179,99 @@ class _ListMateriState extends State<ListMateri> {
                           Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: TextFormField(
-                              controller: _linkPDFController,
+                              controller: _pilganAController,
                               decoration: InputDecoration(
-                                labelText: "Link PDF Materi (cdn url)",
+                                labelText: "Deskripsi Pilgan A",
+                                border: OutlineInputBorder(),
+                              ),
+                              maxLines: 4,
+                              minLines: 3,
+                              validator: (value) {
+                                if (value!.isEmpty)
+                                  return 'Please enter a value';
+                                else
+                                  return null;
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: TextFormField(
+                              controller: _pilganBController,
+                              decoration: InputDecoration(
+                                labelText: "Deskripsi Pilgan B",
+                                border: OutlineInputBorder(),
+                              ),
+                              maxLines: 4,
+                              minLines: 3,
+                              validator: (value) {
+                                if (value!.isEmpty)
+                                  return 'Please enter a value';
+                                else
+                                  return null;
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: TextFormField(
+                              controller: _pilganCController,
+                              decoration: InputDecoration(
+                                labelText: "Deskripsi Pilgan C",
+                                border: OutlineInputBorder(),
+                              ),
+                              maxLines: 4,
+                              minLines: 3,
+                              validator: (value) {
+                                if (value!.isEmpty)
+                                  return 'Please enter a value';
+                                else
+                                  return null;
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: TextFormField(
+                              controller: _pilganDController,
+                              decoration: InputDecoration(
+                                labelText: "Deskripsi Pilgan D",
+                                border: OutlineInputBorder(),
+                              ),
+                              maxLines: 4,
+                              minLines: 3,
+                              validator: (value) {
+                                if (value!.isEmpty)
+                                  return 'Please enter a value';
+                                else
+                                  return null;
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: TextFormField(
+                              controller: _pilganEController,
+                              decoration: InputDecoration(
+                                labelText: "Deskripsi Pilgan E",
+                                border: OutlineInputBorder(),
+                              ),
+                              maxLines: 4,
+                              minLines: 3,
+                              validator: (value) {
+                                if (value!.isEmpty)
+                                  return 'Please enter a value';
+                                else
+                                  return null;
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: TextFormField(
+                              controller: _kunciJawabanController,
+                              decoration: InputDecoration(
+                                labelText: "Kunci Jawaban",
                                 border: OutlineInputBorder(),
                               ),
                               maxLines: 4,
@@ -201,11 +305,11 @@ class _ListMateriState extends State<ListMateri> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
-                                      _addMateriCheck();
+                                      _addsoalCheck();
                                     }
                                   },
                                   child: const Text(
-                                    'Tambah Materi',
+                                    'Tambah Soal',
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
                                       fontFamily: 'Montserrat',
@@ -233,23 +337,28 @@ class _ListMateriState extends State<ListMateri> {
         });
   }
 
-  void _addMateriCheck() async {
-    String urutan = _urutanMateriController.text;
-    String name = _namaMateriController.text;
-    String linkPdf = _linkPDFController.text;
+  void _addsoalCheck() async {
+    String nomorSoal = _nomorSoalController.text;
+    String soal = _soalController.text;
+    String pilganA = _pilganAController.text;
+    String pilganB = _pilganBController.text;
+    String pilganC = _pilganCController.text;
+    String pilganD = _pilganDController.text;
+    String pilganE = _pilganEController.text;
+    String kunciJawaban = _kunciJawabanController.text;
 
-    _listMateriRef = FirebaseDatabase.instance.ref().child('materialList');
+    _listQuizRef = FirebaseDatabase.instance.ref().child('soalQuizList');
 
-    if (widget.listMateri.isEmpty) {
-      print("Belum ada data materi");
-      _saveMateri(urutan, name, linkPdf);
+    if (widget.listQuiz.isEmpty) {
+      print("Belum ada data quiz");
+      _saveQuiz(nomorSoal, soal, pilganA, pilganB, pilganC, pilganD, pilganE, kunciJawaban);
     } else {
-      if (widget.listMateri.any((element) => element.urutanMateri == urutan)) {
+      if (widget.listQuiz.any((element) => element.nomorSoal == nomorSoal)) {
         // print(snapshot.value);
-        print("Urutan Materi Ke-${urutan} sudah ada");
+        print("Nomor Soal Ke-${nomorSoal} sudah ada");
 
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Urutan Materi Ke-${urutan} sudah ada'),
+          content: Text('Nomor Soal Ke-${nomorSoal} sudah ada'),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(24),
@@ -258,21 +367,26 @@ class _ListMateriState extends State<ListMateri> {
         Navigator.pop(context);
       } else {
         print('No data available.');
-        _saveMateri(urutan, name, linkPdf);
+        _saveQuiz(nomorSoal, soal, pilganA, pilganB, pilganC, pilganD, pilganE, kunciJawaban);
       }
     }
   }
 
-  void _saveMateri(String urutan, String name, String linkPdf) async {
-    _listMateriRef.push().set({
-      'urutanMateri': urutan,
-      'namaMateri': name,
-      'linkPdf': linkPdf,
+  void _saveQuiz(String nomorSoal, String soal, String pilganA, String pilganB, String pilganC, String pilganD, String pilganE, String kunciJawaban) async {
+    _listQuizRef.push().set({
+      'nomorSoal': nomorSoal,
+      'soal': soal,
+      'pilganA': pilganA,
+      'pilganB': pilganB,
+      'pilganC': pilganC,
+      'pilganD': pilganD,
+      'pilganE': pilganE,
+      'kunciJawaban': kunciJawaban,
       'idPertemuan': widget.idPertemuan,
     }).then((_) {
       // Data saved successfully!
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text('Data Materi berhasil ditambah!'),
+        content: const Text('Data Soal Quiz berhasil ditambah!'),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
@@ -283,7 +397,7 @@ class _ListMateriState extends State<ListMateri> {
       // The write failed...
       print(error);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: const Text('Data Materi gagal ditambah!'),
+        content: const Text('Data Soal Quiz gagal ditambah!'),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),

@@ -8,16 +8,16 @@ import '../../controllers/controller.dart';
 import '../../models/mata_pelajaran_model.dart';
 import '../dash_board_screen.dart';
 
-class PertemuanTable extends StatefulWidget {
+class QuizPertemuanTable extends StatefulWidget {
   final List<PertemuanModel> pertemuan;
 
-  const PertemuanTable({Key? key, required this.pertemuan}) : super(key: key);
+  const QuizPertemuanTable({Key? key, required this.pertemuan}) : super(key: key);
 
   @override
-  _PertemuanTableState createState() => _PertemuanTableState();
+  _QuizPertemuanTableState createState() => _QuizPertemuanTableState();
 }
 
-class _PertemuanTableState extends State<PertemuanTable> {
+class _QuizPertemuanTableState extends State<QuizPertemuanTable> {
   final TextEditingController _namapertemuanController =
       TextEditingController();
   final TextEditingController _deskripsiController = TextEditingController();
@@ -60,7 +60,7 @@ class _PertemuanTableState extends State<PertemuanTable> {
               // size: ColumnSize.L,
             ),
             DataColumn2(
-              label: Text('Detail Materi',
+              label: Text('Quiz tiap Pertemuan',
                   style: TextStyle(fontWeight: FontWeight.bold)),
               // size: ColumnSize.S,
               // fixedWidth: 200,
@@ -107,7 +107,7 @@ class _PertemuanTableState extends State<PertemuanTable> {
                                 )
                               ],
                                   child: DashBoardScreen.withIdPertemuan(
-                                    contentType: ContentType.ManageListMaterial,
+                                    contentType: ContentType.ManageListQuiz,
                                     idPertemuan: pertemuan.id,
                                   )),
                           transitionDuration: Duration.zero,
@@ -416,6 +416,4 @@ class _PertemuanTableState extends State<PertemuanTable> {
       ));
     });
   }
-
-
 }
