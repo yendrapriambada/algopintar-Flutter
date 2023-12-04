@@ -26,9 +26,9 @@ class Leaderboard extends StatelessWidget {
               Text(
                 'Papan Peringkat',
                 style: TextStyle(
-                  color: textColor,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 15,
+                  fontFamily: 'Montserrat',
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
                 ),
               ),
               // Text(
@@ -42,7 +42,7 @@ class Leaderboard extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: appPadding,
+            height: 4.0,
           ),
           Expanded(
             child: ListView.builder(

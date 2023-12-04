@@ -3,7 +3,7 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../models/mata_pelajaran_model.dart';
 
 class MateriScreen extends StatelessWidget {
-  final Map<dynamic, dynamic>? materi;
+  final Map<String, dynamic>? materi;
 
   const MateriScreen({Key? key, required this.materi}) : super(key: key);
 
@@ -29,10 +29,7 @@ class MateriScreen extends StatelessWidget {
               TextStyle(color: Color(0xff5D60E2), fontWeight: FontWeight.w500),
         ),
       ),
-      // body: SfPdfViewer.asset(
-      //   'assets/images/test.pdf',
-      // ),
-      body: SfPdfViewer.network(materi?['pdfUrl']),
+      body: SfPdfViewer.network(materi?['linkPdf']),
       bottomNavigationBar: BottomAppBar(
         shape: const CircularNotchedRectangle(),
         notchMargin: 5.0,
@@ -47,7 +44,7 @@ class MateriScreen extends StatelessWidget {
                 icon: const Icon(Icons.arrow_left),
                 onPressed: () {},
               ),
-              Text(materi?['title']),
+              Text(materi?['namaMateri']),
               IconButton(
                 icon: const Icon(Icons.arrow_right),
                 onPressed: () {},

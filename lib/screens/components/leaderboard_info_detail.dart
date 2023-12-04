@@ -12,6 +12,7 @@ class LeaderboardInfoDetail extends StatelessWidget {
       padding: EdgeInsets.all(appPadding / 2),
       child: Row(
         children: [
+          // Text('1'),
           ClipRRect(
             borderRadius: BorderRadius.circular(40),
             child: Image.network(

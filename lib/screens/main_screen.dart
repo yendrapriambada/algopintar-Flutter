@@ -2,11 +2,14 @@ import 'package:algopintar/data/data_static_subjects.dart';
 import 'package:algopintar/models/mata_pelajaran_model.dart';
 import 'package:algopintar/screens/landing_page_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:algopintar/screens/detail_materi_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'components/leaderboard.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -19,11 +22,40 @@ class _MainScreenState extends State<MainScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final DatabaseReference _database = FirebaseDatabase.instance.ref();
   String username = 'kawan';
+  late DatabaseReference _studentsRef;
+  List<Map<String, dynamic>> _students = [];
 
   @override
   void initState() {
     super.initState();
     getCurrentUsername();
+    _initializeDatabase();
+  }
+
+  Future<void> _initializeDatabase() async {
+    // for leaderboard
+    await Firebase.initializeApp();
+    _studentsRef = FirebaseDatabase.instance.ref().child('users');
+
+    _studentsRef.onValue.listen((event) {
+      if (event.snapshot.value != null) {
+        Map<String, dynamic> studentsMap =
+            event.snapshot.value as Map<String, dynamic>;
+        // print(studentsMap);
+        _updateStudentsList(studentsMap);
+      }
+    });
+  }
+
+  void _updateStudentsList(Map<String, dynamic> studentsMap) {
+    _students.clear();
+    studentsMap.forEach((key, value) {
+      print(value);
+      if (value['role'] == 'student') {
+        _students.add(value);
+      }
+    });
+    setState(() {}); // Trigger widget rebuild after updating data
   }
 
   Future<void> getCurrentUsername() async {
@@ -50,12 +82,14 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(username);
+    print(_students);
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         if (constraints.maxWidth > 800) {
-          return HomepageWeb(username: username);
+          return HomepageWeb(username: username, students: _students);
         } else {
-          return HomepageMobile(username: username);
+          return HomepageMobile(username: username, students: _students);
         }
       },
     );
@@ -64,7 +98,10 @@ class _MainScreenState extends State<MainScreen> {
 
 class HomepageWeb extends StatefulWidget {
   final String username;
-  const HomepageWeb({Key? key, required this.username}) : super(key: key);
+  final List<Map<String, dynamic>> students;
+
+  const HomepageWeb({Key? key, required this.username, required this.students})
+      : super(key: key);
 
   @override
   State<HomepageWeb> createState() => _HomepageWebState();
@@ -99,10 +136,14 @@ class _HomepageWebState extends State<HomepageWeb> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const CircleAvatar(
-                                backgroundImage:
-                                    AssetImage('images/default_profilepic.png'),
-                                radius: 30,
+                              ClipRRect(
+                                child: Image.network(
+                                  'https://api.dicebear.com/7.x/adventurer/png?seed=${widget.username}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf',
+                                  height: 55,
+                                  width: 55,
+                                  fit: BoxFit.cover,
+                                ),
+                                borderRadius: BorderRadius.circular(30),
                               ),
                               // screenWidth <= 1200
                               //     ? const SizedBox()
@@ -191,10 +232,41 @@ class _HomepageWebState extends State<HomepageWeb> {
                                           Expanded(
                                             flex: 1,
                                             child: Hero(
-                                              tag: "cover_pemilihan",
-                                              child: Image.asset(
-                                                  'images/img_cover_pemilihan.png'),
-                                            ),
+                                                tag: '1',
+                                                child: Stack(
+                                                    alignment: Alignment.center,
+                                                    children: <Widget>[
+                                                      ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                        child: Image.asset(
+                                                          'images/pertemuan.png',
+                                                          fit: BoxFit.cover,
+                                                          width: 80,
+                                                          height: 80,
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(top: 8.0),
+                                                        child: Text(
+                                                          '1',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style:
+                                                              const TextStyle(
+                                                            fontFamily:
+                                                                'Montserrat',
+                                                            fontSize: 22.0,
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ])),
                                           ),
                                           const SizedBox(width: 8),
                                           const Expanded(
@@ -206,7 +278,7 @@ class _HomepageWebState extends State<HomepageWeb> {
                                                     CrossAxisAlignment.start,
                                                 children: <Widget>[
                                                   Text(
-                                                    "Algoritma Pemilihan",
+                                                    "Pertemuan 1",
                                                     textAlign: TextAlign.start,
                                                     style: TextStyle(
                                                       fontFamily: 'Montserrat',
@@ -221,7 +293,7 @@ class _HomepageWebState extends State<HomepageWeb> {
                                                       Expanded(
                                                           child:
                                                               LinearProgressIndicator(
-                                                        value: 0.7,
+                                                        value: 0.1,
                                                         color: Colors.green,
                                                         backgroundColor:
                                                             Colors.orangeAccent,
@@ -230,7 +302,7 @@ class _HomepageWebState extends State<HomepageWeb> {
                                                       Center(
                                                         // this widget is not nessesary
                                                         child: Text(
-                                                          '70%',
+                                                          '10%',
                                                           style: TextStyle(
                                                             fontFamily:
                                                                 'Montserrat',
@@ -257,60 +329,18 @@ class _HomepageWebState extends State<HomepageWeb> {
                             ),
                           ),
                           Container(
-                            margin: const EdgeInsets.only(top: 8.0, left: 16.0),
-                            child: const Text(
-                              "Papan Peringkat",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                          Container(
                             margin: const EdgeInsets.only(
                                 left: 16.0, right: 16.0, bottom: 8.0),
-                            child: DataTable(
-                              columns: const [
-                                DataColumn(
-                                    label: Text('ID',
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold))),
-                                DataColumn(
-                                    label: Text('Name',
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold))),
-                                DataColumn(
-                                    label: Text('Score',
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold))),
-                              ],
-                              rows: const [
-                                DataRow(cells: [
-                                  DataCell(Text('1')),
-                                  DataCell(Text('Stephen')),
-                                  DataCell(Text('100')),
-                                ]),
-                                DataRow(cells: [
-                                  DataCell(Text('2')),
-                                  DataCell(Text('John')),
-                                  DataCell(Text('90')),
-                                ]),
-                                DataRow(cells: [
-                                  DataCell(Text('3')),
-                                  DataCell(Text('Harry')),
-                                  DataCell(Text('80')),
-                                ]),
-                                DataRow(cells: [
-                                  DataCell(Text('4')),
-                                  DataCell(Text('Peter')),
-                                  DataCell(Text('75')),
-                                ]),
-                              ],
+                            child: SizedBox(
+                              height: 372,
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: Leaderboard(
+                                  students: widget.students,
+                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -319,6 +349,9 @@ class _HomepageWebState extends State<HomepageWeb> {
                     const SizedBox(width: 32),
                     Expanded(
                       child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
                         child: Container(
                           padding: const EdgeInsets.all(16),
                           child: Column(
@@ -340,58 +373,96 @@ class _HomepageWebState extends State<HomepageWeb> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     SizedBox(
-                                      height: 500,
-                                      child: FirebaseAnimatedList(
-                                          padding: const EdgeInsets.only(top: 0),
-                                          query: FirebaseDatabase.instance.ref('pertemuan'),
-                                          itemBuilder: (context, snapshot, animation, index) {
-                                            Map<dynamic, dynamic>? dataPertemuan = snapshot.value as Map<dynamic, dynamic>?;
+                                        height: 500,
+                                        child: FirebaseAnimatedList(
+                                            padding:
+                                                const EdgeInsets.only(top: 0),
+                                            query: FirebaseDatabase.instance
+                                                .ref('pertemuan'),
+                                            itemBuilder: (context, snapshot,
+                                                animation, index) {
+                                              Map<String, dynamic>?
+                                                  dataPertemuan = snapshot.value
+                                                      as Map<String, dynamic>?;
+                                              var idPertemuan = snapshot.key;
 
-                                            return Card(
-                                              child: ListTile(
-                                                leading: Hero(
-                                                    tag: dataPertemuan?['name'],
-                                                    child: Stack(
-                                                        alignment: Alignment.center,
-                                                        children: <Widget>[
-                                                          ClipRRect(
-                                                            borderRadius: BorderRadius.circular(10.0),
-                                                            child: Image.asset(
-                                                              'images/pertemuan.png',
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding: const EdgeInsets.only(top: 8.0),
-                                                            child: Text(
-                                                              dataPertemuan?['name'][10],
-                                                              textAlign: TextAlign.center,
-                                                              style: const TextStyle(
-                                                                fontFamily: 'Montserrat',
-                                                                fontSize: 12.0,
-                                                                color: Colors.white,
-                                                                fontWeight: FontWeight.bold,
+                                              return Card(
+                                                child: ListTile(
+                                                  visualDensity: VisualDensity(
+                                                      horizontal: 1,
+                                                      vertical: 1),
+                                                  leading: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 6.0,
+                                                            bottom: 6.0),
+                                                    child: Hero(
+                                                        tag: dataPertemuan?[
+                                                            'namaPertemuan'],
+                                                        child: Stack(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            children: <Widget>[
+                                                              ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10.0),
+                                                                child:
+                                                                    Image.asset(
+                                                                  'images/pertemuan.png',
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ),
-                                                        ]
-                                                    )),
-                                                title: Text(dataPertemuan?['name'] as String),
-                                                subtitle: Text(dataPertemuan?['numOfSubs'] as String),
-                                                trailing: Icon(Icons.navigate_next),
-                                                onTap: () {
-                                                  Navigator.push(context,
-                                                      MaterialPageRoute(builder: (context) {
-                                                        return DetailMateri(dataPertemuan: dataPertemuan);
-                                                      }
-                                                      )
-                                                  );
-                                                },
-                                              ),
-                                            );
-                                          }
-                                      )
-                                    ),
+                                                              Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                        top:
+                                                                            8.0),
+                                                                child: Text(
+                                                                  dataPertemuan?[
+                                                                      'namaPertemuan'],
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                    fontSize:
+                                                                        12.0,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ])),
+                                                  ),
+                                                  title: Text(
+                                                      'Pertemuan ${dataPertemuan?['namaPertemuan'] as String}'),
+                                                  // subtitle: Text('4 Sub Materi'),
+                                                  trailing:
+                                                      Icon(Icons.navigate_next),
+                                                  onTap: () {
+                                                    Navigator.push(context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) {
+                                                      return DetailMateri(
+                                                        dataPertemuan:
+                                                            dataPertemuan,
+                                                        idPertemuan:
+                                                            idPertemuan,
+                                                      );
+                                                    }));
+                                                  },
+                                                ),
+                                              );
+                                            })),
                                   ]),
                             ],
                           ),
@@ -411,8 +482,11 @@ class _HomepageWebState extends State<HomepageWeb> {
 
 class HomepageMobile extends StatefulWidget {
   final String username;
-  const HomepageMobile({required this.username, Key? key}) : super(key: key);
+  final List<Map<String, dynamic>> students;
 
+  const HomepageMobile(
+      {Key? key, required this.username, required this.students})
+      : super(key: key);
 
   @override
   State<HomepageMobile> createState() => _HomepageMobileState();
@@ -434,10 +508,14 @@ class _HomepageMobileState extends State<HomepageMobile> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const CircleAvatar(
-                        backgroundImage:
-                            AssetImage('images/default_profilepic.png'),
-                        radius: 30,
+                      ClipRRect(
+                        child: Image.network(
+                          'https://api.dicebear.com/7.x/adventurer/png?seed=${widget.username}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf',
+                          height: 55,
+                          width: 55,
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.circular(30),
                       ),
                       Card(
                         shape: RoundedRectangleBorder(
@@ -469,10 +547,8 @@ class _HomepageMobileState extends State<HomepageMobile> {
                 textAlign: TextAlign.start,
                 style: const TextStyle(
                   fontFamily: 'Montserrat',
-                  // Use the font family name specified in pubspec.yaml
                   fontWeight: FontWeight.bold,
-                  // Set the fontWeight to bold
-                  fontSize: 20, // Set the font size as needed
+                  fontSize: 20,
                 ),
               ),
             ),
@@ -515,10 +591,35 @@ class _HomepageMobileState extends State<HomepageMobile> {
                             Expanded(
                               flex: 1,
                               child: Hero(
-                                tag: "cover_pemilihan",
-                                child: Image.asset(
-                                    'images/img_cover_pemilihan.png'),
-                              ),
+                                  tag: '12',
+                                  child: Stack(
+                                      alignment: Alignment.center,
+                                      children: <Widget>[
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          child: Image.asset(
+                                            'images/pertemuan.png',
+                                            fit: BoxFit.cover,
+                                            width: 80,
+                                            height: 80,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: Text(
+                                            '1',
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontSize: 22.0,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ])),
                             ),
                             const SizedBox(width: 8),
                             const Expanded(
@@ -529,7 +630,7 @@ class _HomepageMobileState extends State<HomepageMobile> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Text(
-                                      "Algoritma Pemilihan",
+                                      "Pertemuan 1",
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
                                         fontFamily: 'Montserrat',
@@ -543,7 +644,7 @@ class _HomepageMobileState extends State<HomepageMobile> {
                                       children: <Widget>[
                                         Expanded(
                                             child: LinearProgressIndicator(
-                                          value: 0.7,
+                                          value: 0.1,
                                           color: Colors.green,
                                           backgroundColor: Colors.orangeAccent,
                                         )),
@@ -551,7 +652,7 @@ class _HomepageMobileState extends State<HomepageMobile> {
                                         Center(
                                           // this widget is not nessesary
                                           child: Text(
-                                            '70%',
+                                            '10%',
                                             style: TextStyle(
                                               fontFamily: 'Montserrat',
                                               fontSize: 14,
@@ -589,112 +690,83 @@ class _HomepageMobileState extends State<HomepageMobile> {
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
+              margin:
+                  const EdgeInsets.only(left: 16.0, bottom: 8.0, right: 16.0),
               child: SizedBox(
-                height: 280.0,
-                child: FirebaseAnimatedList(
-                  padding: const EdgeInsets.only(top: 0),
-                  query: FirebaseDatabase.instance.ref('pertemuan'),
-                  itemBuilder: (context, snapshot, animation, index) {
-                    Map<dynamic, dynamic>? dataPertemuan = snapshot.value as Map<dynamic, dynamic>?;
+                  height: 280.0,
+                  child: FirebaseAnimatedList(
+                      padding: const EdgeInsets.only(top: 0),
+                      query: FirebaseDatabase.instance.ref('pertemuan'),
+                      itemBuilder: (context, snapshot, animation, index) {
+                        Map<String, dynamic>? dataPertemuan =
+                            snapshot.value as Map<String, dynamic>?;
+                        var idPertemuan = snapshot.key;
 
-                    return Card(
-                      child: ListTile(
-                        leading: Hero(
-                            tag: dataPertemuan?['name'],
-                            child: Stack(
-                                alignment: Alignment.center,
-                                children: <Widget>[
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    child: Image.asset(
-                                      dataPertemuan?['imageAsset'],
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
-                                    child: Text(
-                                      dataPertemuan?['name'][10],
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 12.0,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ]
-                            )),
-                        title: Text(dataPertemuan?['name'] as String),
-                        subtitle: Text(dataPertemuan?['numOfSubs'] as String),
-                        trailing: Icon(Icons.navigate_next),
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                                return DetailMateri(dataPertemuan: dataPertemuan);
-                              }
-                              )
-                          );
-                        },
-                      ),
-                    );
-                  }
-                )
-              ),
+                        return Card(
+                          child: ListTile(
+                            visualDensity:
+                                VisualDensity(horizontal: 1, vertical: 1),
+                            leading: Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 6.0, bottom: 6.0),
+                              child: Hero(
+                                  tag: dataPertemuan?['namaPertemuan'],
+                                  child: Stack(
+                                      alignment: Alignment.center,
+                                      children: <Widget>[
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          child: Image.asset(
+                                            'images/pertemuan.png',
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 8.0),
+                                          child: Text(
+                                            dataPertemuan?['namaPertemuan'],
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontSize: 12.0,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ])),
+                            ),
+                            title: Text(
+                                'Pertemuan ${dataPertemuan?['namaPertemuan'] as String}'),
+                            // subtitle: Text('4 Sub Materi'),
+                            trailing: Icon(Icons.navigate_next),
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return DetailMateri(
+                                    dataPertemuan: dataPertemuan,
+                                    idPertemuan: idPertemuan);
+                              }));
+                            },
+                          ),
+                        );
+                      })),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 8.0, left: 16.0),
-              child: const Text(
-                "Papan Peringkat",
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+              margin:
+                  const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
+              child: SizedBox(
+                height: 550,
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Leaderboard(
+                    students: widget.students,
+                  ),
                 ),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(left: 16.0, bottom: 8.0),
-              child: DataTable(
-                columns: const [
-                  DataColumn(
-                      label: Text('ID',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold))),
-                  DataColumn(
-                      label: Text('Name',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold))),
-                  DataColumn(
-                      label: Text('Score',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold))),
-                ],
-                rows: const [
-                  DataRow(cells: [
-                    DataCell(Text('1')),
-                    DataCell(Text('Stephen')),
-                    DataCell(Text('100')),
-                  ]),
-                  DataRow(cells: [
-                    DataCell(Text('2')),
-                    DataCell(Text('John')),
-                    DataCell(Text('90')),
-                  ]),
-                  DataRow(cells: [
-                    DataCell(Text('3')),
-                    DataCell(Text('Harry')),
-                    DataCell(Text('80')),
-                  ]),
-                  DataRow(cells: [
-                    DataCell(Text('4')),
-                    DataCell(Text('Peter')),
-                    DataCell(Text('75')),
-                  ]),
-                ],
               ),
             ),
           ],

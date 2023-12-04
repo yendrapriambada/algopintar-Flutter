@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:algopintar/screens/dash_board_screen.dart';
 import 'package:algopintar/screens/landing_page_screen.dart';
+import 'package:algopintar/screens/materi_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:algopintar/screens/main_screen.dart';
@@ -92,12 +93,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => Controller(),)
-        ],
-        child: DashBoardScreen(contentType: ContentType.Material,),
-      ),
+      home: MainScreen(),
+      // home: MultiProvider(
+      //   providers: [
+      //     ChangeNotifierProvider(create: (context) => Controller(),)
+      //   ],
+      //   child: DashBoardScreen(contentType: ContentType.Material,),
+      // ),
       // routes: {
       //   '/': (context) => SplashScreen(
       //         child: getInitialRoute(screenWidth),

@@ -1,11 +1,57 @@
 import 'package:algopintar/models/mata_pelajaran_model.dart';
 import 'package:algopintar/screens/materi_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-class DetailMateri extends StatelessWidget {
-  final Map<dynamic, dynamic>? dataPertemuan;
+class DetailMateri extends StatefulWidget {
+  final Map<String, dynamic>? dataPertemuan;
+  final String? idPertemuan;
 
-  const DetailMateri({Key? key, required this.dataPertemuan}) : super(key: key);
+  const DetailMateri(
+      {Key? key, required this.dataPertemuan, required this.idPertemuan})
+      : super(key: key);
+
+  @override
+  State<DetailMateri> createState() => _DetailMateriState();
+}
+
+class _DetailMateriState extends State<DetailMateri> {
+  late DatabaseReference _materialList;
+  List<Map<String, dynamic>> _materials = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeDatabase();
+  }
+
+  Future<void> _initializeDatabase() async {
+    // for leaderboard
+    await Firebase.initializeApp();
+    _materialList = FirebaseDatabase.instance.ref().child('materialList');
+
+    _materialList.onValue.listen((event) {
+      if (event.snapshot.value != null) {
+        Map<String, dynamic> materialsMap =
+            event.snapshot.value as Map<String, dynamic>;
+        // print(materialsMap);
+        _updateMaterialList(materialsMap);
+      }
+    });
+  }
+
+  void _updateMaterialList(Map<String, dynamic> materialsMap) {
+    _materials.clear();
+    materialsMap.forEach((key, value) {
+      print(value);
+      if (value['idPertemuan'] == widget.idPertemuan) {
+        _materials.add(value);
+      }
+    });
+    _materials.sort((a, b) => a['urutanMateri'].compareTo(b['urutanMateri']));
+    setState(() {}); // Trigger widget rebuild after updating data
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +59,15 @@ class DetailMateri extends StatelessWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         if (constraints.maxWidth > 800) {
           return DetailWebPage(
-            dataPertemuan: dataPertemuan,
+            dataPertemuan: widget.dataPertemuan,
+            idPertemuan: widget.idPertemuan,
+            materials: _materials,
           );
         } else {
           return DetailMobilePage(
-            dataPertemuan: dataPertemuan,
+            dataPertemuan: widget.dataPertemuan,
+            idPertemuan: widget.idPertemuan,
+            materials: _materials,
           );
         }
       },
@@ -26,9 +76,16 @@ class DetailMateri extends StatelessWidget {
 }
 
 class DetailWebPage extends StatelessWidget {
-  final Map<dynamic, dynamic>? dataPertemuan;
+  final Map<String, dynamic>? dataPertemuan;
+  final String? idPertemuan;
+  final List<Map<String, dynamic>> materials;
 
-  const DetailWebPage({Key? key, required this.dataPertemuan}) : super(key: key);
+  const DetailWebPage(
+      {Key? key,
+      required this.dataPertemuan,
+      required this.idPertemuan,
+      required this.materials})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +129,7 @@ class DetailWebPage extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            dataPertemuan?['nama'],
+                            'Pertemuan ${dataPertemuan?['namaPertemuan']}',
                             textAlign: TextAlign.start,
                             style: const TextStyle(
                               fontFamily: 'Montserrat',
@@ -85,17 +142,32 @@ class DetailWebPage extends StatelessWidget {
                       ),
                       Center(
                         child: Hero(
-                            tag: dataPertemuan?['nama'],
-                            child: SizedBox(
-                              height: 325,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(25.0),
-                                child: Image.asset(
-                                  dataPertemuan?['imageAsset'],
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            )),
+                            tag: dataPertemuan?['namaPertemuan'],
+                            child: Stack(
+                                alignment: Alignment.center,
+                                children: <Widget>[
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    child: Image.asset(
+                                      height: 255,
+                                      'images/pertemuan.png',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      dataPertemuan?['namaPertemuan'],
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        fontSize: 42.0,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ])),
                       ),
                       const SizedBox(
                         height: 16,
@@ -104,7 +176,7 @@ class DetailWebPage extends StatelessWidget {
                         margin: const EdgeInsets.only(
                             top: 8.0, left: 16.0, right: 16.0),
                         child: Text(
-                         dataPertemuan?['description'],
+                          dataPertemuan?['description'],
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontFamily: 'Montserrat',
@@ -141,17 +213,25 @@ class DetailWebPage extends StatelessWidget {
                           Container(
                             margin: const EdgeInsets.only(
                                 top: 8.0, left: 16.0, right: 16.0),
-                            child: ListView.builder(
-                              padding: const EdgeInsets.all(0),
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: dataPertemuan?['materialList'].length,
-                              itemBuilder: (context, index) {
-                                final Map<dynamic, dynamic>? material =
-                                dataPertemuan?['materialList'][index];
-                                return getListMateri(material, context);
-                              },
-                            ),
+                            child: materials.isEmpty
+                                ? Text(
+                                    "Materi tidak ada",
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 14.0,
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    padding: const EdgeInsets.all(0),
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    itemCount: materials.length,
+                                    itemBuilder: (context, index) {
+                                      var material = materials[index];
+                                      return getListMateri(material, context);
+                                    },
+                                  ),
                           ),
                           Container(
                               margin: const EdgeInsets.only(
@@ -164,13 +244,13 @@ class DetailWebPage extends StatelessWidget {
                                 height: 50,
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => MateriScreen(
-                                            materi: dataPertemuan?['materialList'][0]),
-                                      ),
-                                    );
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) => MateriScreen(
+                                    //         materi: dataPertemuan?['materialList'][0]),
+                                    //   ),
+                                    // );
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF5D60E2),
@@ -206,9 +286,16 @@ class DetailWebPage extends StatelessWidget {
 }
 
 class DetailMobilePage extends StatelessWidget {
-  final Map<dynamic, dynamic>? dataPertemuan;
+  final Map<String, dynamic>? dataPertemuan;
+  final String? idPertemuan;
+  final List<Map<String, dynamic>> materials;
 
-  const DetailMobilePage({Key? key, required this.dataPertemuan}) : super(key: key);
+  const DetailMobilePage(
+      {Key? key,
+      required this.dataPertemuan,
+      required this.idPertemuan,
+      required this.materials})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -222,35 +309,33 @@ class DetailMobilePage extends StatelessWidget {
               children: <Widget>[
                 Center(
                   child: Hero(
-                      tag: dataPertemuan?['name'],
+                      tag: dataPertemuan?['namaPertemuan'],
                       child: SizedBox(
-                        height: 325,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: <Widget>[
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(25.0),
-                              child: Image.asset(
-                                dataPertemuan?['imageAsset'],
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 32.0),
-                              child: Text(
-                                dataPertemuan?['name'][10],
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 82.0,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                          height: 300,
+                          child: Stack(
+                              alignment: Alignment.center,
+                              children: <Widget>[
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(25.0),
+                                  child: Image.asset(
+                                    'images/pertemuan.png',
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ]
-                        )
-                      )),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 32.0),
+                                  child: Text(
+                                    dataPertemuan?['namaPertemuan'],
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 41.0,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ]))),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -282,7 +367,7 @@ class DetailMobilePage extends StatelessWidget {
           Container(
             margin: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
             child: Text(
-              dataPertemuan?['name'],
+              'Pertemuan ${dataPertemuan?['namaPertemuan']}',
               textAlign: TextAlign.start,
               style: const TextStyle(
                 fontFamily: 'Montserrat',
@@ -316,16 +401,24 @@ class DetailMobilePage extends StatelessWidget {
           ),
           Container(
             margin: const EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
-            child: ListView.builder(
-              padding: const EdgeInsets.all(0),
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: dataPertemuan?['materialList'].length,
-              itemBuilder: (context, index) {
-                final Map<dynamic, dynamic>? material = dataPertemuan?['materialList'][index];
-                return getListMateri(material, context);
-              },
-            ),
+            child: materials.isEmpty
+                ? Text(
+                    "Materi tidak ada",
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                      fontSize: 14.0,
+                    ),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.all(0),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: materials.length,
+                    itemBuilder: (context, index) {
+                      var material = materials[index];
+                      return getListMateri(material, context);
+                    },
+                  ),
           ),
           Container(
               margin: const EdgeInsets.only(
@@ -335,13 +428,13 @@ class DetailMobilePage extends StatelessWidget {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            MateriScreen(materi: dataPertemuan?['materialList'][0]),
-                      ),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) =>
+                    //         MateriScreen(materi: dataPertemuan?['materialList'][0]),
+                    //   ),
+                    // );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF5D60E2),
@@ -367,13 +460,13 @@ class DetailMobilePage extends StatelessWidget {
   }
 }
 
-Widget getListMateri(Map<dynamic, dynamic>? materi, BuildContext context) {
+Widget getListMateri(Map<String, dynamic>? materi, BuildContext context) {
   return Card(
     child: ListTile(
         visualDensity: const VisualDensity(horizontal: 0, vertical: -3),
         leading: const Icon(Icons.check_circle_rounded, color: Colors.green),
         title: Text(
-          materi?['title'],
+          materi?['namaMateri'],
           style: const TextStyle(
             fontFamily: 'Montserrat',
             fontSize: 14.0,
@@ -386,8 +479,7 @@ Widget getListMateri(Map<dynamic, dynamic>? materi, BuildContext context) {
               builder: (context) => MateriScreen(materi: materi),
             ),
           );
-        }
-        ),
+        }),
   );
 }
 
