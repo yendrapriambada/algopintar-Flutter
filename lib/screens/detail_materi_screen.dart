@@ -5,7 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class DetailMateri extends StatefulWidget {
-  final Map<String, dynamic>? dataPertemuan;
+  final Map<dynamic, dynamic>? dataPertemuan;
   final String? idPertemuan;
 
   const DetailMateri(
@@ -18,7 +18,7 @@ class DetailMateri extends StatefulWidget {
 
 class _DetailMateriState extends State<DetailMateri> {
   late DatabaseReference _materialList;
-  List<Map<String, dynamic>> _materials = [];
+  List<Map<dynamic, dynamic>> _materials = [];
 
   @override
   void initState() {
@@ -33,15 +33,15 @@ class _DetailMateriState extends State<DetailMateri> {
 
     _materialList.onValue.listen((event) {
       if (event.snapshot.value != null) {
-        Map<String, dynamic> materialsMap =
-            event.snapshot.value as Map<String, dynamic>;
+        Map<dynamic, dynamic> materialsMap =
+            event.snapshot.value as Map<dynamic, dynamic>;
         // print(materialsMap);
         _updateMaterialList(materialsMap);
       }
     });
   }
 
-  void _updateMaterialList(Map<String, dynamic> materialsMap) {
+  void _updateMaterialList(Map<dynamic, dynamic> materialsMap) {
     _materials.clear();
     materialsMap.forEach((key, value) {
       print(value);
@@ -76,9 +76,9 @@ class _DetailMateriState extends State<DetailMateri> {
 }
 
 class DetailWebPage extends StatelessWidget {
-  final Map<String, dynamic>? dataPertemuan;
+  final Map<dynamic, dynamic>? dataPertemuan;
   final String? idPertemuan;
-  final List<Map<String, dynamic>> materials;
+  final List<Map<dynamic, dynamic>> materials;
 
   const DetailWebPage(
       {Key? key,
@@ -286,9 +286,9 @@ class DetailWebPage extends StatelessWidget {
 }
 
 class DetailMobilePage extends StatelessWidget {
-  final Map<String, dynamic>? dataPertemuan;
+  final Map<dynamic, dynamic>? dataPertemuan;
   final String? idPertemuan;
-  final List<Map<String, dynamic>> materials;
+  final List<Map<dynamic, dynamic>> materials;
 
   const DetailMobilePage(
       {Key? key,
@@ -460,7 +460,7 @@ class DetailMobilePage extends StatelessWidget {
   }
 }
 
-Widget getListMateri(Map<String, dynamic>? materi, BuildContext context) {
+Widget getListMateri(Map<dynamic, dynamic>? materi, BuildContext context) {
   return Card(
     child: ListTile(
         visualDensity: const VisualDensity(horizontal: 0, vertical: -3),

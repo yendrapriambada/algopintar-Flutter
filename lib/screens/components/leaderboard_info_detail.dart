@@ -8,7 +8,7 @@ class LeaderboardInfoDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: appPadding),
+      // margin: EdgeInsets.only(top: appPadding),
       padding: EdgeInsets.all(appPadding / 2),
       child: Row(
         children: [

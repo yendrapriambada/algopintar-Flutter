@@ -23,7 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   final DatabaseReference _database = FirebaseDatabase.instance.ref();
   String username = 'kawan';
   late DatabaseReference _studentsRef;
-  List<Map<String, dynamic>> _students = [];
+  List<Map<dynamic, dynamic>> _students = [];
 
   @override
   void initState() {
@@ -34,20 +34,21 @@ class _MainScreenState extends State<MainScreen> {
 
   Future<void> _initializeDatabase() async {
     // for leaderboard
+    print("flag");
     await Firebase.initializeApp();
-    _studentsRef = FirebaseDatabase.instance.ref().child('users');
-
+    _studentsRef = FirebaseDatabase.instance.ref('users');
+    // print("debug: ${_studentsRef}");
     _studentsRef.onValue.listen((event) {
       if (event.snapshot.value != null) {
-        Map<String, dynamic> studentsMap =
-            event.snapshot.value as Map<String, dynamic>;
-        // print(studentsMap);
+        Map<dynamic, dynamic> studentsMap =
+            event.snapshot.value as Map<dynamic, dynamic>;
+
         _updateStudentsList(studentsMap);
       }
     });
   }
 
-  void _updateStudentsList(Map<String, dynamic> studentsMap) {
+  void _updateStudentsList(Map<dynamic, dynamic> studentsMap) {
     _students.clear();
     studentsMap.forEach((key, value) {
       print(value);
@@ -82,8 +83,8 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(username);
-    print(_students);
+    print("username: ${username}");
+    print("students: ${_students}");
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         if (constraints.maxWidth > 800) {
@@ -98,7 +99,7 @@ class _MainScreenState extends State<MainScreen> {
 
 class HomepageWeb extends StatefulWidget {
   final String username;
-  final List<Map<String, dynamic>> students;
+  final List<Map<dynamic, dynamic>> students;
 
   const HomepageWeb({Key? key, required this.username, required this.students})
       : super(key: key);
@@ -381,9 +382,9 @@ class _HomepageWebState extends State<HomepageWeb> {
                                                 .ref('pertemuan'),
                                             itemBuilder: (context, snapshot,
                                                 animation, index) {
-                                              Map<String, dynamic>?
+                                              Map<dynamic, dynamic>?
                                                   dataPertemuan = snapshot.value
-                                                      as Map<String, dynamic>?;
+                                                      as Map<dynamic, dynamic>?;
                                               var idPertemuan = snapshot.key;
 
                                               return Card(
@@ -482,7 +483,7 @@ class _HomepageWebState extends State<HomepageWeb> {
 
 class HomepageMobile extends StatefulWidget {
   final String username;
-  final List<Map<String, dynamic>> students;
+  final List<Map<dynamic, dynamic>> students;
 
   const HomepageMobile(
       {Key? key, required this.username, required this.students})
@@ -698,8 +699,8 @@ class _HomepageMobileState extends State<HomepageMobile> {
                       padding: const EdgeInsets.only(top: 0),
                       query: FirebaseDatabase.instance.ref('pertemuan'),
                       itemBuilder: (context, snapshot, animation, index) {
-                        Map<String, dynamic>? dataPertemuan =
-                            snapshot.value as Map<String, dynamic>?;
+                        Map<dynamic, dynamic>? dataPertemuan =
+                            snapshot.value as Map<dynamic, dynamic>?;
                         var idPertemuan = snapshot.key;
 
                         return Card(
@@ -758,7 +759,7 @@ class _HomepageMobileState extends State<HomepageMobile> {
               margin:
                   const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
               child: SizedBox(
-                height: 550,
+                height: 350,
                 child: Card(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),

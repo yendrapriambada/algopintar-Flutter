@@ -93,26 +93,26 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MainScreen(),
+      // home: MainScreen(),
       // home: MultiProvider(
       //   providers: [
       //     ChangeNotifierProvider(create: (context) => Controller(),)
       //   ],
       //   child: DashBoardScreen(contentType: ContentType.Material,),
       // ),
-      // routes: {
-      //   '/': (context) => SplashScreen(
-      //         child: getInitialRoute(screenWidth),
-      //       ),
-      //   '/landingPage': (context) => const LandingPage(),
-      //   '/login': (context) => const LoginScreen(),
-      //   '/signUp': (context) => const SignupScreen(),
-      //   '/home': (context) => preventAccessRight('/home'),
-      //   '/teacherHome': (context) => preventAccessRight('/teacherHome'),
-      //   '/manageMaterial': (context) => preventAccessRight('/manageMaterial'),
-      //   '/manageQuiz': (context) => preventAccessRight('/manageQuiz'),
-      //   '/manageListMaterial': (context) => preventAccessRight('/manageListMaterial'),
-      // },
+      routes: {
+        '/': (context) => SplashScreen(
+              child: getInitialRoute(screenWidth),
+            ),
+        '/landingPage': (context) => const LandingPage(),
+        '/login': (context) => const LoginScreen(),
+        '/signUp': (context) => const SignupScreen(),
+        '/home': (context) => preventAccessRight('/home'),
+        '/teacherHome': (context) => preventAccessRight('/teacherHome'),
+        '/manageMaterial': (context) => preventAccessRight('/manageMaterial'),
+        '/manageQuiz': (context) => preventAccessRight('/manageQuiz'),
+        '/manageListMaterial': (context) => preventAccessRight('/manageListMaterial'),
+      },
     );
   }
 }

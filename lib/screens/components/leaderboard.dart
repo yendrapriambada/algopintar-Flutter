@@ -42,7 +42,7 @@ class Leaderboard extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: 4.0,
+            height: 2.0,
           ),
           Expanded(
             child: ListView.builder(

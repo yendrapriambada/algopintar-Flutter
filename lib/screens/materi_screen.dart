@@ -3,7 +3,7 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../models/mata_pelajaran_model.dart';
 
 class MateriScreen extends StatelessWidget {
-  final Map<String, dynamic>? materi;
+  final Map<dynamic, dynamic>? materi;
 
   const MateriScreen({Key? key, required this.materi}) : super(key: key);
 
