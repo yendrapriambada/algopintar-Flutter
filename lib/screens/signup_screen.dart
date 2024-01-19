@@ -304,6 +304,7 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14.0,
+                                color: Colors.white,
                               ),
                             ),
                           ),
@@ -513,14 +514,20 @@ class BackButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(17.0),
                 ),
                 elevation: 4,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back,
-                    color: Colors.black,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(17.0),
+                    color: Colors.white,
                   ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/landingPage");
-                  },
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.black,
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(context, "/landingPage");
+                    },
+                  ),
                 ),
               )
           ],

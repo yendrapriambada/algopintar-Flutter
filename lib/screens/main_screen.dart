@@ -184,6 +184,7 @@ class _HomepageWebState extends State<HomepageWeb> {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(17.0),
                                 ),
+                                surfaceTintColor: Colors.white,
                                 elevation: 4,
                                 child: IconButton(
                                   icon: const Icon(
@@ -211,6 +212,10 @@ class _HomepageWebState extends State<HomepageWeb> {
                               ),
                               elevation: 5,
                               child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
                                   padding: const EdgeInsets.all(10.0),
                                   child: Column(
                                     crossAxisAlignment:
@@ -354,6 +359,10 @@ class _HomepageWebState extends State<HomepageWeb> {
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           padding: const EdgeInsets.all(16),
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
@@ -388,10 +397,12 @@ class _HomepageWebState extends State<HomepageWeb> {
                                               var idPertemuan = snapshot.key;
 
                                               return Card(
+                                                surfaceTintColor: Colors.white,
+                                                elevation: 3,
                                                 child: ListTile(
                                                   visualDensity: VisualDensity(
-                                                      horizontal: 1,
-                                                      vertical: 1),
+                                                      horizontal: 3,
+                                                      vertical: 3),
                                                   leading: Padding(
                                                     padding:
                                                         const EdgeInsets.only(
@@ -522,7 +533,8 @@ class _HomepageMobileState extends State<HomepageMobile> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(17.0),
                         ),
-                        elevation: 4,
+                        surfaceTintColor: Colors.white,
+                        elevation: 3,
                         child: IconButton(
                           icon: const Icon(
                             Icons.logout,
@@ -572,6 +584,10 @@ class _HomepageMobileState extends State<HomepageMobile> {
                 ),
                 elevation: 5,
                 child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -704,9 +720,11 @@ class _HomepageMobileState extends State<HomepageMobile> {
                         var idPertemuan = snapshot.key;
 
                         return Card(
+                          surfaceTintColor: Colors.white,
+                          elevation: 2,
                           child: ListTile(
                             visualDensity:
-                                VisualDensity(horizontal: 1, vertical: 1),
+                                VisualDensity(horizontal: 3, vertical: 3),
                             leading: Padding(
                               padding:
                                   const EdgeInsets.only(top: 6.0, bottom: 6.0),

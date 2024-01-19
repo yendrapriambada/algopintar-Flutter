@@ -103,6 +103,7 @@ class LandingPageMobile extends StatelessWidget {
                           fontFamily: 'Montserrat',
                           fontWeight: FontWeight.bold,
                           fontSize: 14.0,
+                          color: Colors.white,
                         ),
                       ),
                     ),

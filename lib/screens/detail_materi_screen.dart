@@ -114,6 +114,7 @@ class DetailWebPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Card(
+                            surfaceTintColor: Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(17.0),
                             ),
@@ -192,6 +193,10 @@ class DetailWebPage extends StatelessWidget {
                   flex: 2,
                   child: Card(
                     child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: Colors.white,
+                      ),
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
@@ -267,6 +272,7 @@ class DetailWebPage extends StatelessWidget {
                                       fontFamily: 'Montserrat',
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14.0,
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),
@@ -347,14 +353,20 @@ class DetailMobilePage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(17.0),
                         ),
                         elevation: 4,
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back,
-                            color: Colors.black,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(17.0),
+                            color: Colors.white,
                           ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.arrow_back,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
                         ),
                       ),
                       const FavoriteButton(),
@@ -450,6 +462,7 @@ class DetailMobilePage extends StatelessWidget {
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.bold,
                       fontSize: 14.0,
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -462,6 +475,8 @@ class DetailMobilePage extends StatelessWidget {
 
 Widget getListMateri(Map<dynamic, dynamic>? materi, BuildContext context) {
   return Card(
+    surfaceTintColor: Colors.white,
+    elevation: 3,
     child: ListTile(
         visualDensity: const VisualDensity(horizontal: 0, vertical: -3),
         leading: const Icon(Icons.check_circle_rounded, color: Colors.green),
@@ -496,6 +511,7 @@ class FavoriteButtonState extends State<FavoriteButton> {
   @override
   Widget build(BuildContext context) {
     return Card(
+        surfaceTintColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(17.0),
         ),

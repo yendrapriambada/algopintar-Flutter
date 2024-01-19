@@ -246,6 +246,7 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
                                 fontFamily: 'Montserrat',
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14.0,
+                                color: Colors.white,
                               ),
                             ),
                           ),
@@ -424,15 +425,22 @@ class BackButton extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(17.0),
                 ),
+                color: Colors.white,
                 elevation: 4,
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back,
-                    color: Colors.black,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(17.0),
+                    color: Colors.white,
                   ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/landingPage");
-                  },
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.black,
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(context, "/landingPage");
+                    },
+                  ),
                 ),
               )
           ],
