@@ -22,8 +22,11 @@ class _MainScreenState extends State<MainScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final DatabaseReference _database = FirebaseDatabase.instance.ref();
   String username = 'kawan';
+  String email = '';
   late DatabaseReference _studentsRef;
   List<Map<dynamic, dynamic>> _students = [];
+  int currentPertemuan = 100;
+  double currentProgress = 0.0;
 
   @override
   void initState() {
@@ -34,7 +37,7 @@ class _MainScreenState extends State<MainScreen> {
 
   Future<void> _initializeDatabase() async {
     // for leaderboard
-    print("flag");
+    // print("flag");
     await Firebase.initializeApp();
     _studentsRef = FirebaseDatabase.instance.ref('users');
     // print("debug: ${_studentsRef}");
@@ -51,7 +54,6 @@ class _MainScreenState extends State<MainScreen> {
   void _updateStudentsList(Map<dynamic, dynamic> studentsMap) {
     _students.clear();
     studentsMap.forEach((key, value) {
-      print(value);
       if (value['role'] == 'student') {
         _students.add(value);
       }
@@ -67,10 +69,12 @@ class _MainScreenState extends State<MainScreen> {
       if (snapshot.exists) {
         var userMap = snapshot.value as Map<dynamic, dynamic>?;
         var usernameValue = userMap?['username'] as String?;
+        var emailValue = userMap?['email'] as String?;
 
-        if (usernameValue != null) {
+        if (emailValue != null) {
           setState(() {
-            username = usernameValue;
+            username = usernameValue ?? '';
+            email = emailValue ?? '';
           });
         }
       } else {
@@ -84,13 +88,45 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     print("username: ${username}");
+    print("email: ${email}");
     print("students: ${_students}");
+    var progressBelajarList = _students
+        .where((element) => element['email'] == email)
+        .map((e) => e['progressBelajar'])
+        .toList();
+
+    if (progressBelajarList.isNotEmpty) {
+      var progressBelajar = progressBelajarList.first;
+      print("progressBelajar: $progressBelajar");
+
+      // Jika Anda ingin mengonversi ke tipe data int
+      int progressBelajarInt = (progressBelajar?.toDouble() ?? 0).toInt();
+      print("progressBelajar (as int): $progressBelajarInt");
+
+      // Selanjutnya, Anda dapat melanjutkan dengan perhitungan currentPertemuan dan currentProgress
+      currentPertemuan = (progressBelajarInt / 100).toInt() + 1;
+      currentProgress = progressBelajarInt / 100 - (currentPertemuan - 1).toDouble();
+
+      print("currentPertemuan: $currentPertemuan");
+      print("currentProgress: $currentProgress");
+    } else {
+      print("Data tidak ditemukan untuk email yang diberikan");
+    }
+
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         if (constraints.maxWidth > 800) {
-          return HomepageWeb(username: username, students: _students);
+          return HomepageWeb(
+              username: username,
+              students: _students,
+              currentPertemuan: currentPertemuan,
+              currentProgress: currentProgress);
         } else {
-          return HomepageMobile(username: username, students: _students);
+          return HomepageMobile(
+              username: username,
+              students: _students,
+              currentPertemuan: currentPertemuan,
+              currentProgress: currentProgress);
         }
       },
     );
@@ -100,8 +136,15 @@ class _MainScreenState extends State<MainScreen> {
 class HomepageWeb extends StatefulWidget {
   final String username;
   final List<Map<dynamic, dynamic>> students;
+  final int currentPertemuan;
+  final double currentProgress;
 
-  const HomepageWeb({Key? key, required this.username, required this.students})
+  const HomepageWeb(
+      {Key? key,
+      required this.username,
+      required this.students,
+      required this.currentPertemuan,
+      required this.currentProgress})
       : super(key: key);
 
   @override
@@ -238,7 +281,8 @@ class _HomepageWebState extends State<HomepageWeb> {
                                           Expanded(
                                             flex: 1,
                                             child: Hero(
-                                                tag: '1',
+                                                tag:
+                                                    '${widget.currentPertemuan}-w',
                                                 child: Stack(
                                                     alignment: Alignment.center,
                                                     children: <Widget>[
@@ -258,7 +302,7 @@ class _HomepageWebState extends State<HomepageWeb> {
                                                             const EdgeInsets
                                                                 .only(top: 8.0),
                                                         child: Text(
-                                                          '1',
+                                                          '${widget.currentPertemuan}',
                                                           textAlign:
                                                               TextAlign.center,
                                                           style:
@@ -275,7 +319,7 @@ class _HomepageWebState extends State<HomepageWeb> {
                                                     ])),
                                           ),
                                           const SizedBox(width: 8),
-                                          const Expanded(
+                                          Expanded(
                                             flex: 3,
                                             child: Padding(
                                               padding: EdgeInsets.all(8.0),
@@ -284,7 +328,7 @@ class _HomepageWebState extends State<HomepageWeb> {
                                                     CrossAxisAlignment.start,
                                                 children: <Widget>[
                                                   Text(
-                                                    "Pertemuan 1",
+                                                    "Pertemuan ${widget.currentPertemuan}",
                                                     textAlign: TextAlign.start,
                                                     style: TextStyle(
                                                       fontFamily: 'Montserrat',
@@ -299,7 +343,8 @@ class _HomepageWebState extends State<HomepageWeb> {
                                                       Expanded(
                                                           child:
                                                               LinearProgressIndicator(
-                                                        value: 0.1,
+                                                        value: widget
+                                                            .currentProgress,
                                                         color: Colors.green,
                                                         backgroundColor:
                                                             Colors.orangeAccent,
@@ -308,7 +353,7 @@ class _HomepageWebState extends State<HomepageWeb> {
                                                       Center(
                                                         // this widget is not nessesary
                                                         child: Text(
-                                                          '10%',
+                                                          '${(widget.currentProgress * 100).toInt()}%',
                                                           style: TextStyle(
                                                             fontFamily:
                                                                 'Montserrat',
@@ -318,12 +363,6 @@ class _HomepageWebState extends State<HomepageWeb> {
                                                       ),
                                                     ],
                                                   ),
-
-                                                  // LinearProgressIndicator(
-                                                  //   value: 0.7,
-                                                  //   color: Colors.green,
-                                                  //   backgroundColor: Colors.orangeAccent,
-                                                  // ),
                                                 ],
                                               ),
                                             ),
@@ -495,9 +534,15 @@ class _HomepageWebState extends State<HomepageWeb> {
 class HomepageMobile extends StatefulWidget {
   final String username;
   final List<Map<dynamic, dynamic>> students;
+  final int currentPertemuan;
+  final double currentProgress;
 
   const HomepageMobile(
-      {Key? key, required this.username, required this.students})
+      {Key? key,
+      required this.username,
+      required this.students,
+      required this.currentPertemuan,
+      required this.currentProgress})
       : super(key: key);
 
   @override
@@ -507,6 +552,7 @@ class HomepageMobile extends StatefulWidget {
 class _HomepageMobileState extends State<HomepageMobile> {
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -608,7 +654,7 @@ class _HomepageMobileState extends State<HomepageMobile> {
                             Expanded(
                               flex: 1,
                               child: Hero(
-                                  tag: '12',
+                                  tag: '${widget.currentPertemuan}-m',
                                   child: Stack(
                                       alignment: Alignment.center,
                                       children: <Widget>[
@@ -626,7 +672,7 @@ class _HomepageMobileState extends State<HomepageMobile> {
                                           padding:
                                               const EdgeInsets.only(top: 8.0),
                                           child: Text(
-                                            '1',
+                                            '${widget.currentPertemuan}',
                                             textAlign: TextAlign.center,
                                             style: const TextStyle(
                                               fontFamily: 'Montserrat',
@@ -639,7 +685,7 @@ class _HomepageMobileState extends State<HomepageMobile> {
                                       ])),
                             ),
                             const SizedBox(width: 8),
-                            const Expanded(
+                            Expanded(
                               flex: 3,
                               child: Padding(
                                 padding: EdgeInsets.all(8.0),
@@ -647,7 +693,7 @@ class _HomepageMobileState extends State<HomepageMobile> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Text(
-                                      "Pertemuan 1",
+                                      "Pertemuan ${widget.currentPertemuan}",
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
                                         fontFamily: 'Montserrat',
@@ -661,7 +707,7 @@ class _HomepageMobileState extends State<HomepageMobile> {
                                       children: <Widget>[
                                         Expanded(
                                             child: LinearProgressIndicator(
-                                          value: 0.1,
+                                          value: widget.currentProgress,
                                           color: Colors.green,
                                           backgroundColor: Colors.orangeAccent,
                                         )),
@@ -669,7 +715,7 @@ class _HomepageMobileState extends State<HomepageMobile> {
                                         Center(
                                           // this widget is not nessesary
                                           child: Text(
-                                            '10%',
+                                            '${(widget.currentProgress * 100).toInt()}%',
                                             style: TextStyle(
                                               fontFamily: 'Montserrat',
                                               fontSize: 14,
@@ -678,12 +724,6 @@ class _HomepageMobileState extends State<HomepageMobile> {
                                         ),
                                       ],
                                     ),
-
-                                    // LinearProgressIndicator(
-                                    //   value: 0.7,
-                                    //   color: Colors.green,
-                                    //   backgroundColor: Colors.orangeAccent,
-                                    // ),
                                   ],
                                 ),
                               ),
