@@ -1,5 +1,6 @@
 import 'package:algopintar/models/mata_pelajaran_model.dart';
 import 'package:algopintar/screens/materi_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +20,14 @@ class DetailMateri extends StatefulWidget {
 class _DetailMateriState extends State<DetailMateri> {
   late DatabaseReference _materialList;
   List<Map<dynamic, dynamic>> _materials = [];
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  Map<dynamic, dynamic> _subMaterialDone = {};
 
   @override
   void initState() {
     super.initState();
     _initializeDatabase();
+    _getSubMaterialDoneByUserId();
   }
 
   Future<void> _initializeDatabase() async {
@@ -44,14 +48,51 @@ class _DetailMateriState extends State<DetailMateri> {
   void _updateMaterialList(Map<dynamic, dynamic> materialsMap) {
     _materials.clear();
     materialsMap.forEach((key, value) {
-      print(value);
       if (value['idPertemuan'] == widget.idPertemuan) {
-        _materials.add(value);
+        Map<String, dynamic> materialWithKey = Map.from(value); // Create a copy of the material
+        materialWithKey['idMateri'] = key; // Add the key to the material
+        _materials.add(materialWithKey);
       }
     });
     _materials.sort((a, b) => a['urutanMateri'].compareTo(b['urutanMateri']));
+    // print("Hasil Akhir: $_materials");
     setState(() {}); // Trigger widget rebuild after updating data
   }
+
+  Future<void> _getSubMaterialDoneByUserId() async {
+    User? user = _auth.currentUser;
+    DatabaseReference starCountRef =
+    FirebaseDatabase.instance.ref('users/${user?.uid}/subMaterialDone');
+    starCountRef.onValue.listen((DatabaseEvent event) {
+      Map<dynamic, dynamic>? data = event.snapshot.value as Map<dynamic, dynamic>?;
+      _updateSubMaterialDone(data);
+    });
+  }
+
+  void _updateSubMaterialDone(Map<dynamic, dynamic>? subMaterialDoneMap) {
+    if (mounted) {
+      if (subMaterialDoneMap != null) {
+        _subMaterialDone.clear();
+        subMaterialDoneMap.forEach((key, value) {
+          if (value is int) {
+            // Assuming value 1 indicates the sub-material is done
+            _subMaterialDone[key] = value == 1;
+          } else {
+            print("Invalid data at key $key: $value");
+          }
+        });
+        print("check sub materi done yaaaaaa: $_subMaterialDone");
+        setState(() {}); // Trigger widget rebuild after updating data
+      } else {
+        print("subMaterialDoneMap is null.");
+      }
+    } else {
+      print("Widget is disposed. Ignoring setState.");
+    }
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -62,12 +103,14 @@ class _DetailMateriState extends State<DetailMateri> {
             dataPertemuan: widget.dataPertemuan,
             idPertemuan: widget.idPertemuan,
             materials: _materials,
+            subMaterialDone: _subMaterialDone,
           );
         } else {
           return DetailMobilePage(
             dataPertemuan: widget.dataPertemuan,
             idPertemuan: widget.idPertemuan,
             materials: _materials,
+            subMaterialDone: _subMaterialDone,
           );
         }
       },
@@ -79,12 +122,14 @@ class DetailWebPage extends StatelessWidget {
   final Map<dynamic, dynamic>? dataPertemuan;
   final String? idPertemuan;
   final List<Map<dynamic, dynamic>> materials;
+  final Map<dynamic, dynamic> subMaterialDone;
 
   const DetailWebPage(
       {Key? key,
       required this.dataPertemuan,
       required this.idPertemuan,
-      required this.materials})
+      required this.materials,
+      required this.subMaterialDone})
       : super(key: key);
 
   @override
@@ -234,7 +279,11 @@ class DetailWebPage extends StatelessWidget {
                                     itemCount: materials.length,
                                     itemBuilder: (context, index) {
                                       var material = materials[index];
-                                      return getListMateri(material, context);
+                                      var nextMaterial = index + 1 < materials.length
+                                          ? materials[index + 1]
+                                          : null;
+                                      var subMateriDone = subMaterialDone;
+                                      return getListMateri(material, context, nextMaterial, subMateriDone, index);
                                     },
                                   ),
                           ),
@@ -295,16 +344,19 @@ class DetailMobilePage extends StatelessWidget {
   final Map<dynamic, dynamic>? dataPertemuan;
   final String? idPertemuan;
   final List<Map<dynamic, dynamic>> materials;
+  final Map<dynamic, dynamic> subMaterialDone;
 
   const DetailMobilePage(
       {Key? key,
       required this.dataPertemuan,
       required this.idPertemuan,
-      required this.materials})
+      required this.materials,
+      required this.subMaterialDone})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    print("test yahh: $subMaterialDone");
     return Scaffold(
       body: SingleChildScrollView(
           child: Column(
@@ -428,7 +480,11 @@ class DetailMobilePage extends StatelessWidget {
                     itemCount: materials.length,
                     itemBuilder: (context, index) {
                       var material = materials[index];
-                      return getListMateri(material, context);
+                      var nextMaterial = index + 1 < materials.length
+                          ? materials[index + 1]
+                          : null;
+                      var subMateriDone = subMaterialDone;
+                      return getListMateri(material, context, nextMaterial, subMateriDone, index);
                     },
                   ),
           ),
@@ -473,13 +529,14 @@ class DetailMobilePage extends StatelessWidget {
   }
 }
 
-Widget getListMateri(Map<dynamic, dynamic>? materi, BuildContext context) {
+Widget getListMateri(Map<dynamic, dynamic>? materi, BuildContext context, Map<dynamic, dynamic>? nextMateri, Map<dynamic, dynamic> subMaterialDone, int index) {
+  print(index);
   return Card(
     surfaceTintColor: Colors.white,
     elevation: 3,
     child: ListTile(
         visualDensity: const VisualDensity(horizontal: 0, vertical: -3),
-        leading: const Icon(Icons.check_circle_rounded, color: Colors.green),
+        leading: Icon(Icons.check_circle_rounded, color: subMaterialDone[materi?['idMateri']] == true ? Colors.green : Colors.grey),
         title: Text(
           materi?['namaMateri'],
           style: const TextStyle(
@@ -487,11 +544,12 @@ Widget getListMateri(Map<dynamic, dynamic>? materi, BuildContext context) {
             fontSize: 14.0,
           ),
         ),
+        enabled: index == 0 || subMaterialDone[materi?['idMateri']] == false || subMaterialDone[materi?['idMateri']] == true,
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => MateriScreen(materi: materi),
+              builder: (context) => MateriScreen(materi: materi, nextMateri: nextMateri),
             ),
           );
         }),

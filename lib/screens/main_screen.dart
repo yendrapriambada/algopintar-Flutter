@@ -25,7 +25,7 @@ class _MainScreenState extends State<MainScreen> {
   String email = '';
   late DatabaseReference _studentsRef;
   List<Map<dynamic, dynamic>> _students = [];
-  int currentPertemuan = 100;
+  int currentPertemuan = 0;
   double currentProgress = 0.0;
 
   @override
@@ -96,7 +96,7 @@ class _MainScreenState extends State<MainScreen> {
         .toList();
 
     if (progressBelajarList.isNotEmpty) {
-      var progressBelajar = progressBelajarList.first;
+      var progressBelajar = progressBelajarList.first + 1;
       print("progressBelajar: $progressBelajar");
 
       // Jika Anda ingin mengonversi ke tipe data int
@@ -105,10 +105,10 @@ class _MainScreenState extends State<MainScreen> {
 
       // Selanjutnya, Anda dapat melanjutkan dengan perhitungan currentPertemuan dan currentProgress
       currentPertemuan = (progressBelajarInt / 100).toInt() + 1;
-      currentProgress = progressBelajarInt / 100 - (currentPertemuan - 1).toDouble();
+      currentProgress = (progressBelajarInt / 100 - (currentPertemuan - 1));
 
       print("currentPertemuan: $currentPertemuan");
-      print("currentProgress: $currentProgress");
+      print("currentProgress: ${currentProgress}");
     } else {
       print("Data tidak ditemukan untuk email yang diberikan");
     }
@@ -497,6 +497,7 @@ class _HomepageWebState extends State<HomepageWeb> {
                                                   title: Text(
                                                       'Pertemuan ${dataPertemuan?['namaPertemuan'] as String}'),
                                                   // subtitle: Text('4 Sub Materi'),
+                                                  enabled: int.parse(dataPertemuan?['namaPertemuan']) <= widget.currentPertemuan ? true : false,
                                                   trailing:
                                                       Icon(Icons.navigate_next),
                                                   onTap: () {
@@ -800,6 +801,7 @@ class _HomepageMobileState extends State<HomepageMobile> {
                             title: Text(
                                 'Pertemuan ${dataPertemuan?['namaPertemuan'] as String}'),
                             // subtitle: Text('4 Sub Materi'),
+                            enabled: int.parse(dataPertemuan?['namaPertemuan']) <= widget.currentPertemuan ? true : false,
                             trailing: Icon(Icons.navigate_next),
                             onTap: () {
                               Navigator.push(context,
