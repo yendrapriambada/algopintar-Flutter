@@ -287,45 +287,45 @@ class DetailWebPage extends StatelessWidget {
                                     },
                                   ),
                           ),
-                          Container(
-                              margin: const EdgeInsets.only(
-                                  top: 24.0,
-                                  left: 16.0,
-                                  right: 16.0,
-                                  bottom: 16.0),
-                              child: SizedBox(
-                                width: 250,
-                                height: 50,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) => MateriScreen(
-                                    //         materi: dataPertemuan?['materialList'][0]),
-                                    //   ),
-                                    // );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF5D60E2),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          12), // <-- Radius
-                                    ),
-                                    // padding: EdgeInsets.all(18),
-                                  ),
-                                  child: const Text(
-                                    'Lanjutkan Belajar',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontFamily: 'Montserrat',
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14.0,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ))
+                          // Container(
+                          //     margin: const EdgeInsets.only(
+                          //         top: 24.0,
+                          //         left: 16.0,
+                          //         right: 16.0,
+                          //         bottom: 16.0),
+                          //     child: SizedBox(
+                          //       width: 250,
+                          //       height: 50,
+                          //       child: ElevatedButton(
+                          //         onPressed: () {
+                          //           // Navigator.push(
+                          //           //   context,
+                          //           //   MaterialPageRoute(
+                          //           //     builder: (context) => MateriScreen(
+                          //           //         materi: dataPertemuan?['materialList'][0]),
+                          //           //   ),
+                          //           // );
+                          //         },
+                          //         style: ElevatedButton.styleFrom(
+                          //           backgroundColor: const Color(0xFF5D60E2),
+                          //           shape: RoundedRectangleBorder(
+                          //             borderRadius: BorderRadius.circular(
+                          //                 12), // <-- Radius
+                          //           ),
+                          //           // padding: EdgeInsets.all(18),
+                          //         ),
+                          //         child: const Text(
+                          //           'Lanjutkan Belajar',
+                          //           textAlign: TextAlign.center,
+                          //           style: TextStyle(
+                          //             fontFamily: 'Montserrat',
+                          //             fontWeight: FontWeight.bold,
+                          //             fontSize: 14.0,
+                          //             color: Colors.white,
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ))
                         ],
                       ),
                     ),
@@ -488,41 +488,41 @@ class DetailMobilePage extends StatelessWidget {
                     },
                   ),
           ),
-          Container(
-              margin: const EdgeInsets.only(
-                  top: 16.0, left: 16.0, right: 16.0, bottom: 16.0),
-              child: SizedBox(
-                width: 1,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) =>
-                    //         MateriScreen(materi: dataPertemuan?['materialList'][0]),
-                    //   ),
-                    // );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF5D60E2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12), // <-- Radius
-                    ),
-                    // padding: EdgeInsets.all(18),
-                  ),
-                  child: const Text(
-                    'Lanjutkan Belajar',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14.0,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ))
+          // Container(
+          //     margin: const EdgeInsets.only(
+          //         top: 16.0, left: 16.0, right: 16.0, bottom: 16.0),
+          //     child: SizedBox(
+          //       width: 1,
+          //       height: 50,
+          //       child: ElevatedButton(
+          //         onPressed: () {
+          //           // Navigator.push(
+          //           //   context,
+          //           //   MaterialPageRoute(
+          //           //     builder: (context) =>
+          //           //         MateriScreen(materi: dataPertemuan?['materialList'][0]),
+          //           //   ),
+          //           // );
+          //         },
+          //         style: ElevatedButton.styleFrom(
+          //           backgroundColor: const Color(0xFF5D60E2),
+          //           shape: RoundedRectangleBorder(
+          //             borderRadius: BorderRadius.circular(12), // <-- Radius
+          //           ),
+          //           // padding: EdgeInsets.all(18),
+          //         ),
+          //         child: const Text(
+          //           'Lanjutkan Belajar',
+          //           textAlign: TextAlign.center,
+          //           style: TextStyle(
+          //             fontFamily: 'Montserrat',
+          //             fontWeight: FontWeight.bold,
+          //             fontSize: 14.0,
+          //             color: Colors.white,
+          //           ),
+          //         ),
+          //       ),
+          //     ))
         ],
       )),
     );

@@ -386,6 +386,7 @@ class _SignupPageMobileState extends State<SignupPageMobile> {
         "password": password,
         "role": "student",
         "score": 0,
+        "progressBelajar": 0,
       });
 
       // also save the user's data locally
