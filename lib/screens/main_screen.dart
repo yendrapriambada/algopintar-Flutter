@@ -23,6 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   final DatabaseReference _database = FirebaseDatabase.instance.ref();
   String username = 'kawan';
   String email = '';
+  int score = 0;
   late DatabaseReference _studentsRef;
   List<Map<dynamic, dynamic>> _students = [];
   int currentPertemuan = 0;
@@ -65,31 +66,42 @@ class _MainScreenState extends State<MainScreen> {
     User? user = _auth.currentUser;
 
     if (user?.uid != null) {
-      final snapshot = await _database.child('users/${user?.uid}').get();
-      if (snapshot.exists) {
-        var userMap = snapshot.value as Map<dynamic, dynamic>?;
-        var usernameValue = userMap?['username'] as String?;
-        var emailValue = userMap?['email'] as String?;
+      _database.child('users/${user?.uid}').onValue.listen((event) {
+        var snapshot = event.snapshot;
+        if (snapshot.value != null) {
+          var userMap = snapshot.value as Map<dynamic, dynamic>;
+          var usernameValue = userMap['username'] as String?;
+          var emailValue = userMap['email'] as String?;
+          var scoreValue = userMap['score'] as int?;
 
-        if (emailValue != null) {
-          setState(() {
-            username = usernameValue ?? '';
-            email = emailValue ?? '';
-          });
+          if (emailValue != null) {
+            setState(() {
+              username = usernameValue ?? '';
+              email = emailValue ?? '';
+              score = scoreValue ?? 0;
+            });
+          }
+        } else {
+          print('No data available.');
         }
-      } else {
-        print('No data available.');
-      }
+      });
     } else {
-      const LandingPage();
+      // Contoh tindakan jika user tidak terautentikasi
+      // Misalnya, navigasi ke halaman awal
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LandingPage()),
+      );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
     print("username: ${username}");
     print("email: ${email}");
     print("students: ${_students}");
+    print("Score: ${score}");
     var progressBelajarList = _students
         .where((element) => element['email'] == email)
         .map((e) => e['progressBelajar'])
@@ -118,12 +130,14 @@ class _MainScreenState extends State<MainScreen> {
         if (constraints.maxWidth > 800) {
           return HomepageWeb(
               username: username,
+              score: score,
               students: _students,
               currentPertemuan: currentPertemuan,
               currentProgress: currentProgress);
         } else {
           return HomepageMobile(
               username: username,
+              score: score,
               students: _students,
               currentPertemuan: currentPertemuan,
               currentProgress: currentProgress);
@@ -135,6 +149,7 @@ class _MainScreenState extends State<MainScreen> {
 
 class HomepageWeb extends StatefulWidget {
   final String username;
+  final int score;
   final List<Map<dynamic, dynamic>> students;
   final int currentPertemuan;
   final double currentProgress;
@@ -142,6 +157,7 @@ class HomepageWeb extends StatefulWidget {
   const HomepageWeb(
       {Key? key,
       required this.username,
+      required this.score,
       required this.students,
       required this.currentPertemuan,
       required this.currentProgress})
@@ -264,14 +280,38 @@ class _HomepageWebState extends State<HomepageWeb> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                        "Progress Belajar",
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                          fontFamily: 'Montserrat',
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                        ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          const Text(
+                                            "Progress Belajar",
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(8.0),
+                                            ),
+                                            color: Color(0xff5D60E2),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(4.0),
+                                              child: Text(
+                                                "Skor: ${widget.score}",
+                                                textAlign: TextAlign.center,
+                                                style: const TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 11,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                       const SizedBox(height: 10),
                                       Row(
@@ -497,7 +537,12 @@ class _HomepageWebState extends State<HomepageWeb> {
                                                   title: Text(
                                                       'Pertemuan ${dataPertemuan?['namaPertemuan'] as String}'),
                                                   // subtitle: Text('4 Sub Materi'),
-                                                  enabled: int.parse(dataPertemuan?['namaPertemuan']) <= widget.currentPertemuan ? true : false,
+                                                  enabled: int.parse(dataPertemuan?[
+                                                              'namaPertemuan']) <=
+                                                          widget
+                                                              .currentPertemuan
+                                                      ? true
+                                                      : false,
                                                   trailing:
                                                       Icon(Icons.navigate_next),
                                                   onTap: () {
@@ -534,6 +579,7 @@ class _HomepageWebState extends State<HomepageWeb> {
 
 class HomepageMobile extends StatefulWidget {
   final String username;
+  final int score;
   final List<Map<dynamic, dynamic>> students;
   final int currentPertemuan;
   final double currentProgress;
@@ -541,6 +587,7 @@ class HomepageMobile extends StatefulWidget {
   const HomepageMobile(
       {Key? key,
       required this.username,
+      required this.score,
       required this.students,
       required this.currentPertemuan,
       required this.currentProgress})
@@ -553,7 +600,6 @@ class HomepageMobile extends StatefulWidget {
 class _HomepageMobileState extends State<HomepageMobile> {
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -639,14 +685,38 @@ class _HomepageMobileState extends State<HomepageMobile> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          "Progress Belajar",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "Progress Belajar",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              color: Color(0xff5D60E2),
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "Skor: ${widget.score}",
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 11,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 10),
                         Row(
@@ -801,7 +871,11 @@ class _HomepageMobileState extends State<HomepageMobile> {
                             title: Text(
                                 'Pertemuan ${dataPertemuan?['namaPertemuan'] as String}'),
                             // subtitle: Text('4 Sub Materi'),
-                            enabled: int.parse(dataPertemuan?['namaPertemuan']) <= widget.currentPertemuan ? true : false,
+                            enabled:
+                                int.parse(dataPertemuan?['namaPertemuan']) <=
+                                        widget.currentPertemuan
+                                    ? true
+                                    : false,
                             trailing: Icon(Icons.navigate_next),
                             onTap: () {
                               Navigator.push(context,
