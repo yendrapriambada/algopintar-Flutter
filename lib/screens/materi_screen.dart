@@ -186,6 +186,17 @@ class _MateriScreenState extends State<MateriScreen> {
   }
 
   Future<void> _dialogBuilder(BuildContext context, int poin) {
+    IconData iconData = Icons.workspace_premium;
+    Color iconColor = Color(0xffE5B80B);
+
+    if (poin == 100) {
+      iconColor = Color(0xffE5B80B);
+    } else if (poin == 75) {
+      iconColor = Color(0xffC0C0C0);
+    } else if (poin == 50) {
+      iconColor = Color(0xffCD7F32);
+    }
+
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -195,12 +206,12 @@ class _MateriScreenState extends State<MateriScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Terimakasih telah menyelesaikan materi ini. \nAnda berhak mendapatkan point sebesar ${poin} poin',
+                'Terimakasih telah menyelesaikan materi ini. \nAnda berhak mendapatkan point sebesar $poin poin',
               ),
               Icon(
-                Icons.emoji_events,
+                iconData,
                 size: 100,
-                color: Colors.amber,
+                color: iconColor,
               ),
             ],
           ),
@@ -216,6 +227,7 @@ class _MateriScreenState extends State<MateriScreen> {
       },
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
