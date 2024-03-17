@@ -258,7 +258,7 @@ class _MateriScreenState extends State<MateriScreen> {
         child: !_isMateriCompleted
             ? ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: const Color(0xff5D60E2),
+              backgroundColor: const Color(0xff5D60E2),
               minimumSize: const Size(double.infinity, 50),
             ),
             onPressed: () {

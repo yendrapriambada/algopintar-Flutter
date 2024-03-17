@@ -7,8 +7,9 @@ import '../../models/mata_pelajaran_model.dart';
 
 class ListMateriTable extends StatefulWidget {
   final List<MateriModel> listMateri;
+  final String idPertemuan;
 
-  const ListMateriTable({Key? key, required this.listMateri}) : super(key: key);
+  const ListMateriTable({Key? key, required this.listMateri, required this.idPertemuan}) : super(key: key);
 
   @override
   _ListMateriTableState createState() => _ListMateriTableState();
@@ -311,7 +312,7 @@ class _ListMateriTableState extends State<ListMateriTable> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Konfirmasi hapus data'),
-          content: Text('Apakah kamu yakin ingin menghapus data ini?'),
+          content: Text('Apakah kamu yakin ingin menghapus data ini?\avg bobot materi setelah delete: ${100 / (widget.listMateri.length - 1)}'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -336,11 +337,14 @@ class _ListMateriTableState extends State<ListMateriTable> {
   }
 
   void _deleteMateri(String materiId) async {
+    double bobotMateri = 100 / (widget.listMateri.length - 1);
+
     _listMateriRef =
         FirebaseDatabase.instance.ref().child('materialList').child(materiId);
 
     _listMateriRef.remove().then((_) {
       print("Materi deleted successfully!");
+      _updateBobotMateriBulk(bobotMateri);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text('Data Materi berhasil dihapus!'),
         behavior: SnackBarBehavior.floating,
@@ -359,4 +363,28 @@ class _ListMateriTableState extends State<ListMateriTable> {
       ));
     });
   }
+
+  void _updateBobotMateriBulk(double bobotMateri) async {
+    // Ambil referensi ke daftar materi pada Firebase
+    DatabaseReference materiRef = FirebaseDatabase.instance
+        .ref()
+        .child('materialList');
+
+    // Ambil snapshot materi berdasarkan idPertemuan
+    DataSnapshot snapshot = await materiRef
+        .orderByChild('idPertemuan')
+        .equalTo(widget.idPertemuan)
+        .get();
+
+    // Iterasi semua materi pada pertemuan tertentu
+    Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
+    print("data yaaaaaaaaaaa: ${data}");
+    data.forEach((key, value) {
+      // Update bobotMateri untuk materi saat ini
+      materiRef.child(key).update({
+        'bobotMateri': bobotMateri,
+      });
+    });
+  }
+
 }

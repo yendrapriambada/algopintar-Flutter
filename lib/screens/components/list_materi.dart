@@ -84,7 +84,7 @@ class _ListMateriState extends State<ListMateri> {
             ],
           ),
           Expanded(
-            child: ListMateriTable(listMateri: widget.listMateri),
+            child: ListMateriTable(listMateri: widget.listMateri, idPertemuan: widget.idPertemuan),
           )
         ],
       ),
@@ -118,7 +118,7 @@ class _ListMateriState extends State<ListMateri> {
                           Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Text(
-                              "Tambah Materi",
+                              "Tambah Materi${100 / (widget.listMateri.length + 1)}",
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 16,
@@ -237,12 +237,14 @@ class _ListMateriState extends State<ListMateri> {
     String urutan = _urutanMateriController.text;
     String name = _namaMateriController.text;
     String linkPdf = _linkPDFController.text;
+    double bobotMateri = 100 / (widget.listMateri.length + 1);
+    print("bobotMateri ${bobotMateri}");
 
     _listMateriRef = FirebaseDatabase.instance.ref().child('materialList');
 
     if (widget.listMateri.isEmpty) {
       print("Belum ada data materi");
-      _saveMateri(urutan, name, linkPdf);
+      _saveMateri(urutan, name, linkPdf, bobotMateri);
     } else {
       if (widget.listMateri.any((element) => element.urutanMateri == urutan)) {
         // print(snapshot.value);
@@ -258,17 +260,18 @@ class _ListMateriState extends State<ListMateri> {
         Navigator.pop(context);
       } else {
         print('No data available.');
-        _saveMateri(urutan, name, linkPdf);
+        _saveMateri(urutan, name, linkPdf, bobotMateri);
       }
     }
   }
 
-  void _saveMateri(String urutan, String name, String linkPdf) async {
+  void _saveMateri(String urutan, String name, String linkPdf, double bobotMateri) async {
     _listMateriRef.push().set({
       'urutanMateri': urutan,
       'namaMateri': name,
       'linkPdf': linkPdf,
       'idPertemuan': widget.idPertemuan,
+      'bobotMateri': bobotMateri,
     }).then((_) {
       // Data saved successfully!
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -278,6 +281,7 @@ class _ListMateriState extends State<ListMateri> {
           borderRadius: BorderRadius.circular(24),
         ),
       ));
+      _updateBobotMateriBulk(bobotMateri);
       Navigator.pop(context);
     }).catchError((error) {
       // The write failed...
@@ -291,4 +295,28 @@ class _ListMateriState extends State<ListMateri> {
       ));
     });
   }
+
+  void _updateBobotMateriBulk(double bobotMateri) async {
+    // Ambil referensi ke daftar materi pada Firebase
+    DatabaseReference materiRef = FirebaseDatabase.instance
+        .ref()
+        .child('materialList');
+
+    // Ambil snapshot materi berdasarkan idPertemuan
+    DataSnapshot snapshot = await materiRef
+        .orderByChild('idPertemuan')
+        .equalTo(widget.idPertemuan)
+        .get();
+
+    // Iterasi semua materi pada pertemuan tertentu
+    Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
+    print("data yaaaaaaaaaaa: ${data}");
+    data.forEach((key, value) {
+      // Update bobotMateri untuk materi saat ini
+      materiRef.child(key).update({
+        'bobotMateri': bobotMateri,
+      });
+    });
+  }
+
 }
