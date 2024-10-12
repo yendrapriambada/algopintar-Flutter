@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:algopintar/screens/signup_screen.dart';
+import 'package:algopintar/screens/forgot_password_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -281,6 +282,39 @@ class _LoginPageMobileState extends State<LoginPageMobile> {
                             );
                           },
                           child: const Text('Signup'),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Lupa Password?",
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            textStyle: const TextStyle(
+                              fontSize: 14.0,
+                              fontFamily: 'Montserrat',
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder:
+                                    (context, animation1, animation2) =>
+                                        const ForgotPasswordScreen(),
+                                transitionDuration: Duration.zero,
+                                reverseTransitionDuration: Duration.zero,
+                              ),
+                            );
+                          },
+                          child: const Text('Reset Password'),
                         ),
                       ],
                     )

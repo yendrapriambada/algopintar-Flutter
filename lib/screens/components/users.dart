@@ -6,7 +6,8 @@ import 'bar_chart_users.dart';
 
 class Users extends StatelessWidget {
   final List<Map<dynamic, dynamic>> students;
-  const Users({Key? key, required this.students}) : super(key: key);
+  final int materiCount;
+  const Users({Key? key, required this.students, required this.materiCount}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,7 @@ class Users extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: StudentsTable(students: students),
+            child: StudentsTable(students: students, materiCount: materiCount,),
           )
         ],
       ),

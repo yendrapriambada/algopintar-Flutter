@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -8,13 +9,27 @@ import 'package:algopintar/widgets/custom_text.dart';
 
 class StudentsTable extends StatefulWidget {
   final List<Map<dynamic, dynamic>> students;
-  const StudentsTable({Key? key, required this.students}) : super(key: key);
+  final int materiCount;
+  const StudentsTable({Key? key, required this.students, required this.materiCount}) : super(key: key);
 
   @override
   _StudentsTableState createState() => _StudentsTableState();
 }
 
 class _StudentsTableState extends State<StudentsTable> {
+  // Fungsi untuk mengirim email reset password
+  Future<void> sendPasswordResetEmail(String email, BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Reset password email sent to $email')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to send reset password email: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,32 +76,27 @@ class _StudentsTableState extends State<StudentsTable> {
                   DataCell(Text(student['email'] ?? 'N/A')),
                   DataCell(Text(student['fullName'] ?? 'N/A')),
                   DataCell(Text(student['username'] ?? 'N/A')),
+                  DataCell(Text(
+                      (student['subMaterialDone'] is Map)
+                          ? ((student['subMaterialDone'].keys.length / widget.materiCount) * 100).toStringAsFixed(1) + '%'  // Menampilkan persentase dengan 1 angka desimal
+                          : '0%'  // Jika subMaterialDone bukan Map, tampilkan 0%
+                  ),),
+
                   DataCell(
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
-                          Icons.star,
-                          color: Colors.deepOrange,
-                          size: 18,
+                        IconButton(
+                          icon: Icon(Icons.restore, color: Colors.blue),
+                          onPressed: () {
+                            // Kirim reset password berdasarkan email siswa
+                            sendPasswordResetEmail(student['email'], context);
+                          },
+                          tooltip: 'Reset Password',
                         ),
-                        SizedBox(width: 5),
-                        Text(student['rating'] != null ? student['rating'].toString() : 'N/A'),
                       ],
                     ),
                   ),
-                  DataCell(Container(
-                      decoration: BoxDecoration(
-                        color: light,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: active, width: .5),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      child: CustomText(
-                        text: "Detail",
-                        color: active.withOpacity(.7),
-                        weight: FontWeight.bold,
-                      ))),
                 ],
               );
             },

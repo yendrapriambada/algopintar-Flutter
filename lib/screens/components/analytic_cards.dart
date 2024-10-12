@@ -8,7 +8,10 @@ import 'analytic_info_card.dart';
 
 class AnalyticCards extends StatelessWidget {
   final int studentCount;
-  const AnalyticCards({Key? key, required this.studentCount}) : super(key: key);
+  final int guruCount;
+  final int pertemuanCount;
+  final int materiCount;
+  const AnalyticCards({Key? key, required this.studentCount, required this.guruCount, required this.pertemuanCount, required this.materiCount}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +24,17 @@ class AnalyticCards extends StatelessWidget {
           crossAxisCount: size.width < 650 ? 2 : 4,
           childAspectRatio: size.width < 650 ? 2 : 1.5,
           studentCount: studentCount,
+          guruCount: guruCount,
+          pertemuanCount: pertemuanCount,
+          materiCount: materiCount,
         ),
         tablet: AnalyticInfoCardGridView(),
         desktop: AnalyticInfoCardGridView(
           childAspectRatio: size.width < 1400 ? 1.5 : 2.1,
           studentCount: studentCount,
+          guruCount: guruCount,
+          pertemuanCount: pertemuanCount,
+          materiCount: materiCount,
         ),
       ),
     );
@@ -38,11 +47,17 @@ class AnalyticInfoCardGridView extends StatelessWidget {
     this.crossAxisCount = 4,
     this.childAspectRatio = 1.4,
     this.studentCount = 0,
+    this.guruCount = 0,
+    this.pertemuanCount = 0,
+    this.materiCount = 0,
   }) : super(key: key);
 
   final int crossAxisCount;
   final double childAspectRatio;
   final int studentCount;
+  final int guruCount;
+  final int pertemuanCount;
+  final int materiCount;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +81,7 @@ class AnalyticInfoCardGridView extends StatelessWidget {
         AnalyticInfoCard(
           info: AnalyticInfo(
             title: "Guru",
-            count: 2,
+            count: guruCount,
             svgSrc: "assets/icons/Subscribers.svg",
             color: purple,
           ),
@@ -74,15 +89,15 @@ class AnalyticInfoCardGridView extends StatelessWidget {
         AnalyticInfoCard(
           info: AnalyticInfo(
             title: "Pertemuan",
-            count: 4,
+            count: pertemuanCount,
             svgSrc: "assets/icons/Pages.svg",
             color: orange,
           ),
         ),
         AnalyticInfoCard(
           info: AnalyticInfo(
-            title: "Telah Selesai Belajar",
-            count: 21,
+            title: "Total Materi",
+            count: materiCount,
             svgSrc: "assets/icons/Comments.svg",
             color: green,
           ),
