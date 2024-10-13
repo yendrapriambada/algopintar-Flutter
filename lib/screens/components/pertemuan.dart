@@ -19,12 +19,14 @@ class _PertemuanState extends State<Pertemuan> {
   final TextEditingController _namapertemuanController =
       TextEditingController();
   final TextEditingController _deskripsiController = TextEditingController();
+  final TextEditingController _statusPertemuanController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
     _namapertemuanController.dispose();
     _deskripsiController.dispose();
+    _statusPertemuanController.dispose();
     super.dispose();
   }
 
@@ -88,6 +90,7 @@ class _PertemuanState extends State<Pertemuan> {
   _showSimpleModalDialog(context) {
     _namapertemuanController.clear();
     _deskripsiController.clear();
+    _statusPertemuanController.clear();
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -139,6 +142,35 @@ class _PertemuanState extends State<Pertemuan> {
                               },
                             ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: DropdownButtonFormField<String>(
+                              value: _statusPertemuanController.text.isNotEmpty
+                                  ? _statusPertemuanController.text
+                                  : null, // Nilai default untuk dropdown
+                              decoration: InputDecoration(
+                                labelText: "Status Pertemuan",
+                                border: OutlineInputBorder(),
+                              ),
+                              items: <String>['Aktif', 'Tidak Aktif'].map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                // Update controller dengan nilai baru dari dropdown
+                                _statusPertemuanController.text = newValue!;
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please select a status';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+
                           Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: TextFormField(
@@ -215,6 +247,9 @@ class _PertemuanState extends State<Pertemuan> {
   Future<void> _addPertemuan() async {
     String name = _namapertemuanController.text;
     String deskripsi = _deskripsiController.text;
+    String statusPertemuan = _statusPertemuanController.text;
+    bool boolStatusPertemuan = (statusPertemuan == "Aktif");
+
 
     _pertemuanRef = FirebaseDatabase.instance.ref().child('pertemuan');
     final snapshot = await _pertemuanRef.orderByChild('namaPertemuan').equalTo(name).get();
@@ -236,6 +271,7 @@ class _PertemuanState extends State<Pertemuan> {
       _pertemuanRef.push().set({
         'namaPertemuan': name,
         'description': deskripsi,
+        'statusPertemuan': boolStatusPertemuan
       }).then((_) {
         // Data saved successfully!
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(

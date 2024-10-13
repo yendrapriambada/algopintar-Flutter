@@ -21,6 +21,8 @@ class _PertemuanTableState extends State<PertemuanTable> {
   final TextEditingController _namapertemuanController =
       TextEditingController();
   final TextEditingController _deskripsiController = TextEditingController();
+  final TextEditingController _statusPertemuanController = TextEditingController();
+
   bool _isLoading = false;
   late DatabaseReference _pertemuanRef;
   late DatabaseReference _materialListRef;
@@ -31,6 +33,7 @@ class _PertemuanTableState extends State<PertemuanTable> {
   void dispose() {
     _namapertemuanController.dispose();
     _deskripsiController.dispose();
+    _statusPertemuanController.dispose();
     super.dispose();
   }
 
@@ -56,6 +59,11 @@ class _PertemuanTableState extends State<PertemuanTable> {
             ),
             DataColumn2(
               label: Text('Deskripsi',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              // size: ColumnSize.L,
+            ),
+            DataColumn2(
+              label: Text('Status Pertemuan',
                   style: TextStyle(fontWeight: FontWeight.bold)),
               // size: ColumnSize.L,
             ),
@@ -87,6 +95,7 @@ class _PertemuanTableState extends State<PertemuanTable> {
                       child: Text(pertemuan.description),
                     ),
                   ),
+                  DataCell(Text(pertemuan.statusPertemuan ? 'Aktif' : 'Tidak Aktif')),
                   DataCell(ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF5D60E2),
@@ -132,7 +141,7 @@ class _PertemuanTableState extends State<PertemuanTable> {
                         ),
                         onPressed: () {
                           _showSimpleModalDialog(context, pertemuan.id,
-                              pertemuan.namaPertemuan, pertemuan.description);
+                              pertemuan.namaPertemuan, pertemuan.description, pertemuan.statusPertemuan);
                         },
                       ),
                       SizedBox(
@@ -166,9 +175,11 @@ class _PertemuanTableState extends State<PertemuanTable> {
   }
 
   void _showSimpleModalDialog(
-      context, String pertemuanId, String namaPertemuan, String deskripsi) {
+      context, String pertemuanId, String namaPertemuan, String deskripsi, bool statusPertemuan) {
     _namapertemuanController.text = namaPertemuan;
     _deskripsiController.text = deskripsi;
+    _statusPertemuanController.text = statusPertemuan ? 'Aktif' : 'Tidak Aktif';
+
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -214,6 +225,34 @@ class _PertemuanTableState extends State<PertemuanTable> {
                                   return 'Please enter a value';
                                 else
                                   return null;
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: DropdownButtonFormField<String>(
+                              value: _statusPertemuanController.text.isNotEmpty
+                                  ? _statusPertemuanController.text
+                                  : null, // Nilai default untuk dropdown
+                              decoration: InputDecoration(
+                                labelText: "Status Pertemuan",
+                                border: OutlineInputBorder(),
+                              ),
+                              items: <String>['Aktif', 'Tidak Aktif'].map((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                // Update controller dengan nilai baru dari dropdown
+                                _statusPertemuanController.text = newValue!;
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please select a status';
+                                }
+                                return null;
                               },
                             ),
                           ),
@@ -301,12 +340,15 @@ class _PertemuanTableState extends State<PertemuanTable> {
   }
 
   void _editPertemuan(String pertemuanId) {
+    bool boolStatusPertemuan = (_statusPertemuanController.text == "Aktif");
+
     DatabaseReference pertemuanRef =
         FirebaseDatabase.instance.ref().child('pertemuan').child(pertemuanId);
 
     Map<String, dynamic> updatedData = {
       'namaPertemuan': _namapertemuanController.text,
       'description': _deskripsiController.text,
+      'statusPertemuan': boolStatusPertemuan
     };
 
     pertemuanRef.update(updatedData).then((_) {

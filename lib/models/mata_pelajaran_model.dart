@@ -2,22 +2,26 @@ class PertemuanModel {
   String id;
   String namaPertemuan;
   String description;
+  bool statusPertemuan;
+
   // Add other fields as needed
 
-  PertemuanModel({
-    required this.id,
-    required this.namaPertemuan,
-    required this.description,
-    // Add other fields here
-  });
+  PertemuanModel(
+      {required this.id,
+      required this.namaPertemuan,
+      required this.description,
+      required this.statusPertemuan
+      // Add other fields here
+      });
 
   factory PertemuanModel.fromJson(Map<String, dynamic> json, String id) {
     return PertemuanModel(
-      id: id,
-      namaPertemuan: json['namaPertemuan'] ?? '',
-      description: json['description'] ?? '',
-      // Parse other fields accordingly
-    );
+        id: id,
+        namaPertemuan: json['namaPertemuan'] ?? '',
+        description: json['description'] ?? '',
+        statusPertemuan: json['statusPertemuan'] ?? false
+        // Parse other fields accordingly
+        );
   }
 
   Map<String, dynamic> toJson() {
@@ -25,16 +29,16 @@ class PertemuanModel {
       'id': id,
       'namaPertemuan': namaPertemuan,
       'description': description,
+      'statusPertemuan': statusPertemuan
       // Add other fields accordingly
     };
   }
 }
 
-
 class MateriModel {
   final String id; // ID materi
   final String urutanMateri;
-  final String namaMateri;  // Nama materi
+  final String namaMateri; // Nama materi
   final String linkPdf; // URL ke file PDF
   final String idPertemuan; // ID pertemuan
 
@@ -67,7 +71,6 @@ class MateriModel {
     };
   }
 }
-
 
 class Quizmodel {
   final String id;

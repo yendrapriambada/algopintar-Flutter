@@ -586,10 +586,8 @@ class _HomepageWebState extends State<HomepageWeb> {
                                                   title: Text(
                                                       'Pertemuan ${dataPertemuan?['namaPertemuan'] as String}'),
                                                   // subtitle: Text('4 Sub Materi'),
-                                                  enabled: int.parse(dataPertemuan?[
-                                                              'namaPertemuan']) <=
-                                                          widget
-                                                              .currentPertemuan
+                                                  enabled: dataPertemuan?['statusPertemuan'] == true &&
+                                                      int.parse(dataPertemuan?['namaPertemuan']) <= widget.currentPertemuan
                                                       ? true
                                                       : false,
                                                   trailing:
@@ -947,9 +945,8 @@ class _HomepageMobileState extends State<HomepageMobile> {
                             title: Text(
                                 'Pertemuan ${dataPertemuan?['namaPertemuan'] as String}'),
                             // subtitle: Text('4 Sub Materi'),
-                            enabled:
-                                int.parse(dataPertemuan?['namaPertemuan']) <=
-                                        widget.currentPertemuan
+                            enabled: dataPertemuan?['statusPertemuan'] == true &&
+                                int.parse(dataPertemuan?['namaPertemuan']) <= widget.currentPertemuan
                                     ? true
                                     : false,
                             trailing: Icon(Icons.navigate_next),
