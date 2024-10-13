@@ -28,6 +28,8 @@ class _MainScreenState extends State<MainScreen> {
   List<Map<dynamic, dynamic>> _students = [];
   int currentPertemuan = 0;
   double currentProgress = 0.0;
+  late DatabaseReference _pertemuanRef;
+  List<Map<dynamic, dynamic>> _pertemuan = [];
 
   @override
   void initState() {
@@ -37,17 +39,24 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> _initializeDatabase() async {
-    // for leaderboard
-    // print("flag");
     await Firebase.initializeApp();
     _studentsRef = FirebaseDatabase.instance.ref('users');
-    // print("debug: ${_studentsRef}");
+    _pertemuanRef = FirebaseDatabase.instance.ref().child('pertemuan');
+
+
     _studentsRef.onValue.listen((event) {
       if (event.snapshot.value != null) {
         Map<dynamic, dynamic> studentsMap =
             event.snapshot.value as Map<dynamic, dynamic>;
 
         _updateStudentsList(studentsMap);
+      }
+    });
+
+    _pertemuanRef.onValue.listen((event) {
+      if (event.snapshot.value != null) {
+        Map<dynamic, dynamic> pertemuanMap = event.snapshot.value as Map<dynamic, dynamic>;
+        _updatePertemuanList(pertemuanMap);
       }
     });
   }
@@ -58,6 +67,14 @@ class _MainScreenState extends State<MainScreen> {
       if (value['role'] == 'student') {
         _students.add(value);
       }
+    });
+    setState(() {}); // Trigger widget rebuild after updating data
+  }
+
+  void _updatePertemuanList(Map<dynamic, dynamic> pertemuanMap) {
+    _pertemuan.clear();
+    pertemuanMap.forEach((key, value) {
+      _pertemuan.add(value);
     });
     setState(() {}); // Trigger widget rebuild after updating data
   }
@@ -133,14 +150,17 @@ class _MainScreenState extends State<MainScreen> {
               score: score,
               students: _students,
               currentPertemuan: currentPertemuan,
-              currentProgress: currentProgress);
+              currentProgress: currentProgress,
+              pertemuanLength: _pertemuan.length
+          );
         } else {
           return HomepageMobile(
               username: username,
               score: score,
               students: _students,
               currentPertemuan: currentPertemuan,
-              currentProgress: currentProgress);
+              currentProgress: currentProgress,
+              pertemuanLength: _pertemuan.length);
         }
       },
     );
@@ -153,6 +173,7 @@ class HomepageWeb extends StatefulWidget {
   final List<Map<dynamic, dynamic>> students;
   final int currentPertemuan;
   final double currentProgress;
+  final int pertemuanLength;
 
   const HomepageWeb(
       {Key? key,
@@ -160,7 +181,8 @@ class HomepageWeb extends StatefulWidget {
       required this.score,
       required this.students,
       required this.currentPertemuan,
-      required this.currentProgress})
+      required this.currentProgress,
+      required this.pertemuanLength})
       : super(key: key);
 
   @override
@@ -314,6 +336,33 @@ class _HomepageWebState extends State<HomepageWeb> {
                                         ],
                                       ),
                                       const SizedBox(height: 10),
+                                      widget.currentPertemuan > widget.pertemuanLength ?
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          Expanded(
+                                            flex: 3,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(8.0),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Text(
+                                                    "Selamat anda telah menyelesaikan seluruh materi! 👍",
+                                                    textAlign: TextAlign.start,
+                                                    style: TextStyle(
+                                                      fontFamily: 'Montserrat',
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ) :
                                       Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
@@ -583,6 +632,7 @@ class HomepageMobile extends StatefulWidget {
   final List<Map<dynamic, dynamic>> students;
   final int currentPertemuan;
   final double currentProgress;
+  final int pertemuanLength;
 
   const HomepageMobile(
       {Key? key,
@@ -590,7 +640,8 @@ class HomepageMobile extends StatefulWidget {
       required this.score,
       required this.students,
       required this.currentPertemuan,
-      required this.currentProgress})
+      required this.currentProgress,
+      required this.pertemuanLength})
       : super(key: key);
 
   @override
@@ -719,6 +770,31 @@ class _HomepageMobileState extends State<HomepageMobile> {
                           ],
                         ),
                         const SizedBox(height: 10),
+                        widget.currentPertemuan > widget.pertemuanLength ?
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Expanded(
+                              flex: 3,
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      "Selamat anda telah menyelesaikan seluruh materi! 👍",
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ):
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
@@ -731,7 +807,7 @@ class _HomepageMobileState extends State<HomepageMobile> {
                                       children: <Widget>[
                                         ClipRRect(
                                           borderRadius:
-                                              BorderRadius.circular(10.0),
+                                          BorderRadius.circular(10.0),
                                           child: Image.asset(
                                             'images/pertemuan.png',
                                             fit: BoxFit.cover,
@@ -741,7 +817,7 @@ class _HomepageMobileState extends State<HomepageMobile> {
                                         ),
                                         Padding(
                                           padding:
-                                              const EdgeInsets.only(top: 8.0),
+                                          const EdgeInsets.only(top: 8.0),
                                           child: Text(
                                             '${widget.currentPertemuan}',
                                             textAlign: TextAlign.center,
@@ -778,10 +854,10 @@ class _HomepageMobileState extends State<HomepageMobile> {
                                       children: <Widget>[
                                         Expanded(
                                             child: LinearProgressIndicator(
-                                          value: widget.currentProgress,
-                                          color: Colors.green,
-                                          backgroundColor: Colors.orangeAccent,
-                                        )),
+                                              value: widget.currentProgress,
+                                              color: Colors.green,
+                                              backgroundColor: Colors.orangeAccent,
+                                            )),
                                         SizedBox(width: 8),
                                         Center(
                                           // this widget is not nessesary
@@ -800,7 +876,7 @@ class _HomepageMobileState extends State<HomepageMobile> {
                               ),
                             ),
                           ],
-                        ),
+                        )
                       ],
                     )),
               ),
