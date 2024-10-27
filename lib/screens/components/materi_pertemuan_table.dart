@@ -8,16 +8,16 @@ import '../../controllers/controller.dart';
 import '../../models/mata_pelajaran_model.dart';
 import '../dash_board_screen.dart';
 
-class PertemuanTable extends StatefulWidget {
+class MateriPertemuanTable extends StatefulWidget {
   final List<PertemuanModel> pertemuan;
 
-  const PertemuanTable({Key? key, required this.pertemuan}) : super(key: key);
+  const MateriPertemuanTable({Key? key, required this.pertemuan}) : super(key: key);
 
   @override
-  _PertemuanTableState createState() => _PertemuanTableState();
+  _MateriPertemuanTableState createState() => _MateriPertemuanTableState();
 }
 
-class _PertemuanTableState extends State<PertemuanTable> {
+class _MateriPertemuanTableState extends State<MateriPertemuanTable> {
   final TextEditingController _namapertemuanController =
       TextEditingController();
   final TextEditingController _deskripsiController = TextEditingController();
@@ -67,18 +67,18 @@ class _PertemuanTableState extends State<PertemuanTable> {
                   style: TextStyle(fontWeight: FontWeight.bold)),
               // size: ColumnSize.L,
             ),
-            // DataColumn2(
-            //   label: Text('Detail Materi',
-            //       style: TextStyle(fontWeight: FontWeight.bold)),
-            //   // size: ColumnSize.S,
-            //   // fixedWidth: 200,
-            // ),
             DataColumn2(
-              label:
-                  Text('Aksi', style: TextStyle(fontWeight: FontWeight.bold)),
+              label: Text('Detail Materi',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               // size: ColumnSize.S,
-              // fixedWidth: 150,
+              // fixedWidth: 200,
             ),
+            // DataColumn2(
+            //   label:
+            //       Text('Aksi', style: TextStyle(fontWeight: FontWeight.bold)),
+            //   // size: ColumnSize.S,
+            //   // fixedWidth: 150,
+            // ),
           ],
           rows: List<DataRow>.generate(
             widget.pertemuan.length,
@@ -96,75 +96,75 @@ class _PertemuanTableState extends State<PertemuanTable> {
                     ),
                   ),
                   DataCell(Text(pertemuan.statusPertemuan ? 'Aktif' : 'Tidak Aktif')),
-                  // DataCell(ElevatedButton(
-                  //   style: ElevatedButton.styleFrom(
-                  //     backgroundColor: const Color(0xFF5D60E2),
-                  //     shape: RoundedRectangleBorder(
-                  //       borderRadius: BorderRadius.circular(12), // <-- Radius
-                  //     ),
-                  //   ),
-                  //   child: Text('Detail'),
-                  //   onPressed: () {
-                  //     Navigator.pushReplacement(
-                  //       context,
-                  //       PageRouteBuilder(
-                  //         pageBuilder: (context, animation1, animation2) =>
-                  //             MultiProvider(
-                  //                 providers: [
-                  //               ChangeNotifierProvider(
-                  //                 create: (context) => Controller(),
-                  //               )
-                  //             ],
-                  //                 child: DashBoardScreen.withIdPertemuan(
-                  //                   contentType: ContentType.ManageListMaterial,
-                  //                   idPertemuan: pertemuan.id,
-                  //                 )),
-                  //         transitionDuration: Duration.zero,
-                  //         reverseTransitionDuration: Duration.zero,
-                  //       ),
-                  //     );
-                  //   },
-                  // )),
-                  DataCell(Row(
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(6), // <-- Radius
-                          ),
-                        ),
-                        child: Icon(
-                          Icons.edit,
-                          size: 16,
-                        ),
-                        onPressed: () {
-                          _showSimpleModalDialog(context, pertemuan.id,
-                              pertemuan.namaPertemuan, pertemuan.description, pertemuan.statusPertemuan);
-                        },
+                  DataCell(ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF5D60E2),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12), // <-- Radius
                       ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(6), // <-- Radius
-                          ),
+                    ),
+                    child: Text('Detail', style: TextStyle(color: Colors.white)),
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation1, animation2) =>
+                              MultiProvider(
+                                  providers: [
+                                ChangeNotifierProvider(
+                                  create: (context) => Controller(),
+                                )
+                              ],
+                                  child: DashBoardScreen.withIdPertemuan(
+                                    contentType: ContentType.ManageListMaterial,
+                                    idPertemuan: pertemuan.id,
+                                  )),
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
                         ),
-                        child: Icon(
-                          Icons.delete,
-                          size: 16,
-                        ),
-                        onPressed: () {
-                          _showDeleteConfirmationDialog(pertemuan.id);
-                        },
-                      ),
-                    ],
+                      );
+                    },
                   )),
+                  // DataCell(Row(
+                  //   children: [
+                  //     ElevatedButton(
+                  //       style: ElevatedButton.styleFrom(
+                  //         backgroundColor: Colors.orange,
+                  //         shape: RoundedRectangleBorder(
+                  //           borderRadius:
+                  //               BorderRadius.circular(6), // <-- Radius
+                  //         ),
+                  //       ),
+                  //       child: Icon(
+                  //         Icons.edit,
+                  //         size: 16,
+                  //       ),
+                  //       onPressed: () {
+                  //         _showSimpleModalDialog(context, pertemuan.id,
+                  //             pertemuan.namaPertemuan, pertemuan.description, pertemuan.statusPertemuan);
+                  //       },
+                  //     ),
+                  //     SizedBox(
+                  //       width: 8,
+                  //     ),
+                  //     ElevatedButton(
+                  //       style: ElevatedButton.styleFrom(
+                  //         backgroundColor: Colors.red,
+                  //         shape: RoundedRectangleBorder(
+                  //           borderRadius:
+                  //               BorderRadius.circular(6), // <-- Radius
+                  //         ),
+                  //       ),
+                  //       child: Icon(
+                  //         Icons.delete,
+                  //         size: 16,
+                  //       ),
+                  //       onPressed: () {
+                  //         _showDeleteConfirmationDialog(pertemuan.id);
+                  //       },
+                  //     ),
+                  //   ],
+                  // )),
                 ],
               );
             },

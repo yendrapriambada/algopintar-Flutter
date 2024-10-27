@@ -552,7 +552,7 @@ class DetailMobilePage extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: const Color(0xFF5D60E2),
+                    backgroundColor: const Color(0xFF5D60E2),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12), // <-- Radius
                     ),

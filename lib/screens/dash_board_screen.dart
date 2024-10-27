@@ -1,4 +1,5 @@
 import 'package:algopintar/screens/components/list_quiz_table.dart';
+import 'package:algopintar/screens/components/manage_pertemuan_content.dart';
 import 'package:flutter/material.dart';
 import 'package:algopintar/constants/constants.dart';
 import 'package:algopintar/constants/responsive.dart';
@@ -15,6 +16,7 @@ import 'components/manage_quiz_content.dart';
 
 enum ContentType {
   Dashboard,
+  Pertemuan,
   Material,
   ManageListMaterial,
   Quiz,
@@ -45,6 +47,8 @@ class DashBoardScreen extends StatelessWidget {
     switch (contentType) {
       case ContentType.Dashboard:
         return DashboardContent();
+      case ContentType.Pertemuan:
+        return ManagePertemuanContent();
       case ContentType.Material:
         return ManageMaterialContent();
       case ContentType.ManageListMaterial:

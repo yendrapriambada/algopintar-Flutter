@@ -1,4 +1,5 @@
-import 'package:algopintar/screens/components/quiz_pertemuan_table.dart';
+import 'package:algopintar/screens/components/pertemuan.dart';
+import 'package:algopintar/screens/components/pertemuan_table.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:algopintar/constants/constants.dart';
@@ -8,14 +9,14 @@ import 'package:firebase_database/firebase_database.dart';
 
 import '../../models/mata_pelajaran_model.dart';
 
-class ManageQuizContent extends StatefulWidget {
-  const ManageQuizContent({Key? key}) : super(key: key);
+class ManagePertemuanContent extends StatefulWidget {
+  const ManagePertemuanContent({Key? key}) : super(key: key);
 
   @override
-  State<ManageQuizContent> createState() => _DashboardContentState();
+  State<ManagePertemuanContent> createState() => _DashboardContentState();
 }
 
-class _DashboardContentState extends State<ManageQuizContent> {
+class _DashboardContentState extends State<ManagePertemuanContent> {
   late DatabaseReference _pertemuanRef;
   List<PertemuanModel> _pertemuan = [];
 
@@ -65,7 +66,7 @@ class _DashboardContentState extends State<ManageQuizContent> {
         child: Column(
           children: [
             CustomAppbar(
-              pageName: "Kelola Quiz",
+              pageName: "Kelola Pertemuan",
             ),
             SizedBox(
               height: appPadding,
@@ -79,21 +80,21 @@ class _DashboardContentState extends State<ManageQuizContent> {
                       flex: 5,
                       child: Column(
                         children: [
-                          Container(
-                            height: 600,
-                            width: double.infinity,
-                            padding: EdgeInsets.all(appPadding),
-                            decoration: BoxDecoration(
-                              color: secondaryColor,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                QuizPertemuanTable(pertemuan: _pertemuan)
-                              ],
-                            ),
-                          ),
+                          Pertemuan(pertemuan: _pertemuan,),
+                          // Container(
+                          //   height: 600,
+                          //   width: double.infinity,
+                          //   padding: EdgeInsets.all(appPadding),
+                          //   decoration: BoxDecoration(
+                          //     color: secondaryColor,
+                          //     borderRadius: BorderRadius.circular(10),
+                          //   ),
+                          //   child: Column(
+                          //     crossAxisAlignment: CrossAxisAlignment.start,
+                          //     children: [PertemuanTable(pertemuan: _pertemuan)],
+                          //   ),
+                          // ),
+                          // PertemuanTable(pertemuan: _pertemuan)
                         ],
                       ),
                     ),

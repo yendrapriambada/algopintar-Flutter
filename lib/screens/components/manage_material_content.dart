@@ -1,4 +1,6 @@
+import 'package:algopintar/screens/components/materi_pertemuan_table.dart';
 import 'package:algopintar/screens/components/pertemuan.dart';
+import 'package:algopintar/screens/components/pertemuan_table.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:algopintar/constants/constants.dart';
@@ -77,7 +79,19 @@ class _DashboardContentState extends State<ManageMaterialContent> {
                       flex: 5,
                       child: Column(
                         children: [
-                          Pertemuan(pertemuan: _pertemuan,),
+                          Container(
+                            height: 600,
+                            width: double.infinity,
+                            padding: EdgeInsets.all(appPadding),
+                            decoration: BoxDecoration(
+                              color: secondaryColor,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [MateriPertemuanTable(pertemuan: _pertemuan)],
+                            ),
+                          ),
                         ],
                       ),
                     ),

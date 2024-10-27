@@ -60,17 +60,22 @@ class _QuizPertemuanTableState extends State<QuizPertemuanTable> {
               // size: ColumnSize.L,
             ),
             DataColumn2(
+              label: Text('Status Pertemuan',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              // size: ColumnSize.L,
+            ),
+            DataColumn2(
               label: Text('Quiz tiap Pertemuan',
                   style: TextStyle(fontWeight: FontWeight.bold)),
               // size: ColumnSize.S,
               // fixedWidth: 200,
             ),
-            DataColumn2(
-              label:
-                  Text('Aksi', style: TextStyle(fontWeight: FontWeight.bold)),
-              // size: ColumnSize.S,
-              // fixedWidth: 150,
-            ),
+            // DataColumn2(
+            //   label:
+            //       Text('Aksi', style: TextStyle(fontWeight: FontWeight.bold)),
+            //   // size: ColumnSize.S,
+            //   // fixedWidth: 150,
+            // ),
           ],
           rows: List<DataRow>.generate(
             widget.pertemuan.length,
@@ -87,6 +92,7 @@ class _QuizPertemuanTableState extends State<QuizPertemuanTable> {
                       child: Text(pertemuan.description),
                     ),
                   ),
+                  DataCell(Text(pertemuan.statusPertemuan ? 'Aktif' : 'Tidak Aktif')),
                   DataCell(ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF5D60E2),
@@ -94,7 +100,7 @@ class _QuizPertemuanTableState extends State<QuizPertemuanTable> {
                         borderRadius: BorderRadius.circular(12), // <-- Radius
                       ),
                     ),
-                    child: Text('Detail'),
+                    child: Text('Detail', style: TextStyle(color: Colors.white)),
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
@@ -116,46 +122,46 @@ class _QuizPertemuanTableState extends State<QuizPertemuanTable> {
                       );
                     },
                   )),
-                  DataCell(Row(
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(6), // <-- Radius
-                          ),
-                        ),
-                        child: Icon(
-                          Icons.edit,
-                          size: 16,
-                        ),
-                        onPressed: () {
-                          _showSimpleModalDialog(context, pertemuan.id,
-                              pertemuan.namaPertemuan, pertemuan.description);
-                        },
-                      ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(6), // <-- Radius
-                          ),
-                        ),
-                        child: Icon(
-                          Icons.delete,
-                          size: 16,
-                        ),
-                        onPressed: () {
-                          _showDeleteConfirmationDialog(pertemuan.id);
-                        },
-                      ),
-                    ],
-                  )),
+                  // DataCell(Row(
+                  //   children: [
+                  //     ElevatedButton(
+                  //       style: ElevatedButton.styleFrom(
+                  //         backgroundColor: Colors.orange,
+                  //         shape: RoundedRectangleBorder(
+                  //           borderRadius:
+                  //               BorderRadius.circular(6), // <-- Radius
+                  //         ),
+                  //       ),
+                  //       child: Icon(
+                  //         Icons.edit,
+                  //         size: 16,
+                  //       ),
+                  //       onPressed: () {
+                  //         _showSimpleModalDialog(context, pertemuan.id,
+                  //             pertemuan.namaPertemuan, pertemuan.description);
+                  //       },
+                  //     ),
+                  //     SizedBox(
+                  //       width: 8,
+                  //     ),
+                  //     ElevatedButton(
+                  //       style: ElevatedButton.styleFrom(
+                  //         backgroundColor: Colors.red,
+                  //         shape: RoundedRectangleBorder(
+                  //           borderRadius:
+                  //               BorderRadius.circular(6), // <-- Radius
+                  //         ),
+                  //       ),
+                  //       child: Icon(
+                  //         Icons.delete,
+                  //         size: 16,
+                  //       ),
+                  //       onPressed: () {
+                  //         _showDeleteConfirmationDialog(pertemuan.id);
+                  //       },
+                  //     ),
+                  //   ],
+                  // )),
                 ],
               );
             },

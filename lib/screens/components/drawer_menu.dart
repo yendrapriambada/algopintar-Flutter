@@ -40,6 +40,25 @@ class DrawerMenu extends StatelessWidget {
                 );
               }),
           DrawerListTile(
+              title: 'Kelola Pertemuan',
+              svgSrc: 'assets/icons/Post.svg',
+              tap: () {
+                Navigator.pushReplacement(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (context, animation1, animation2) =>
+                        MultiProvider(
+                            providers: [
+                              ChangeNotifierProvider(create: (context) => Controller(),)
+                            ],
+                            child: DashBoardScreen(contentType: ContentType.Pertemuan,)
+                        ),
+                    transitionDuration: Duration.zero,
+                    reverseTransitionDuration: Duration.zero,
+                  ),
+                );
+              }),
+          DrawerListTile(
               title: 'Kelola Materi',
               svgSrc: 'assets/icons/BlogPost.svg',
               tap: () {
