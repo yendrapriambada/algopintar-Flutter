@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class MateriScreen extends StatefulWidget {
   final Map<dynamic, dynamic>? materi;
@@ -24,6 +25,8 @@ class _MateriScreenState extends State<MateriScreen> {
   bool _isMateriCompleted = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  YoutubePlayerController? _controller;
+
   @override
   void initState() {
     super.initState();
@@ -32,13 +35,40 @@ class _MateriScreenState extends State<MateriScreen> {
     if (_isTimerRunning && !_isMateriCompleted) {
       _startTimer();
     }
+    // print("test ${getYouTubeVideoId(widget.materi?['linkYoutube'] ?? '')}");
+    //
+    // _controller = YoutubePlayerController.fromVideoId(
+    //   videoId: getYouTubeVideoId(widget.materi?['linkYoutube'] ?? '') as String,
+    //   autoPlay: false,
+    //   params: const YoutubePlayerParams(showFullscreenButton: true),
+    // );
+    final linkYoutube = widget.materi?['linkYoutube'] ?? '';
+    final videoId = getYouTubeVideoId(linkYoutube);
+    if (videoId != null && videoId.isNotEmpty) {
+      // Initialize controller only if videoId is valid
+      _controller = YoutubePlayerController.fromVideoId(
+        videoId: videoId,
+        autoPlay: false,
+        params: const YoutubePlayerParams(showFullscreenButton: true),
+      );
+    } else {
+      // Handle the null or empty videoId case (e.g., log, show a message, or leave _controller null)
+      print("Invalid YouTube link or video ID.");
+    }
   }
 
   @override
   void dispose() {
     _stopTimer();
     _saveTimeLearn();
+    _controller?.close();
     super.dispose();
+  }
+
+  String? getYouTubeVideoId(String url) {
+    final regExp = RegExp(r"(?:v=|\/)([0-9A-Za-z_-]{11})(?:\?|&|$)");
+    final match = regExp.firstMatch(url);
+    return match != null ? match.group(1) : null;
   }
 
   void _startTimer() {
@@ -228,6 +258,18 @@ class _MateriScreenState extends State<MateriScreen> {
     );
   }
 
+  double getResponsiveWidth(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    if (screenWidth >= 1024) { // Desktop width threshold
+      return screenWidth * 0.4; // 40% of screen width for desktop
+    } else if (screenWidth >= 768) { // Tablet width threshold
+      return screenWidth * 0.6; // 60% of screen width for tablet
+    } else {
+      return screenWidth * 0.9; // 90% of screen width for mobile
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -252,27 +294,64 @@ class _MateriScreenState extends State<MateriScreen> {
               TextStyle(color: Color(0xff5D60E2), fontWeight: FontWeight.w500),
         ),
       ),
-      body: SfPdfViewer.network(
-        widget.materi?['linkPdf'],
-        canShowPaginationDialog: true,
+      // body: SfPdfViewer.network(
+      //   widget.materi?['linkPdf'],
+      //   canShowPaginationDialog: true,
+      // ),
+      // body: YoutubePlayer(
+      //   controller: _controller,
+      //   aspectRatio: 16 / 9,
+      // )
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 20), // Space from the top
+            Center(
+              child: Container(
+                width: getResponsiveWidth(context),
+                child: _controller != null
+
+                    ? YoutubePlayer(
+                  controller: _controller!,
+                  aspectRatio: 16 / 9,
+                )
+                    : SizedBox(), // Display SizedBox if _controller is null
+              ),
+            ),
+            SizedBox(height: 20),
+            Container(
+              // height: 500,
+              height: MediaQuery.of(context).size.height * 0.9,
+              child: widget.materi?['linkPdf'] != null
+                  ? SfPdfViewer.network(
+                widget.materi!['linkPdf'],
+                canShowPaginationDialog: true,
+              )
+                  : SizedBox(), // Display SizedBox if linkPdf is null
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(10),
         child: !_isMateriCompleted
             ? ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xff5D60E2),
-              minimumSize: const Size(double.infinity, 50),
-            ),
-            onPressed: () {
-              _stopTimer(); // Hentikan timer saat tombol Selesai ditekan
-              _markAsDoneMaterial();
-              Navigator.pop(context);
-            },
-            child: const Text(
-              'Selesai',
-              style: TextStyle(color: Colors.white),
-            )): SizedBox(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xff5D60E2),
+                  minimumSize: const Size(double.infinity, 50),
+                ),
+                onPressed: () {
+                  _stopTimer(); // Hentikan timer saat tombol Selesai ditekan
+                  _markAsDoneMaterial();
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  'Selesai',
+                  style: TextStyle(color: Colors.white),
+                ))
+            : SizedBox(),
       ),
     );
   }
