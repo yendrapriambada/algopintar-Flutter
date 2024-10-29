@@ -41,7 +41,7 @@ dependencies:
   firebase_auth: ^4.11.1
   firebase_database: ^10.3.1
   shared_preferences: ^2.1.0
-  syncfusion_flutter_pdfviewer: ^21.2.10
+  syncfusion_flutter_pdfviewer: ^22.1.34
   flutter_svg: ^0.22.0
   fl_chart: ^0.36.1
   provider: ^5.0.0

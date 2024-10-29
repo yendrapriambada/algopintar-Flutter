@@ -252,7 +252,10 @@ class _MateriScreenState extends State<MateriScreen> {
               TextStyle(color: Color(0xff5D60E2), fontWeight: FontWeight.w500),
         ),
       ),
-      body: SfPdfViewer.network(widget.materi?['linkPdf']),
+      body: SfPdfViewer.network(
+        widget.materi?['linkPdf'],
+        canShowPaginationDialog: true,
+      ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(10),
         child: !_isMateriCompleted
