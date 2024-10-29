@@ -20,6 +20,7 @@ class _ListMateriTableState extends State<ListMateriTable> {
   final TextEditingController _urutanMateriController = TextEditingController();
   final TextEditingController _namaMateriController = TextEditingController();
   final TextEditingController _linkPDFController = TextEditingController();
+  final TextEditingController _linkYoutubeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -27,6 +28,7 @@ class _ListMateriTableState extends State<ListMateriTable> {
     _urutanMateriController.dispose();
     _namaMateriController.dispose();
     _linkPDFController.dispose();
+    _linkYoutubeController.dispose();
     super.dispose();
   }
 
@@ -62,6 +64,12 @@ class _ListMateriTableState extends State<ListMateriTable> {
               // fixedWidth: 200,
             ),
             DataColumn2(
+              label: Text('Link Youtube',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              // size: ColumnSize.S,
+              // fixedWidth: 200,
+            ),
+            DataColumn2(
               label:
                   Text('Aksi', style: TextStyle(fontWeight: FontWeight.bold)),
               // size: ColumnSize.S,
@@ -77,6 +85,7 @@ class _ListMateriTableState extends State<ListMateriTable> {
                   DataCell(Text(materi.urutanMateri)),
                   DataCell(Text(materi.namaMateri)),
                   DataCell(Text(materi.linkPdf)),
+                  DataCell(Text(materi.linkYoutube)),
                   DataCell(Row(
                     children: [
                       ElevatedButton(
@@ -97,7 +106,8 @@ class _ListMateriTableState extends State<ListMateriTable> {
                               materi.id,
                               materi.urutanMateri,
                               materi.namaMateri,
-                              materi.linkPdf);
+                              materi.linkPdf,
+                              materi.linkYoutube);
                         },
                       ),
                       SizedBox(
@@ -131,10 +141,11 @@ class _ListMateriTableState extends State<ListMateriTable> {
   }
 
   _showSimpleModalDialog(context, String materiId, String urutanMateri,
-      String namaMateri, String linkPdf) {
+      String namaMateri, String linkPdf, String linkYoutube) {
     _urutanMateriController.text = urutanMateri;
     _namaMateriController.text = namaMateri;
     _linkPDFController.text = linkPdf;
+    _linkYoutubeController.text = linkYoutube;
 
     showDialog(
         context: context,
@@ -221,6 +232,24 @@ class _ListMateriTableState extends State<ListMateriTable> {
                               },
                             ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: TextFormField(
+                              controller: _linkYoutubeController,
+                              decoration: InputDecoration(
+                                labelText: "Link Youtube",
+                                border: OutlineInputBorder(),
+                              ),
+                              maxLines: 4,
+                              minLines: 3,
+                              validator: (value) {
+                                if (value!.isEmpty)
+                                  return 'Please enter a value';
+                                else
+                                  return null;
+                              },
+                            ),
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -282,6 +311,7 @@ class _ListMateriTableState extends State<ListMateriTable> {
       'urutanMateri': _urutanMateriController.text,
       'namaMateri': _namaMateriController.text,
       'linkPdf': _linkPDFController.text,
+      'linkYoutube': _linkYoutubeController.text,
     };
 
     pertemuanRef.update(updatedData).then((_) {

@@ -40,6 +40,7 @@ class MateriModel {
   final String urutanMateri;
   final String namaMateri; // Nama materi
   final String linkPdf; // URL ke file PDF
+  final String linkYoutube; // URL ke Youtube
   final String idPertemuan; // ID pertemuan
 
   MateriModel({
@@ -47,6 +48,7 @@ class MateriModel {
     required this.urutanMateri,
     required this.namaMateri,
     required this.linkPdf,
+    required this.linkYoutube,
     required this.idPertemuan,
   });
 
@@ -56,6 +58,7 @@ class MateriModel {
       urutanMateri: json['urutanMateri'] ?? '',
       namaMateri: json['namaMateri'] ?? '',
       linkPdf: json['linkPdf'] ?? '',
+      linkYoutube: json['linkYoutube'] ?? '',
       idPertemuan: json['idPertemuan'] ?? '',
       // Parse other fields accordingly
     );
@@ -67,6 +70,7 @@ class MateriModel {
       'urutanMateri': urutanMateri,
       'namaMateri': namaMateri,
       'linkPdf': linkPdf,
+      'linkYoutube': linkYoutube,
       'idPertemuan': idPertemuan,
     };
   }

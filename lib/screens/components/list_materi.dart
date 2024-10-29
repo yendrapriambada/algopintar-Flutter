@@ -24,6 +24,7 @@ class _ListMateriState extends State<ListMateri> {
   final TextEditingController _urutanMateriController = TextEditingController();
   final TextEditingController _namaMateriController = TextEditingController();
   final TextEditingController _linkPDFController = TextEditingController();
+  final TextEditingController _linkYoutubeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -31,6 +32,7 @@ class _ListMateriState extends State<ListMateri> {
     _urutanMateriController.dispose();
     _namaMateriController.dispose();
     _linkPDFController.dispose();
+    _linkYoutubeController.dispose();
     super.dispose();
   }
 
@@ -95,6 +97,7 @@ class _ListMateriState extends State<ListMateri> {
     _urutanMateriController.clear();
     _namaMateriController.clear();
     _linkPDFController.clear();
+    _linkYoutubeController.clear();
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -180,6 +183,24 @@ class _ListMateriState extends State<ListMateri> {
                               },
                             ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: TextFormField(
+                              controller: _linkYoutubeController,
+                              decoration: InputDecoration(
+                                labelText: "Link Youtube",
+                                border: OutlineInputBorder(),
+                              ),
+                              maxLines: 4,
+                              minLines: 3,
+                              validator: (value) {
+                                if (value!.isEmpty)
+                                  return 'Please enter a value';
+                                else
+                                  return null;
+                              },
+                            ),
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -237,6 +258,7 @@ class _ListMateriState extends State<ListMateri> {
     String urutan = _urutanMateriController.text;
     String name = _namaMateriController.text;
     String linkPdf = _linkPDFController.text;
+    String linkYoutube = _linkYoutubeController.text;
     double bobotMateri = 100 / (widget.listMateri.length + 1);
     print("bobotMateri ${bobotMateri}");
 
@@ -244,7 +266,7 @@ class _ListMateriState extends State<ListMateri> {
 
     if (widget.listMateri.isEmpty) {
       print("Belum ada data materi");
-      _saveMateri(urutan, name, linkPdf, bobotMateri);
+      _saveMateri(urutan, name, linkPdf, linkYoutube, bobotMateri);
     } else {
       if (widget.listMateri.any((element) => element.urutanMateri == urutan)) {
         // print(snapshot.value);
@@ -260,16 +282,17 @@ class _ListMateriState extends State<ListMateri> {
         Navigator.pop(context);
       } else {
         print('No data available.');
-        _saveMateri(urutan, name, linkPdf, bobotMateri);
+        _saveMateri(urutan, name, linkPdf, linkYoutube, bobotMateri);
       }
     }
   }
 
-  void _saveMateri(String urutan, String name, String linkPdf, double bobotMateri) async {
+  void _saveMateri(String urutan, String name, String linkPdf, String linkYoutube, double bobotMateri) async {
     _listMateriRef.push().set({
       'urutanMateri': urutan,
       'namaMateri': name,
       'linkPdf': linkPdf,
+      'linkYoutube': linkYoutube,
       'idPertemuan': widget.idPertemuan,
       'bobotMateri': bobotMateri,
     }).then((_) {
