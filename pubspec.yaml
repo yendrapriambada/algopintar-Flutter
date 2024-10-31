@@ -46,7 +46,7 @@ dependencies:
   fl_chart: ^0.36.1
   provider: ^5.0.0
   data_table_2: ^2.5.9
-  youtube_player_iframe: ^4.0.4
+  youtube_player_iframe: ^4.0.3
 
 dev_dependencies:
   flutter_test:

@@ -30,18 +30,11 @@ class _MateriScreenState extends State<MateriScreen> {
   @override
   void initState() {
     super.initState();
-    _loadTimeLearn();
+    // _loadTimeLearn();
     _checkMateriCompletion();
     if (_isTimerRunning && !_isMateriCompleted) {
       _startTimer();
     }
-    // print("test ${getYouTubeVideoId(widget.materi?['linkYoutube'] ?? '')}");
-    //
-    // _controller = YoutubePlayerController.fromVideoId(
-    //   videoId: getYouTubeVideoId(widget.materi?['linkYoutube'] ?? '') as String,
-    //   autoPlay: false,
-    //   params: const YoutubePlayerParams(showFullscreenButton: true),
-    // );
     final linkYoutube = widget.materi?['linkYoutube'] ?? '';
     final videoId = getYouTubeVideoId(linkYoutube);
     if (videoId != null && videoId.isNotEmpty) {
@@ -60,7 +53,7 @@ class _MateriScreenState extends State<MateriScreen> {
   @override
   void dispose() {
     _stopTimer();
-    _saveTimeLearn();
+    // _saveTimeLearn();
     _controller?.close();
     super.dispose();
   }
@@ -85,25 +78,25 @@ class _MateriScreenState extends State<MateriScreen> {
     _isTimerRunning = false;
   }
 
-  Future<void> _loadTimeLearn() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      timeLearn = prefs.getInt('timeLearn') ?? 0;
-    });
-  }
+  // Future<void> _loadTimeLearn() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     timeLearn = prefs.getInt('timeLearn') ?? 0;
+  //   });
+  // }
+  //
+  // Future<void> _saveTimeLearn() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   await prefs.setInt('timeLearn', timeLearn);
+  // }
 
-  Future<void> _saveTimeLearn() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('timeLearn', timeLearn);
-  }
-
-  Future<void> _resetTimeLearn() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      timeLearn = 0;
-    });
-    await prefs.remove('timeLearn');
-  }
+  // Future<void> _resetTimeLearn() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     timeLearn = 0;
+  //   });
+  //   await prefs.remove('timeLearn');
+  // }
 
   Future<void> _checkMateriCompletion() async {
     User? user = _auth.currentUser;
@@ -183,36 +176,39 @@ class _MateriScreenState extends State<MateriScreen> {
 
     print("nextMateriData ${nextMateriData}");
 
-    if (materiData != nextMateriData) {
-      final poinRef =
-          FirebaseDatabase.instance.ref().child('users/${user?.uid}/score');
-      final poinSnapshot = await poinRef.get();
-      int poin = poinSnapshot.value as int;
-      // if (timeLearn < 900) {
-      //   // < 15 menit
-      //   poin += 50;
-      // } else if (timeLearn >= 900 && timeLearn <= 3600) {
-      //   // 15 menit - 1 jam
-      //   poin += 100;
-      // } else if (timeLearn > 3600) {
-      //   // > 1 jam
-      //   poin += 75;
-      // }
+    // if (materiData != nextMateriData) {
+    final poinRef =
+        FirebaseDatabase.instance.ref().child('users/${user?.uid}/score');
+    final poinSnapshot = await poinRef.get();
+    int poin = poinSnapshot.value as int;
 
-      if (timeLearn < 5) {
-        // < 15 menit
-        poin += 50;
-      } else if (timeLearn >= 5 && timeLearn <= 10) {
-        // 15 menit - 1 jam
-        poin += 100;
-      } else if (timeLearn > 10) {
-        // > 1 jam
-        poin += 75;
-      }
-      await poinRef.set(poin);
-      _resetTimeLearn();
-      _dialogBuilder(context, poin - (poinSnapshot.value as int));
+    // if (timeLearn < 900) {
+    //   // < 15 menit
+    //   poin += 50;
+    // } else if (timeLearn >= 900 && timeLearn <= 3600) {
+    //   // 15 menit - 1 jam
+    //   poin += 100;
+    // } else if (timeLearn > 3600) {
+    //   // > 1 jam
+    //   poin += 75;
+    // }
+
+    if (timeLearn < 5) {
+      // < 15 menit
+      poin += 50;
+    } else if (timeLearn >= 5 && timeLearn <= 10) {
+      // 15 menit - 1 jam
+      poin += 100;
+    } else if (timeLearn > 10) {
+      // > 1 jam
+      poin += 75;
     }
+    await poinRef.set(poin);
+    // _resetTimeLearn();
+
+    _dialogBuilder(context, poin - (poinSnapshot.value as int));
+
+    // }
   }
 
   Future<void> _dialogBuilder(BuildContext context, int poin) {
@@ -261,15 +257,16 @@ class _MateriScreenState extends State<MateriScreen> {
   double getResponsiveWidth(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
-    if (screenWidth >= 1024) { // Desktop width threshold
+    if (screenWidth >= 1024) {
+      // Desktop width threshold
       return screenWidth * 0.4; // 40% of screen width for desktop
-    } else if (screenWidth >= 768) { // Tablet width threshold
+    } else if (screenWidth >= 768) {
+      // Tablet width threshold
       return screenWidth * 0.6; // 60% of screen width for tablet
     } else {
       return screenWidth * 0.9; // 90% of screen width for mobile
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -294,14 +291,6 @@ class _MateriScreenState extends State<MateriScreen> {
               TextStyle(color: Color(0xff5D60E2), fontWeight: FontWeight.w500),
         ),
       ),
-      // body: SfPdfViewer.network(
-      //   widget.materi?['linkPdf'],
-      //   canShowPaginationDialog: true,
-      // ),
-      // body: YoutubePlayer(
-      //   controller: _controller,
-      //   aspectRatio: 16 / 9,
-      // )
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -312,11 +301,10 @@ class _MateriScreenState extends State<MateriScreen> {
               child: Container(
                 width: getResponsiveWidth(context),
                 child: _controller != null
-
                     ? YoutubePlayer(
-                  controller: _controller!,
-                  aspectRatio: 16 / 9,
-                )
+                        controller: _controller!,
+                        aspectRatio: 16 / 9,
+                      )
                     : SizedBox(), // Display SizedBox if _controller is null
               ),
             ),
@@ -326,9 +314,9 @@ class _MateriScreenState extends State<MateriScreen> {
               height: MediaQuery.of(context).size.height * 0.9,
               child: widget.materi?['linkPdf'] != null
                   ? SfPdfViewer.network(
-                widget.materi!['linkPdf'],
-                canShowPaginationDialog: true,
-              )
+                      widget.materi!['linkPdf'],
+                      canShowPaginationDialog: true,
+                    )
                   : SizedBox(), // Display SizedBox if linkPdf is null
             ),
           ],
