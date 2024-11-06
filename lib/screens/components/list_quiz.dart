@@ -25,7 +25,6 @@ class _ListQuizState extends State<ListQuiz> {
   final TextEditingController _pilganBController = TextEditingController();
   final TextEditingController _pilganCController = TextEditingController();
   final TextEditingController _pilganDController = TextEditingController();
-  final TextEditingController _pilganEController = TextEditingController();
   final TextEditingController _kunciJawabanController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -37,7 +36,6 @@ class _ListQuizState extends State<ListQuiz> {
     _pilganBController.dispose();
     _pilganCController.dispose();
     _pilganDController.dispose();
-    _pilganEController.dispose();
     _kunciJawabanController.dispose();
     super.dispose();
   }
@@ -106,7 +104,6 @@ class _ListQuizState extends State<ListQuiz> {
     _pilganBController.clear();
     _pilganCController.clear();
     _pilganDController.clear();
-    _pilganEController.clear();
     _kunciJawabanController.clear();
 
     showDialog(
@@ -251,24 +248,6 @@ class _ListQuizState extends State<ListQuiz> {
                           Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: TextFormField(
-                              controller: _pilganEController,
-                              decoration: InputDecoration(
-                                labelText: "Deskripsi Pilgan E",
-                                border: OutlineInputBorder(),
-                              ),
-                              maxLines: 4,
-                              minLines: 3,
-                              validator: (value) {
-                                if (value!.isEmpty)
-                                  return 'Please enter a value';
-                                else
-                                  return null;
-                              },
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: TextFormField(
                               controller: _kunciJawabanController,
                               decoration: InputDecoration(
                                 labelText: "Kunci Jawaban",
@@ -344,14 +323,13 @@ class _ListQuizState extends State<ListQuiz> {
     String pilganB = _pilganBController.text;
     String pilganC = _pilganCController.text;
     String pilganD = _pilganDController.text;
-    String pilganE = _pilganEController.text;
     String kunciJawaban = _kunciJawabanController.text;
 
     _listQuizRef = FirebaseDatabase.instance.ref().child('soalQuizList');
 
     if (widget.listQuiz.isEmpty) {
       print("Belum ada data quiz");
-      _saveQuiz(nomorSoal, soal, pilganA, pilganB, pilganC, pilganD, pilganE, kunciJawaban);
+      _saveQuiz(nomorSoal, soal, pilganA, pilganB, pilganC, pilganD, kunciJawaban);
     } else {
       if (widget.listQuiz.any((element) => element.nomorSoal == nomorSoal)) {
         // print(snapshot.value);
@@ -367,12 +345,12 @@ class _ListQuizState extends State<ListQuiz> {
         Navigator.pop(context);
       } else {
         print('No data available.');
-        _saveQuiz(nomorSoal, soal, pilganA, pilganB, pilganC, pilganD, pilganE, kunciJawaban);
+        _saveQuiz(nomorSoal, soal, pilganA, pilganB, pilganC, pilganD, kunciJawaban);
       }
     }
   }
 
-  void _saveQuiz(String nomorSoal, String soal, String pilganA, String pilganB, String pilganC, String pilganD, String pilganE, String kunciJawaban) async {
+  void _saveQuiz(String nomorSoal, String soal, String pilganA, String pilganB, String pilganC, String pilganD, String kunciJawaban) async {
     _listQuizRef.push().set({
       'nomorSoal': nomorSoal,
       'soal': soal,
@@ -380,7 +358,6 @@ class _ListQuizState extends State<ListQuiz> {
       'pilganB': pilganB,
       'pilganC': pilganC,
       'pilganD': pilganD,
-      'pilganE': pilganE,
       'kunciJawaban': kunciJawaban,
       'idPertemuan': widget.idPertemuan,
     }).then((_) {

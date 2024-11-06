@@ -22,7 +22,6 @@ class _ListQuizTableState extends State<ListQuizTable> {
   final TextEditingController _pilganBController = TextEditingController();
   final TextEditingController _pilganCController = TextEditingController();
   final TextEditingController _pilganDController = TextEditingController();
-  final TextEditingController _pilganEController = TextEditingController();
   final TextEditingController _kunciJawabanController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -34,7 +33,6 @@ class _ListQuizTableState extends State<ListQuizTable> {
     _pilganBController.dispose();
     _pilganCController.dispose();
     _pilganDController.dispose();
-    _pilganEController.dispose();
     _kunciJawabanController.dispose();
     super.dispose();
   }
@@ -59,7 +57,6 @@ class _ListQuizTableState extends State<ListQuizTable> {
             DataColumn2(label: Text('Pilgan B', style: TextStyle(fontWeight: FontWeight.bold)),),
             DataColumn2(label: Text('Pilgan C', style: TextStyle(fontWeight: FontWeight.bold)),),
             DataColumn2(label: Text('Pilgan D', style: TextStyle(fontWeight: FontWeight.bold)),),
-            DataColumn2(label: Text('Pilgan E', style: TextStyle(fontWeight: FontWeight.bold)),),
             DataColumn2(label: Text('Kunci Jawaban', style: TextStyle(fontWeight: FontWeight.bold)),),
             DataColumn2(label: Text('Aksi', style: TextStyle(fontWeight: FontWeight.bold)), fixedWidth: 50),
           ],
@@ -75,7 +72,6 @@ class _ListQuizTableState extends State<ListQuizTable> {
                   DataCell(Text(quiz.pilganB)),
                   DataCell(Text(quiz.pilganC)),
                   DataCell(Text(quiz.pilganD)),
-                  DataCell(Text(quiz.pilganE)),
                   DataCell(Text(quiz.kunciJawaban)),
                   DataCell(Column(
                     children: [
@@ -104,7 +100,6 @@ class _ListQuizTableState extends State<ListQuizTable> {
                               quiz.pilganB,
                               quiz.pilganC,
                               quiz.pilganD,
-                              quiz.pilganE,
                               quiz.kunciJawaban);
                         },
                       ),
@@ -139,14 +134,13 @@ class _ListQuizTableState extends State<ListQuizTable> {
   }
 
   _showSimpleModalDialog(context, String quizId, String nomorSoal, String soal,
-      String pilganA, String pilganB, String pilganC, String pilganD, String pilganE, String kunciJawaban) {
+      String pilganA, String pilganB, String pilganC, String pilganD, String kunciJawaban) {
     _nomorSoalController.text = nomorSoal;
     _soalController.text = soal;
     _pilganAController.text = pilganA;
     _pilganBController.text = pilganB;
     _pilganCController.text = pilganC;
     _pilganDController.text = pilganD;
-    _pilganEController.text = pilganE;
     _kunciJawabanController.text = kunciJawaban;
 
     showDialog(
@@ -291,24 +285,6 @@ class _ListQuizTableState extends State<ListQuizTable> {
                           Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: TextFormField(
-                              controller: _pilganEController,
-                              decoration: InputDecoration(
-                                labelText: "Deskripsi Pilgan E",
-                                border: OutlineInputBorder(),
-                              ),
-                              maxLines: 4,
-                              minLines: 3,
-                              validator: (value) {
-                                if (value!.isEmpty)
-                                  return 'Please enter a value';
-                                else
-                                  return null;
-                              },
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: TextFormField(
                               controller: _kunciJawabanController,
                               decoration: InputDecoration(
                                 labelText: "Kunci Jawaban",
@@ -388,7 +364,6 @@ class _ListQuizTableState extends State<ListQuizTable> {
       "pilganB": _pilganBController.text,
       "pilganC": _pilganCController.text,
       "pilganD": _pilganDController.text,
-      "pilganE": _pilganEController.text,
       "kunciJawaban": _kunciJawabanController.text,
     };
 

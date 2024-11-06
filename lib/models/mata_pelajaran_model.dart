@@ -84,7 +84,6 @@ class Quizmodel {
   final String pilganB;
   final String pilganC;
   final String pilganD;
-  final String pilganE;
   final String kunciJawaban;
   final String idPertemuan; // ID pertemuan
 
@@ -96,7 +95,6 @@ class Quizmodel {
     required this.pilganB,
     required this.pilganC,
     required this.pilganD,
-    required this.pilganE,
     required this.kunciJawaban,
     required this.idPertemuan,
   });
@@ -110,7 +108,6 @@ class Quizmodel {
       pilganB: json['pilganB'] ?? '',
       pilganC: json['pilganC'] ?? '',
       pilganD: json['pilganD'] ?? '',
-      pilganE: json['pilganE'] ?? '',
       kunciJawaban: json['kunciJawaban'] ?? '',
       idPertemuan: json['idPertemuan'] ?? '',
     );
@@ -125,7 +122,6 @@ class Quizmodel {
       'pilganB': pilganB,
       'pilganC': pilganC,
       'pilganD': pilganD,
-      'pilganE': pilganE,
       'kunciJawaban': kunciJawaban,
       'idPertemuan': idPertemuan,
     };

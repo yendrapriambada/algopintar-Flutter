@@ -251,7 +251,7 @@ class _HomepageWebState extends State<HomepageWeb> {
                                     margin: const EdgeInsets.only(
                                         top: 8.0, left: 16.0),
                                     child: const Text(
-                                      "Selamat Datang di AlgoPintar 👋",
+                                      "Selamat Datang di Pintar Informatika 👋",
                                       textAlign: TextAlign.start,
                                       style: TextStyle(
                                         fontFamily: 'Montserrat',
@@ -710,7 +710,7 @@ class _HomepageMobileState extends State<HomepageMobile> {
             Container(
               margin: const EdgeInsets.only(top: 8.0, left: 16.0),
               child: const Text(
-                "Selamat Datang di AlgoPintar 👋",
+                "Selamat Datang di Pintar Informatika 👋",
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontFamily: 'Montserrat',

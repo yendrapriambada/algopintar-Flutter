@@ -255,35 +255,6 @@ class _QuizScreenState extends State<QuizScreen> {
                       ),
                     ),
                   ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 14),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff5D60E2),
-                        minimumSize: const Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _quiz[currentIndex]['kunciJawaban'] == "E" ? jawabanBenar++ : jawabanBenar;
-
-                          if ((currentIndex + 1) == _quiz.length) {
-                            var point = (jawabanBenar / _quiz.length) * 100;
-                            _dialogBuilder(context, point.toInt());
-                          }
-                          else{
-                            currentIndex = (currentIndex + 1);
-                          }
-                        });
-                      },
-                      child: Text(
-                        _quiz[currentIndex]['pilganE'].toString(),
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),

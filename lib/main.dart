@@ -87,7 +87,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       // initialRoute: FirebaseAuth.instance.currentUser == null ? '/login' : '/home',
-      title: 'Algo Pintar',
+      title: 'Pintar Informatika',
       // theme: ThemeData(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

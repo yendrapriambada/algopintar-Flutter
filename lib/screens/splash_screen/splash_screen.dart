@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
               Container(
                 margin: const EdgeInsets.only(top: 16),
                 child: const Text(
-                  'Algo Pintar',
+                  'Pintar Informatika',
                   style: TextStyle(
                     fontSize: 24,
                     color: Colors.white,

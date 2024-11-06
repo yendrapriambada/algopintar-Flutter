@@ -54,7 +54,7 @@ class LoginWebPage extends StatelessWidget {
                     Container(
                       margin: const EdgeInsets.only(top: 16),
                       child: const Text(
-                        'Algo Pintar',
+                        'Pintar Informatika',
                         style: TextStyle(
                           fontSize: 24,
                           color: Colors.white,
@@ -67,7 +67,7 @@ class LoginWebPage extends StatelessWidget {
                       margin: const EdgeInsets.symmetric(
                           vertical: 8, horizontal: 24),
                       child: const Text(
-                        'AlgoPintar merupakan sebuah platform media pembelajaran bagi siswa yang ingin mempelajari dasar keilmuan pemrograman. Aplikasi ini dilengkapi dengan materi, latihan soal, progress belajar, dan papan peringkat.',
+                        'Belajar Informatika jadi lebih mudah dan menyenangkan',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14,
