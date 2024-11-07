@@ -325,6 +325,56 @@ class DetailWebPage extends StatelessWidget {
                           //         ),
                           //       ),
                           //     ))
+
+                          Container(
+                            margin: const EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0),
+                            child: const Text(
+                              'Quiz',
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 16.0, right: 16.0),
+                            child: ButtonBar(
+                              alignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => QuizScreen(
+                                          idPertemuan: idPertemuan,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF5D60E2),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12), // <-- Radius
+                                    ),
+                                    padding: EdgeInsets.all(18),
+                                  ),
+                                  child: const Text(
+                                    'Mulai Quiz',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14.0,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
