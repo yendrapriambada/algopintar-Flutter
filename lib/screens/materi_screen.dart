@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:algopintar/screens/detail_materi_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -207,9 +208,9 @@ class _MateriScreenState extends State<MateriScreen> {
     // _resetTimeLearn();
 
     _dialogBuilder(context, poin - (poinSnapshot.value as int));
-
     // }
   }
+
 
   Future<void> _dialogBuilder(BuildContext context, int poin) {
     IconData iconData = Icons.workspace_premium;
@@ -246,6 +247,8 @@ class _MateriScreenState extends State<MateriScreen> {
               child: const Text('Close'),
               onPressed: () {
                 Navigator.of(context).pop();
+                Navigator.of(context).pop();
+
               },
             ),
           ],
@@ -333,7 +336,7 @@ class _MateriScreenState extends State<MateriScreen> {
                 onPressed: () {
                   _stopTimer(); // Hentikan timer saat tombol Selesai ditekan
                   _markAsDoneMaterial();
-                  Navigator.pop(context);
+                  // Navigator.pop(context);
                 },
                 child: const Text(
                   'Selesai',
