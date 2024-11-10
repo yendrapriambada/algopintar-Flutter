@@ -183,27 +183,24 @@ class _MateriScreenState extends State<MateriScreen> {
     final poinSnapshot = await poinRef.get();
     int poin = poinSnapshot.value as int;
 
-    // if (timeLearn < 900) {
+    if (timeLearn <= 300) {
+      // <= 5 menit
+      poin += 1;
+    } else {
+      // > 5 menit
+      poin += 10;
+    }
+
+    // if (timeLearn < 5) {
     //   // < 15 menit
     //   poin += 50;
-    // } else if (timeLearn >= 900 && timeLearn <= 3600) {
+    // } else if (timeLearn >= 5 && timeLearn <= 10) {
     //   // 15 menit - 1 jam
     //   poin += 100;
-    // } else if (timeLearn > 3600) {
+    // } else if (timeLearn > 10) {
     //   // > 1 jam
     //   poin += 75;
     // }
-
-    if (timeLearn < 5) {
-      // < 15 menit
-      poin += 50;
-    } else if (timeLearn >= 5 && timeLearn <= 10) {
-      // 15 menit - 1 jam
-      poin += 100;
-    } else if (timeLearn > 10) {
-      // > 1 jam
-      poin += 75;
-    }
     await poinRef.set(poin);
     // _resetTimeLearn();
 
