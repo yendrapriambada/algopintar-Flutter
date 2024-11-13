@@ -31,7 +31,6 @@ class _MateriScreenState extends State<MateriScreen> {
   @override
   void initState() {
     super.initState();
-    // _loadTimeLearn();
     _checkMateriCompletion();
     if (_isTimerRunning && !_isMateriCompleted) {
       _startTimer();
@@ -39,14 +38,12 @@ class _MateriScreenState extends State<MateriScreen> {
     final linkYoutube = widget.materi?['linkYoutube'] ?? '';
     final videoId = getYouTubeVideoId(linkYoutube);
     if (videoId != null && videoId.isNotEmpty) {
-      // Initialize controller only if videoId is valid
       _controller = YoutubePlayerController.fromVideoId(
         videoId: videoId,
         autoPlay: false,
         params: const YoutubePlayerParams(showFullscreenButton: true),
       );
     } else {
-      // Handle the null or empty videoId case (e.g., log, show a message, or leave _controller null)
       print("Invalid YouTube link or video ID.");
     }
   }
@@ -54,7 +51,6 @@ class _MateriScreenState extends State<MateriScreen> {
   @override
   void dispose() {
     _stopTimer();
-    // _saveTimeLearn();
     _controller?.close();
     super.dispose();
   }
@@ -79,26 +75,6 @@ class _MateriScreenState extends State<MateriScreen> {
     _isTimerRunning = false;
   }
 
-  // Future<void> _loadTimeLearn() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   setState(() {
-  //     timeLearn = prefs.getInt('timeLearn') ?? 0;
-  //   });
-  // }
-  //
-  // Future<void> _saveTimeLearn() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   await prefs.setInt('timeLearn', timeLearn);
-  // }
-
-  // Future<void> _resetTimeLearn() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   setState(() {
-  //     timeLearn = 0;
-  //   });
-  //   await prefs.remove('timeLearn');
-  // }
-
   Future<void> _checkMateriCompletion() async {
     User? user = _auth.currentUser;
     String? materiId = widget.materi?['idMateri'];
@@ -113,7 +89,7 @@ class _MateriScreenState extends State<MateriScreen> {
         setState(() {
           _isMateriCompleted = true;
         });
-        _stopTimer(); // Hentikan timer saat materi selesai
+        _stopTimer();
       }
     }
   }
@@ -124,7 +100,6 @@ class _MateriScreenState extends State<MateriScreen> {
     String? materiId = widget.materi?['idMateri'];
 
     if (materiId != null) {
-      // Mendapatkan bobot materi dari Firebase
       final bobotMateriRef = FirebaseDatabase.instance
           .ref()
           .child('materialList/$materiId/bobotMateri');
@@ -132,19 +107,17 @@ class _MateriScreenState extends State<MateriScreen> {
       print(bobotMateriSnapshot.value.toString());
       double bobotMateri = double.parse(bobotMateriSnapshot.value.toString());
 
-      // Menyimpan status materi yang sudah selesai
       final subMaterialDoneRef = FirebaseDatabase.instance
           .ref()
           .child('users/${user?.uid}/subMaterialDone/$materiId');
       await subMaterialDoneRef.set(1);
 
-      // Menambahkan bobot materi ke progress belajar
       final progressBelajarRef = FirebaseDatabase.instance
           .ref()
           .child('users/${user?.uid}/progressBelajar');
       final progressBelajarSnapshot = await progressBelajarRef.get();
       double progressBelajar =
-          double.parse(progressBelajarSnapshot.value.toString());
+      double.parse(progressBelajarSnapshot.value.toString());
       double newProgress = progressBelajar + bobotMateri;
       await progressBelajarRef.set(newProgress);
     } else {
@@ -152,7 +125,6 @@ class _MateriScreenState extends State<MateriScreen> {
     }
 
     if (nextMateriId != null) {
-      // Mengupdate status materi selanjutnya
       final nextMateriRef = FirebaseDatabase.instance
           .ref()
           .child('users/${user?.uid}/subMaterialDone/$nextMateriId');
@@ -161,13 +133,12 @@ class _MateriScreenState extends State<MateriScreen> {
       print('Error: nextIdMateri is null');
     }
 
-    // cek jika nextMateriId.idPertemuan != materiId.idPertemuan, maka kalkulasi poinya
     final materiIdRef = FirebaseDatabase.instance
         .ref()
         .child('materialList/$materiId/idPertemuan');
     final materiSnapshot = await materiIdRef.get();
     final materiData = materiSnapshot.value;
-    print("materiData ${materiData}");
+    print("materiData $materiData");
 
     final nextMateriIdRef = FirebaseDatabase.instance
         .ref()
@@ -175,39 +146,22 @@ class _MateriScreenState extends State<MateriScreen> {
     final nextMateriSnapshot = await nextMateriIdRef.get();
     final nextMateriData = nextMateriSnapshot.value;
 
-    print("nextMateriData ${nextMateriData}");
+    print("nextMateriData $nextMateriData");
 
-    // if (materiData != nextMateriData) {
     final poinRef =
-        FirebaseDatabase.instance.ref().child('users/${user?.uid}/score');
+    FirebaseDatabase.instance.ref().child('users/${user?.uid}/score');
     final poinSnapshot = await poinRef.get();
     int poin = poinSnapshot.value as int;
 
     if (timeLearn <= 300) {
-      // <= 5 menit
       poin += 1;
     } else {
-      // > 5 menit
       poin += 10;
     }
-
-    // if (timeLearn < 5) {
-    //   // < 15 menit
-    //   poin += 50;
-    // } else if (timeLearn >= 5 && timeLearn <= 10) {
-    //   // 15 menit - 1 jam
-    //   poin += 100;
-    // } else if (timeLearn > 10) {
-    //   // > 1 jam
-    //   poin += 75;
-    // }
     await poinRef.set(poin);
-    // _resetTimeLearn();
 
     _dialogBuilder(context, poin - (poinSnapshot.value as int));
-    // }
   }
-
 
   Future<void> _dialogBuilder(BuildContext context, int poin) {
     IconData iconData = Icons.workspace_premium;
@@ -245,7 +199,6 @@ class _MateriScreenState extends State<MateriScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
-
               },
             ),
           ],
@@ -254,92 +207,72 @@ class _MateriScreenState extends State<MateriScreen> {
     );
   }
 
-  double getResponsiveWidth(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-
-    if (screenWidth >= 1024) {
-      // Desktop width threshold
-      return screenWidth * 0.4; // 40% of screen width for desktop
-    } else if (screenWidth >= 768) {
-      // Tablet width threshold
-      return screenWidth * 0.6; // 60% of screen width for tablet
-    } else {
-      return screenWidth * 0.9; // 90% of screen width for mobile
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    print(widget.materi);
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          centerTitle: true,
+          backgroundColor: Colors.white,
+          elevation: 1,
+          title: Text(
+            'Materi: ${timeLearn.toString()} detik',
+            style: TextStyle(color: Color(0xff5D60E2), fontWeight: FontWeight.w500),
+          ),
+          bottom: TabBar(
+            labelColor: Color(0xff5D60E2),
+            unselectedLabelColor: Colors.grey,
+            indicatorColor: Color(0xff5D60E2),
+            tabs: [
+              Tab(text: "Video"),
+              Tab(text: "Materi"),
+            ],
+          ),
         ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 1,
-        title: Text(
-          'Materi: ${timeLearn.toString()} detik',
-          style:
-              TextStyle(color: Color(0xff5D60E2), fontWeight: FontWeight.w500),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
+        body: TabBarView(
           children: [
-            SizedBox(height: 20), // Space from the top
             Center(
-              child: Container(
-                width: getResponsiveWidth(context),
-                child: _controller != null
-                    ? YoutubePlayer(
-                        controller: _controller!,
-                        aspectRatio: 16 / 9,
-                      )
-                    : SizedBox(), // Display SizedBox if _controller is null
-              ),
+              child: _controller != null
+                  ? YoutubePlayer(
+                controller: _controller!,
+                aspectRatio: 16 / 9,
+              )
+                  : Text("Tidak ada video yang tersedia, silahkan buka materi!"),
             ),
-            SizedBox(height: 20),
-            Container(
-              // height: 500,
-              height: MediaQuery.of(context).size.height * 0.9,
-              child: widget.materi?['linkPdf'] != null
-                  ? SfPdfViewer.network(
-                      widget.materi!['linkPdf'],
-                      canShowPaginationDialog: true,
-                    )
-                  : SizedBox(), // Display SizedBox if linkPdf is null
-            ),
+            widget.materi?['linkPdf'] != null
+                ? SfPdfViewer.network(
+              widget.materi!['linkPdf'],
+              canShowPaginationDialog: true,
+            )
+                : Center(child: Text("No PDF available")),
           ],
         ),
-      ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(10),
-        child: !_isMateriCompleted
-            ? ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xff5D60E2),
-                  minimumSize: const Size(double.infinity, 50),
-                ),
-                onPressed: () {
-                  _stopTimer(); // Hentikan timer saat tombol Selesai ditekan
-                  _markAsDoneMaterial();
-                  // Navigator.pop(context);
-                },
-                child: const Text(
-                  'Selesai',
-                  style: TextStyle(color: Colors.white),
-                ))
-            : SizedBox(),
+        bottomNavigationBar: Container(
+          padding: const EdgeInsets.all(10),
+          child: !_isMateriCompleted
+              ? ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xff5D60E2),
+              minimumSize: const Size(double.infinity, 50),
+            ),
+            onPressed: () {
+              _stopTimer();
+              _markAsDoneMaterial();
+            },
+            child: const Text("Tandai Selesai"),
+          )
+              : const SizedBox(),
+        ),
       ),
     );
   }
