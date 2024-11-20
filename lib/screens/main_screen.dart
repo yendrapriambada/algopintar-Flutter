@@ -1,5 +1,6 @@
 import 'package:algopintar/data/data_static_subjects.dart';
 import 'package:algopintar/models/mata_pelajaran_model.dart';
+import 'package:algopintar/screens/components/leaderboard_info_detail.dart';
 import 'package:algopintar/screens/landing_page_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,6 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final DatabaseReference _database = FirebaseDatabase.instance.ref();
   String username = 'kawan';
+  String fullName = 'kawankawan';
   String email = '';
   int score = 0;
   late DatabaseReference _studentsRef;
@@ -88,12 +90,14 @@ class _MainScreenState extends State<MainScreen> {
         if (snapshot.value != null) {
           var userMap = snapshot.value as Map<dynamic, dynamic>;
           var usernameValue = userMap['username'] as String?;
+          var fullNameValue = userMap['fullName'] as String?;
           var emailValue = userMap['email'] as String?;
           var scoreValue = userMap['score'] as int?;
 
           if (emailValue != null) {
             setState(() {
               username = usernameValue ?? '';
+              fullName = fullNameValue ?? '';
               email = emailValue ?? '';
               score = scoreValue ?? 0;
             });
@@ -113,9 +117,12 @@ class _MainScreenState extends State<MainScreen> {
   }
 
 
+
+
   @override
   Widget build(BuildContext context) {
     print("username: ${username}");
+    print("fullname: ${fullName}");
     print("email: ${email}");
     print("students: ${_students}");
     print("Score: ${score}");
@@ -147,6 +154,7 @@ class _MainScreenState extends State<MainScreen> {
         if (constraints.maxWidth > 800) {
           return HomepageWeb(
               username: username,
+              fullName: fullName,
               score: score,
               students: _students,
               currentPertemuan: currentPertemuan,
@@ -156,6 +164,7 @@ class _MainScreenState extends State<MainScreen> {
         } else {
           return HomepageMobile(
               username: username,
+              fullName: fullName,
               score: score,
               students: _students,
               currentPertemuan: currentPertemuan,
@@ -169,6 +178,7 @@ class _MainScreenState extends State<MainScreen> {
 
 class HomepageWeb extends StatefulWidget {
   final String username;
+  final String fullName;
   final int score;
   final List<Map<dynamic, dynamic>> students;
   final int currentPertemuan;
@@ -178,6 +188,7 @@ class HomepageWeb extends StatefulWidget {
   const HomepageWeb(
       {Key? key,
       required this.username,
+      required this.fullName,
       required this.score,
       required this.students,
       required this.currentPertemuan,
@@ -466,7 +477,7 @@ class _HomepageWebState extends State<HomepageWeb> {
                             margin: const EdgeInsets.only(
                                 left: 16.0, right: 16.0, bottom: 8.0),
                             child: SizedBox(
-                              height: 372,
+                              height: 400,
                               child: Card(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
@@ -477,6 +488,28 @@ class _HomepageWebState extends State<HomepageWeb> {
                               ),
                             ),
                           ),
+                          // Container(
+                          //   margin: const EdgeInsets.only(
+                          //       left: 16.0, right: 16.0, bottom: 8.0),
+                          //   child: SizedBox(
+                          //     height: 372,
+                          //     child: Card(
+                          //       shape: RoundedRectangleBorder(
+                          //         borderRadius: BorderRadius.circular(10.0),
+                          //       ),
+                          //       child: LeaderboardInfoDetail(
+                          //             student: {
+                          //               'username': widget.username,
+                          //               'fullName': widget.fullName,
+                          //               'score': widget.score,
+                          //             },
+                          //             rank: widget.students.indexWhere((student) =>
+                          //                 student['username'] == widget.username) +
+                          //                 1,
+                          //           ),
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -626,6 +659,7 @@ class _HomepageWebState extends State<HomepageWeb> {
 
 class HomepageMobile extends StatefulWidget {
   final String username;
+  final String fullName;
   final int score;
   final List<Map<dynamic, dynamic>> students;
   final int currentPertemuan;
@@ -635,6 +669,7 @@ class HomepageMobile extends StatefulWidget {
   const HomepageMobile(
       {Key? key,
       required this.username,
+      required this.fullName,
       required this.score,
       required this.students,
       required this.currentPertemuan,
@@ -966,7 +1001,7 @@ class _HomepageMobileState extends State<HomepageMobile> {
               margin:
                   const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
               child: SizedBox(
-                height: 350,
+                height: 400,
                 child: Card(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),

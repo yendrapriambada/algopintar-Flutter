@@ -3,7 +3,8 @@ import 'package:algopintar/constants/constants.dart';
 
 class LeaderboardInfoDetail extends StatelessWidget {
   final Map<dynamic, dynamic> student;
-  const LeaderboardInfoDetail({Key? key, required this.student}) : super(key: key);
+  final int rank;
+  const LeaderboardInfoDetail({Key? key, required this.student, required this.rank,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +13,16 @@ class LeaderboardInfoDetail extends StatelessWidget {
       padding: EdgeInsets.all(appPadding / 2),
       child: Row(
         children: [
-          // Text('1'),
+          // Tampilkan angka ranking
+          Text(
+            '$rank',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: textColor,
+              fontSize: 18,
+            ),
+          ),
+          const SizedBox(width: 10),
           ClipRRect(
             borderRadius: BorderRadius.circular(40),
             child: Image.network(

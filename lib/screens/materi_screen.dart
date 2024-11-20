@@ -153,10 +153,13 @@ class _MateriScreenState extends State<MateriScreen> {
     final poinSnapshot = await poinRef.get();
     int poin = poinSnapshot.value as int;
 
-    if (timeLearn <= 300) {
-      poin += 1;
-    } else {
+    if (timeLearn <= 480) {
+      poin += 3;
+    }
+    else if (timeLearn > 480 && timeLearn <= 1080){
       poin += 10;
+    } else {
+      poin += 1;
     }
     await poinRef.set(poin);
 
@@ -167,11 +170,11 @@ class _MateriScreenState extends State<MateriScreen> {
     IconData iconData = Icons.workspace_premium;
     Color iconColor = Color(0xffE5B80B);
 
-    if (poin == 100) {
+    if (poin == 10) {
       iconColor = Color(0xffE5B80B);
-    } else if (poin == 75) {
+    } else if (poin == 3) {
       iconColor = Color(0xffC0C0C0);
-    } else if (poin == 50) {
+    } else if (poin == 1) {
       iconColor = Color(0xffCD7F32);
     }
 
