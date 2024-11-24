@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 
 class QuizScreen extends StatefulWidget {
   final String? idPertemuan;
+  final int jenisQuiz;
+  // final String? idMateri;
 
-  QuizScreen({Key? key, required this.idPertemuan}) : super(key: key);
+  QuizScreen({Key? key, required this.idPertemuan, required this.jenisQuiz}) : super(key: key);
 
   @override
   State<QuizScreen> createState() => _QuizScreenState();
@@ -17,7 +19,9 @@ class _QuizScreenState extends State<QuizScreen> {
   int jawabanBenar = 0;
   int currentIndex = 0;
   late DatabaseReference _quizList;
+  late DatabaseReference _soalPemahaman;
   List<Map<dynamic, dynamic>> _quiz = [];
+  List<Map<dynamic, dynamic>> _soalPemahamanSiswa = [];
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
@@ -27,9 +31,14 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 
   Future<void> _getQuizList() async {
-    // for leaderboard
-    await Firebase.initializeApp();
-    _quizList = FirebaseDatabase.instance.ref().child('soalQuizList');
+    if (widget.jenisQuiz == 1) {
+      await Firebase.initializeApp();
+      _quizList = FirebaseDatabase.instance.ref().child('soalQuizList');
+    } else {
+      await Firebase.initializeApp();
+      _quizList = FirebaseDatabase.instance.ref().child('soalPemahamanList');
+    }
+
 
     _quizList.onValue.listen((event) {
       if (event.snapshot.value != null) {
@@ -43,23 +52,36 @@ class _QuizScreenState extends State<QuizScreen> {
 
   void _updateQuizList(Map<dynamic, dynamic> quizMap) {
     _quiz.clear();
-    quizMap.forEach((key, value) {
-      if (value['idPertemuan'] == widget.idPertemuan) {
-        Map<String, dynamic> quizWithKey =
-            Map.from(value); // Create a copy of the material
-        quizWithKey['idQuiz'] = key; // Add the key to the material
-        _quiz.add(quizWithKey);
-      }
-    });
+    if (widget.jenisQuiz == 1) {
+      quizMap.forEach((key, value) {
+        if (value['idPertemuan'] == widget.idPertemuan) {
+          Map<String, dynamic> quizWithKey =
+              Map.from(value); // Create a copy of the material
+          quizWithKey['idQuiz'] = key; // Add the key to the material
+          _quiz.add(quizWithKey);
+        }
+      });
+    } else {
+      quizMap.forEach((key, value) {
+        if (value['idMateri'] == widget.idPertemuan) {
+          Map<String, dynamic> quizWithKey =
+              Map.from(value); // Create a copy of the material
+          quizWithKey['idQuiz'] = key; // Add the key to the material
+          _quiz.add(quizWithKey);
+        }
+      });
+    }
+
     _quiz.sort((a, b) => a['nomorSoal'].compareTo(b['nomorSoal']));
     print("Hasil Akhir: $_quiz");
     setState(() {}); // Trigger widget rebuild after updating data
   }
-
-  Future<void> _dialogBuilder(BuildContext context, int poin) {
+  Future<void> _dialogBuilder(BuildContext context, int poin) async {
+    User? user = _auth.currentUser;
     IconData iconData = Icons.workspace_premium;
     Color iconColor = Color(0xffE5B80B);
 
+    // Tentukan warna berdasarkan poin
     if (poin == 100) {
       iconColor = Color(0xffE5B80B);
     } else if (poin == 75) {
@@ -68,37 +90,91 @@ class _QuizScreenState extends State<QuizScreen> {
       iconColor = Color(0xffCD7F32);
     }
 
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Selamat!'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Terimakasih telah menyelesaikan quiz ini. \nAnda berhak mendapatkan point sebesar $poin poin',
-              ),
-              Icon(
-                iconData,
-                size: 100,
-                color: iconColor,
+    if (widget.jenisQuiz == 1) {
+      // Tambahkan poin ke database
+      final poinRef = FirebaseDatabase.instance.ref().child('users/${user?.uid}/score');
+      final poinSnapshot = await poinRef.get();
+      int currentPoin = (poinSnapshot.value ?? 0) as int;
+
+      // Tambahkan poin baru
+      await poinRef.set(currentPoin + poin);
+
+      // Tampilkan dialog
+      return showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Selamat!'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Terimakasih telah menyelesaikan quiz ini.\n'
+                      'Anda berhak mendapatkan poin sebesar $poin.',
+                ),
+                Icon(
+                  iconData,
+                  size: 100,
+                  color: iconColor,
+                ),
+              ],
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Close'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
               ),
             ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+          );
+        },
+      );
+    } else if (widget.jenisQuiz == 2) {
+      // Navigasi berdasarkan nilai poin
+      if (poin == 100) {
+        Navigator.of(context).pop(1); // Return 1 jika poin 100
+        // Navigator.of(context).pop(1); // Return 1 jika poin 100
+      } else {
+        Navigator.of(context).pop(0); // Return 0 jika poin tidak 100
+        // Navigator.of(context).pop(0); // Return 0 jika poin tidak 100
+      }
+    }
   }
+
+
+
+  // Future<void> _getSoalPemahaman() async {
+  //   // for leaderboard
+  //   await Firebase.initializeApp();
+  //   _soalPemahaman= FirebaseDatabase.instance.ref().child('soalPemahaman');
+  //
+  //   _soalPemahaman.onValue.listen((event) {
+  //     if (event.snapshot.value != null) {
+  //       Map<dynamic, dynamic> soalPemahamanMap =
+  //       event.snapshot.value as Map<dynamic, dynamic>;
+  //       // print(QuizMap);
+  //       _updateSoalPemahaman(soalPemahamanMap);
+  //     }
+  //   });
+  // }
+  //
+  // void _updateSoalPemahaman(Map<dynamic, dynamic> soalPemahamanMap) {
+  //   _soalPemahamanSiswa.clear();
+  //   soalPemahamanMap.forEach((key, value) {
+  //     if (value['idMateri'] == widget.idMateri) {
+  //       Map<String, dynamic> soalPemahamanWithKey =
+  //       Map.from(value); // Create a copy of the material
+  //       soalPemahamanWithKey['idSoalPemahaman'] = key; // Add the key to the material
+  //       _soalPemahamanSiswa.add(soalPemahamanWithKey);
+  //     }
+  //   });
+  //   _soalPemahamanSiswa.sort((a, b) => a['nomorSoal'].compareTo(b['nomorSoal']));
+  //   print("Hasil Akhir: $_soalPemahamanSiswa");
+  //   setState(() {}); // Trigger widget rebuild after updating data
+  // }
+
 
   @override
   Widget build(BuildContext context) {
@@ -116,10 +192,14 @@ class _QuizScreenState extends State<QuizScreen> {
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 1,
-        title: Text(
+        title: widget.jenisQuiz == 1 ? Text(
           'Quiz',
           style:
               TextStyle(color: Color(0xff5D60E2), fontWeight: FontWeight.w500),
+        ): Text(
+          'Soal Pemahaman',
+          style:
+          TextStyle(color: Color(0xff5D60E2), fontWeight: FontWeight.w500),
         ),
       ),
       body: _quiz.isEmpty

@@ -350,6 +350,7 @@ class DetailWebPage extends StatelessWidget {
                                       MaterialPageRoute(
                                         builder: (context) => QuizScreen(
                                           idPertemuan: idPertemuan,
+                                          jenisQuiz: 1,
                                         ),
                                       ),
                                     );
@@ -597,6 +598,7 @@ class DetailMobilePage extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => QuizScreen(
                           idPertemuan: idPertemuan,
+                          jenisQuiz: 1,
                         ),
                       ),
                     );

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:algopintar/screens/detail_materi_screen.dart';
+import 'package:algopintar/screens/quiz_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -94,81 +95,214 @@ class _MateriScreenState extends State<MateriScreen> {
     }
   }
 
+  // Future<void> _markAsDoneMaterial() async {
+  //   User? user = _auth.currentUser;
+  //   String? nextMateriId = widget.nextMateri?['idMateri'];
+  //   String? materiId = widget.materi?['idMateri'];
+  //
+  //   if (materiId != null) {
+  //     final bobotMateriRef = FirebaseDatabase.instance
+  //         .ref()
+  //         .child('materialList/$materiId/bobotMateri');
+  //     final bobotMateriSnapshot = await bobotMateriRef.get();
+  //     print(bobotMateriSnapshot.value.toString());
+  //     double bobotMateri = double.parse(bobotMateriSnapshot.value.toString());
+  //
+  //     final subMaterialDoneRef = FirebaseDatabase.instance
+  //         .ref()
+  //         .child('users/${user?.uid}/subMaterialDone/$materiId');
+  //     await subMaterialDoneRef.set(1);
+  //
+  //     final progressBelajarRef = FirebaseDatabase.instance
+  //         .ref()
+  //         .child('users/${user?.uid}/progressBelajar');
+  //     final progressBelajarSnapshot = await progressBelajarRef.get();
+  //     double progressBelajar =
+  //     double.parse(progressBelajarSnapshot.value.toString());
+  //     double newProgress = progressBelajar + bobotMateri;
+  //     await progressBelajarRef.set(newProgress);
+  //   } else {
+  //     print('Error: idMateri is null');
+  //   }
+  //
+  //   if (nextMateriId != null) {
+  //     final nextMateriRef = FirebaseDatabase.instance
+  //         .ref()
+  //         .child('users/${user?.uid}/subMaterialDone/$nextMateriId');
+  //     await nextMateriRef.set(0);
+  //   } else {
+  //     print('Error: nextIdMateri is null');
+  //   }
+  //
+  //   final materiIdRef = FirebaseDatabase.instance
+  //       .ref()
+  //       .child('materialList/$materiId/idPertemuan');
+  //   final materiSnapshot = await materiIdRef.get();
+  //   final materiData = materiSnapshot.value;
+  //   print("materiData $materiData");
+  //
+  //   final nextMateriIdRef = FirebaseDatabase.instance
+  //       .ref()
+  //       .child('materialList/$nextMateriId/idPertemuan');
+  //   final nextMateriSnapshot = await nextMateriIdRef.get();
+  //   final nextMateriData = nextMateriSnapshot.value;
+  //
+  //   print("nextMateriData $nextMateriData");
+  //
+  //   final soalPemahamanRef = FirebaseDatabase.instance
+  //       .ref()
+  //       .child('soalPemahamanList');
+  //   final soalPemahamanSnapshot = await soalPemahamanRef.get();
+  //   final soalPemahamanData = soalPemahamanSnapshot.value;
+  //
+  //
+  //   // Memanggil QuizScreen untuk mendapatkan hasilnya
+  //   int quizResult = await Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => QuizScreen(
+  //         idPertemuan: materiId,
+  //         jenisQuiz: 2
+  //       ),
+  //     ),
+  //   );
+  //
+  //   // Jika hasil quizResult adalah 1, tambahkan poin
+  //   if (quizResult == 1) {
+  //     final poinRef = FirebaseDatabase.instance.ref().child('users/${user?.uid}/score');
+  //     final poinSnapshot = await poinRef.get();
+  //     int poin = poinSnapshot.value as int;
+  //
+  //     if (timeLearn <= 480) {
+  //       poin += 3;
+  //     } else if (timeLearn > 480 && timeLearn <= 1080) {
+  //       poin += 10;
+  //     } else {
+  //       poin += 1;
+  //     }
+  //     await poinRef.set(poin);
+  //
+  //     _dialogBuilder(context, poin - (poinSnapshot.value as int));
+  //   } else {
+  //     // Jika hasil quizResult bukan 1, poin tidak ditambahkan
+  //     print("Quiz tidak berhasil diselesaikan, poin tidak ditambahkan.");
+  //     _dialogBuilder(context, 0);
+  //   }
+  // }
+
   Future<void> _markAsDoneMaterial() async {
     User? user = _auth.currentUser;
     String? nextMateriId = widget.nextMateri?['idMateri'];
     String? materiId = widget.materi?['idMateri'];
 
-    if (materiId != null) {
-      final bobotMateriRef = FirebaseDatabase.instance
+    try {
+      if (materiId != null) {
+        final bobotMateriRef = FirebaseDatabase.instance
+            .ref()
+            .child('materialList/$materiId/bobotMateri');
+        final bobotMateriSnapshot = await bobotMateriRef.get();
+
+        if (bobotMateriSnapshot.exists) {
+          double bobotMateri = double.parse(bobotMateriSnapshot.value.toString());
+
+          final subMaterialDoneRef = FirebaseDatabase.instance
+              .ref()
+              .child('users/${user?.uid}/subMaterialDone/$materiId');
+          await subMaterialDoneRef.set(1);
+
+          final progressBelajarRef = FirebaseDatabase.instance
+              .ref()
+              .child('users/${user?.uid}/progressBelajar');
+          final progressBelajarSnapshot = await progressBelajarRef.get();
+
+          double progressBelajar = progressBelajarSnapshot.exists
+              ? double.parse(progressBelajarSnapshot.value.toString())
+              : 0.0;
+
+          double newProgress = progressBelajar + bobotMateri;
+          await progressBelajarRef.set(newProgress);
+        } else {
+          print('Error: bobotMateri not found for idMateri $materiId');
+        }
+      } else {
+        print('Error: idMateri is null');
+      }
+
+      if (nextMateriId != null) {
+        final nextMateriRef = FirebaseDatabase.instance
+            .ref()
+            .child('users/${user?.uid}/subMaterialDone/$nextMateriId');
+        await nextMateriRef.set(0);
+      } else {
+        print('Error: nextIdMateri is null');
+      }
+
+      final soalPemahamanRef = FirebaseDatabase.instance
           .ref()
-          .child('materialList/$materiId/bobotMateri');
-      final bobotMateriSnapshot = await bobotMateriRef.get();
-      print(bobotMateriSnapshot.value.toString());
-      double bobotMateri = double.parse(bobotMateriSnapshot.value.toString());
+          .child('soalPemahamanList');
+      final soalPemahamanSnapshot = await soalPemahamanRef.get();
 
-      final subMaterialDoneRef = FirebaseDatabase.instance
-          .ref()
-          .child('users/${user?.uid}/subMaterialDone/$materiId');
-      await subMaterialDoneRef.set(1);
+      if (soalPemahamanSnapshot.exists) {
+        final soalPemahamanData = soalPemahamanSnapshot.value as Map;
 
-      final progressBelajarRef = FirebaseDatabase.instance
-          .ref()
-          .child('users/${user?.uid}/progressBelajar');
-      final progressBelajarSnapshot = await progressBelajarRef.get();
-      double progressBelajar =
-      double.parse(progressBelajarSnapshot.value.toString());
-      double newProgress = progressBelajar + bobotMateri;
-      await progressBelajarRef.set(newProgress);
-    } else {
-      print('Error: idMateri is null');
+        // Cek apakah ada entri dengan idMateri yang cocok
+        bool materiExists = soalPemahamanData.values.any((entry) {
+          return entry['idMateri'] == materiId;
+        });
+
+        if (materiExists) {
+          // Memanggil QuizScreen untuk mendapatkan hasilnya
+          int quizResult = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => QuizScreen(
+                idPertemuan: materiId,
+                jenisQuiz: 2,
+              ),
+            ),
+          );
+
+          // Jika hasil quizResult adalah 1, tambahkan poin
+          if (quizResult == 1) {
+            final poinRef = FirebaseDatabase.instance
+                .ref()
+                .child('users/${user?.uid}/score');
+            final poinSnapshot = await poinRef.get();
+            int poin = poinSnapshot.exists ? poinSnapshot.value as int : 0;
+
+            if (timeLearn <= 480) {
+              poin += 3;
+            } else if (timeLearn > 480 && timeLearn <= 1080) {
+              poin += 10;
+            } else {
+              poin += 1;
+            }
+            await poinRef.set(poin);
+
+            _dialogBuilder(context, poin - (poinSnapshot.value as int));
+          } else {
+            print("Quiz tidak berhasil diselesaikan, poin tidak ditambahkan.");
+            _dialogBuilder(context, 0);
+          }
+        } else {
+          print("Error: Tidak ada soal yang cocok dengan idMateri $materiId");
+          // _dialogBuilder(context, 0);
+          Navigator.of(context).pop();
+        }
+      } else {
+        print('Error: soalPemahamanList is empty or does not exist.');
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      print('Error during _markAsDoneMaterial execution: $e');
     }
-
-    if (nextMateriId != null) {
-      final nextMateriRef = FirebaseDatabase.instance
-          .ref()
-          .child('users/${user?.uid}/subMaterialDone/$nextMateriId');
-      await nextMateriRef.set(0);
-    } else {
-      print('Error: nextIdMateri is null');
-    }
-
-    final materiIdRef = FirebaseDatabase.instance
-        .ref()
-        .child('materialList/$materiId/idPertemuan');
-    final materiSnapshot = await materiIdRef.get();
-    final materiData = materiSnapshot.value;
-    print("materiData $materiData");
-
-    final nextMateriIdRef = FirebaseDatabase.instance
-        .ref()
-        .child('materialList/$nextMateriId/idPertemuan');
-    final nextMateriSnapshot = await nextMateriIdRef.get();
-    final nextMateriData = nextMateriSnapshot.value;
-
-    print("nextMateriData $nextMateriData");
-
-    final poinRef =
-    FirebaseDatabase.instance.ref().child('users/${user?.uid}/score');
-    final poinSnapshot = await poinRef.get();
-    int poin = poinSnapshot.value as int;
-
-    if (timeLearn <= 480) {
-      poin += 3;
-    }
-    else if (timeLearn > 480 && timeLearn <= 1080){
-      poin += 10;
-    } else {
-      poin += 1;
-    }
-    await poinRef.set(poin);
-
-    _dialogBuilder(context, poin - (poinSnapshot.value as int));
   }
 
   Future<void> _dialogBuilder(BuildContext context, int poin) {
     IconData iconData = Icons.workspace_premium;
     Color iconColor = Color(0xffE5B80B);
+    String title = 'Selamat!';
+    String message = 'Terimakasih telah menyelesaikan materi ini. \nPoin yang anda raih sebesar $poin poin';
 
     if (poin == 10) {
       iconColor = Color(0xffE5B80B);
@@ -177,17 +311,24 @@ class _MateriScreenState extends State<MateriScreen> {
     } else if (poin == 1) {
       iconColor = Color(0xffCD7F32);
     }
+    else {
+      iconData = Icons.error;
+      iconColor = Colors.red;
+      title = 'Maaf!';
+      message = 'Quiz tidak berhasil diselesaikan atau quiz tidak tersedia, tidak ada penambahan poin.';
+    }
 
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Selamat!'),
+          title: Text(title),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Terimakasih telah menyelesaikan materi ini. \nAnda berhak mendapatkan point sebesar $poin poin',
+                message,
+                textAlign: TextAlign.center,
               ),
               Icon(
                 iconData,
@@ -200,8 +341,11 @@ class _MateriScreenState extends State<MateriScreen> {
             TextButton(
               child: const Text('Close'),
               onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                if(mounted){
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                }
+
               },
             ),
           ],

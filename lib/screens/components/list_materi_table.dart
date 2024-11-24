@@ -1,9 +1,14 @@
+import 'package:algopintar/screens/components/dashboard_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:provider/provider.dart';
 import '../../constants/constants.dart';
+import '../../controllers/controller.dart';
 import '../../models/mata_pelajaran_model.dart';
+import '../dash_board_screen.dart';
+import 'manage_soal_pemahaman_content.dart';
 
 class ListMateriTable extends StatefulWidget {
   final List<MateriModel> listMateri;
@@ -70,6 +75,12 @@ class _ListMateriTableState extends State<ListMateriTable> {
               // fixedWidth: 200,
             ),
             DataColumn2(
+              label: Text('Detail Soal Pemahaman',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              // size: ColumnSize.S,
+              // fixedWidth: 200,
+            ),
+            DataColumn2(
               label:
                   Text('Aksi', style: TextStyle(fontWeight: FontWeight.bold)),
               // size: ColumnSize.S,
@@ -86,51 +97,115 @@ class _ListMateriTableState extends State<ListMateriTable> {
                   DataCell(Text(materi.namaMateri)),
                   DataCell(Text(materi.linkPdf)),
                   DataCell(Text(materi.linkYoutube)),
+                  DataCell(ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF5D60E2),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12), // <-- Radius
+                      ),
+                    ),
+                    child: Text('Detail', style: TextStyle(color: Colors.white)),
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (context, animation1, animation2) =>
+                              MultiProvider(
+                                  providers: [
+                                    ChangeNotifierProvider(
+                                      create: (context) => Controller(),
+                                    )
+                                  ],
+                                  child: DashBoardScreen.withIdPertemuan(
+                                    contentType: ContentType.ManageSoalPemahaman,
+                                    idPertemuan: materi.id,
+                                  )),
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        ),
+                      );
+                    },
+                  )),
                   DataCell(Row(
                     children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(6), // <-- Radius
+                      Flexible(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
                           ),
+                          child: Icon(Icons.edit, size: 16),
+                          onPressed: () {
+                            _showSimpleModalDialog(
+                                context, materi.id, materi.urutanMateri, materi.namaMateri, materi.linkPdf, materi.linkYoutube);
+                          },
                         ),
-                        child: Icon(
-                          Icons.edit,
-                          size: 16,
-                        ),
-                        onPressed: () {
-                          _showSimpleModalDialog(
-                              context,
-                              materi.id,
-                              materi.urutanMateri,
-                              materi.namaMateri,
-                              materi.linkPdf,
-                              materi.linkYoutube);
-                        },
                       ),
-                      SizedBox(
-                        width: 8,
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(6), // <-- Radius
+                      SizedBox(width: 8),
+                      Flexible(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
                           ),
+                          child: Icon(Icons.delete, size: 16),
+                          onPressed: () {
+                            _showDeleteConfirmationDialog(materi.id);
+                          },
                         ),
-                        child: Icon(
-                          Icons.delete,
-                          size: 16,
-                        ),
-                        onPressed: () {
-                          _showDeleteConfirmationDialog(materi.id);
-                        },
                       ),
                     ],
-                  )),
+                  ))
+
+                  // DataCell(Row(
+                  //   children: [
+                  //     ElevatedButton(
+                  //       style: ElevatedButton.styleFrom(
+                  //         backgroundColor: Colors.orange,
+                  //         shape: RoundedRectangleBorder(
+                  //           borderRadius:
+                  //               BorderRadius.circular(6), // <-- Radius
+                  //         ),
+                  //       ),
+                  //       child: Icon(
+                  //         Icons.edit,
+                  //         size: 16,
+                  //       ),
+                  //       onPressed: () {
+                  //         _showSimpleModalDialog(
+                  //             context,
+                  //             materi.id,
+                  //             materi.urutanMateri,
+                  //             materi.namaMateri,
+                  //             materi.linkPdf,
+                  //             materi.linkYoutube);
+                  //       },
+                  //     ),
+                  //     SizedBox(
+                  //       width: 8,
+                  //     ),
+                  //     ElevatedButton(
+                  //       style: ElevatedButton.styleFrom(
+                  //         backgroundColor: Colors.red,
+                  //         shape: RoundedRectangleBorder(
+                  //           borderRadius:
+                  //               BorderRadius.circular(6), // <-- Radius
+                  //         ),
+                  //       ),
+                  //       child: Icon(
+                  //         Icons.delete,
+                  //         size: 16,
+                  //       ),
+                  //       onPressed: () {
+                  //         _showDeleteConfirmationDialog(materi.id);
+                  //       },
+                  //     ),
+                  //   ],
+                  // )),
                 ],
               );
             },
