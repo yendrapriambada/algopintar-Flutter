@@ -282,7 +282,16 @@ class _MateriScreenState extends State<MateriScreen> {
             _dialogBuilder(context, poin - (poinSnapshot.value as int));
           } else {
             print("Quiz tidak berhasil diselesaikan, poin tidak ditambahkan.");
-            _dialogBuilder(context, 0);
+            // _dialogBuilder(context, 0);
+
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: const Text('Quiz tidak berhasil diselesaikan, poin tidak ditambahkan.'),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+            ));
+            Navigator.of(context).pop();
           }
         } else {
           print("Error: Tidak ada soal yang cocok dengan idMateri $materiId");
@@ -310,13 +319,22 @@ class _MateriScreenState extends State<MateriScreen> {
       iconColor = Color(0xffC0C0C0);
     } else if (poin == 1) {
       iconColor = Color(0xffCD7F32);
-    }
-    else {
+    } else {
       iconData = Icons.error;
       iconColor = Colors.red;
       title = 'Maaf!';
       message = 'Quiz tidak berhasil diselesaikan atau quiz tidak tersedia, tidak ada penambahan poin.';
     }
+
+
+    // Menggunakan Future.delayed untuk menutup dialog setelah 3 detik
+    Future.delayed(Duration(seconds: 3), () {
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop(); // Menutup dialog
+        Navigator.of(context).pop(); // Menutup MateriScreen
+      }
+    });
+
 
     return showDialog<void>(
       context: context,
@@ -337,22 +355,78 @@ class _MateriScreenState extends State<MateriScreen> {
               ),
             ],
           ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Close'),
-              onPressed: () {
-                if(mounted){
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                }
-
-              },
-            ),
-          ],
+          // actions: <Widget>[
+          //   TextButton(
+          //     child: Text('Close: ${_countdown.toString()}'),
+          //     onPressed: () {
+          //       if (Navigator.of(context).canPop()) {
+          //         Navigator.of(context).pop();
+          //         Navigator.of(context).pop();
+          //       }
+          //     },
+          //   ),
+          // ],
         );
       },
     );
   }
+
+
+  // Future<void> _dialogBuilder(BuildContext context, int poin) {
+  //   IconData iconData = Icons.workspace_premium;
+  //   Color iconColor = Color(0xffE5B80B);
+  //   String title = 'Selamat!';
+  //   String message = 'Terimakasih telah menyelesaikan materi ini. \nPoin yang anda raih sebesar $poin poin';
+  //
+  //   if (poin == 10) {
+  //     iconColor = Color(0xffE5B80B);
+  //   } else if (poin == 3) {
+  //     iconColor = Color(0xffC0C0C0);
+  //   } else if (poin == 1) {
+  //     iconColor = Color(0xffCD7F32);
+  //   }
+  //   else {
+  //     iconData = Icons.error;
+  //     iconColor = Colors.red;
+  //     title = 'Maaf!';
+  //     message = 'Quiz tidak berhasil diselesaikan atau quiz tidak tersedia, tidak ada penambahan poin.';
+  //   }
+  //
+  //   return showDialog<void>(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text(title),
+  //         content: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             Text(
+  //               message,
+  //               textAlign: TextAlign.center,
+  //             ),
+  //             Icon(
+  //               iconData,
+  //               size: 100,
+  //               color: iconColor,
+  //             ),
+  //           ],
+  //         ),
+  //         actions: <Widget>[
+  //           TextButton(
+  //             child: const Text('Close'),
+  //             onPressed: () {
+  //               if(mounted){
+  //                 Navigator.of(context).pop();
+  //                 Navigator.of(context).pop();
+  //               }
+  //
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
