@@ -1,3 +1,4 @@
+import 'package:algopintar/screens/history_scoring.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:algopintar/constants/constants.dart';
@@ -122,7 +123,7 @@ class _DashboardContentState extends State<DashboardContent> {
                             SizedBox(
                               height: appPadding,
                             ),
-                          if (Responsive.isMobile(context)) Leaderboard(students: _students,),
+                          if (Responsive.isMobile(context)) HistoryScoring(),
                         ],
                       ),
                     ),
@@ -133,7 +134,7 @@ class _DashboardContentState extends State<DashboardContent> {
                     if (!Responsive.isMobile(context))
                       Expanded(
                         flex: 2,
-                        child: Leaderboard(students: _students,),
+                        child: HistoryScoring(),
                       ),
                   ],
                 ),

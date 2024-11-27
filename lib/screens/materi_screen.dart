@@ -12,8 +12,9 @@ import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 class MateriScreen extends StatefulWidget {
   final Map<dynamic, dynamic>? materi;
   final Map<dynamic, dynamic>? nextMateri;
+  final String username;
 
-  MateriScreen({Key? key, required this.materi, required this.nextMateri})
+  MateriScreen({Key? key, required this.materi, required this.nextMateri, required this.username})
       : super(key: key);
 
   @override
@@ -279,6 +280,17 @@ class _MateriScreenState extends State<MateriScreen> {
             }
             await poinRef.set(poin);
 
+            print("nama Materi ${widget.materi?['namaMateri']}");
+            // Tambahkan data ke historyScoring
+            final historyScoringRef = FirebaseDatabase.instance.ref().child('historyScoring').push();
+            await historyScoringRef.set({
+              'idUser': user?.uid,
+              'namaMateri': widget.materi?['namaMateri'] ?? 'Unknown',
+              'namaUser': widget.username ?? 'Unknown',
+              'skor': (poin - (poinSnapshot.value as int)), // Contoh skor tetap 100, bisa disesuaikan
+              'timeLearn': timeLearn,
+            });
+
             _dialogBuilder(context, poin - (poinSnapshot.value as int));
           } else {
             print("Quiz tidak berhasil diselesaikan, poin tidak ditambahkan.");
@@ -291,6 +303,18 @@ class _MateriScreenState extends State<MateriScreen> {
                 borderRadius: BorderRadius.circular(24),
               ),
             ));
+
+            print("nama Materi ${widget.materi?['namaMateri']}");
+            // Tambahkan data ke historyScoring
+            final historyScoringRef = FirebaseDatabase.instance.ref().child('historyScoring').push();
+            await historyScoringRef.set({
+              'idUser': user?.uid,
+              'namaMateri': widget.materi?['namaMateri'] ?? 'Unknown',
+              'namaUser': widget.username ?? 'Unknown',
+              'skor': 0, // Contoh skor tetap 100, bisa disesuaikan
+              'timeLearn': timeLearn,
+            });
+
             Navigator.of(context).pop();
           }
         } else {

@@ -634,6 +634,8 @@ class _HomepageWebState extends State<HomepageWeb> {
                                                             dataPertemuan,
                                                         idPertemuan:
                                                             idPertemuan,
+                                                        username: widget
+                                                            .username,
                                                       );
                                                     }));
                                                   },
@@ -990,7 +992,8 @@ class _HomepageMobileState extends State<HomepageMobile> {
                                   MaterialPageRoute(builder: (context) {
                                 return DetailMateri(
                                     dataPertemuan: dataPertemuan,
-                                    idPertemuan: idPertemuan);
+                                    idPertemuan: idPertemuan,
+                                    username: widget.username);
                               }));
                             },
                           ),

@@ -9,9 +9,10 @@ import 'package:flutter/material.dart';
 class DetailMateri extends StatefulWidget {
   final Map<dynamic, dynamic>? dataPertemuan;
   final String? idPertemuan;
+  final String? username;
 
   const DetailMateri(
-      {Key? key, required this.dataPertemuan, required this.idPertemuan})
+      {Key? key, required this.dataPertemuan, required this.idPertemuan, required this.username})
       : super(key: key);
 
   @override
@@ -103,6 +104,7 @@ class _DetailMateriState extends State<DetailMateri> {
             idPertemuan: widget.idPertemuan,
             materials: _materials,
             subMaterialDone: _subMaterialDone,
+            username: widget.username,
           );
         } else {
           return DetailMobilePage(
@@ -110,6 +112,7 @@ class _DetailMateriState extends State<DetailMateri> {
             idPertemuan: widget.idPertemuan,
             materials: _materials,
             subMaterialDone: _subMaterialDone,
+            username: widget.username,
           );
         }
       },
@@ -122,13 +125,15 @@ class DetailWebPage extends StatelessWidget {
   final String? idPertemuan;
   final List<Map<dynamic, dynamic>> materials;
   final Map<dynamic, dynamic> subMaterialDone;
+  final String? username;
 
   const DetailWebPage(
       {Key? key,
       required this.dataPertemuan,
       required this.idPertemuan,
       required this.materials,
-      required this.subMaterialDone})
+      required this.subMaterialDone,
+      required this.username})
       : super(key: key);
 
   @override
@@ -282,7 +287,7 @@ class DetailWebPage extends StatelessWidget {
                                           ? materials[index + 1]
                                           : null;
                                       var subMateriDone = subMaterialDone;
-                                      return getListMateri(material, context, nextMaterial, subMateriDone, index);
+                                      return getListMateri(material, context, nextMaterial, subMateriDone, index, username??"");
                                     },
                                   ),
                           ),
@@ -395,13 +400,15 @@ class DetailMobilePage extends StatelessWidget {
   final String? idPertemuan;
   final List<Map<dynamic, dynamic>> materials;
   final Map<dynamic, dynamic> subMaterialDone;
+  final String? username;
 
   const DetailMobilePage(
       {Key? key,
       required this.dataPertemuan,
       required this.idPertemuan,
       required this.materials,
-      required this.subMaterialDone})
+      required this.subMaterialDone,
+      required this.username})
       : super(key: key);
 
   @override
@@ -534,7 +541,7 @@ class DetailMobilePage extends StatelessWidget {
                           ? materials[index + 1]
                           : null;
                       var subMateriDone = subMaterialDone;
-                      return getListMateri(material, context, nextMaterial, subMateriDone, index);
+                      return getListMateri(material, context, nextMaterial, subMateriDone, index, username??"");
                     },
                   ),
           ),
@@ -630,7 +637,7 @@ class DetailMobilePage extends StatelessWidget {
   }
 }
 
-Widget getListMateri(Map<dynamic, dynamic>? materi, BuildContext context, Map<dynamic, dynamic>? nextMateri, Map<dynamic, dynamic> subMaterialDone, int index) {
+Widget getListMateri(Map<dynamic, dynamic>? materi, BuildContext context, Map<dynamic, dynamic>? nextMateri, Map<dynamic, dynamic> subMaterialDone, int index, String username) {
   print(index);
   return Card(
     surfaceTintColor: Colors.white,
@@ -650,7 +657,7 @@ Widget getListMateri(Map<dynamic, dynamic>? materi, BuildContext context, Map<dy
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => MateriScreen(materi: materi, nextMateri: nextMateri),
+              builder: (context) => MateriScreen(materi: materi, nextMateri: nextMateri, username: username),
             ),
           );
         }),
