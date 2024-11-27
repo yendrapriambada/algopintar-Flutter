@@ -61,12 +61,13 @@ class HistoryScoringDetail extends StatelessWidget {
               ),
               SizedBox(height: 5),
               Text(
-                "Time: ${timeLearn}s",
+                "Time: ${timeLearn ~/ 60} min ${timeLearn % 60} sec",
                 style: TextStyle(
                   fontWeight: FontWeight.w400,
                   color: textColor.withOpacity(0.7),
                 ),
               ),
+
             ],
           ),
         ],
