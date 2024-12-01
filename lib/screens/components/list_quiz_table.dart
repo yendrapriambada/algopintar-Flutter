@@ -58,7 +58,7 @@ class _ListQuizTableState extends State<ListQuizTable> {
             DataColumn2(label: Text('Pilgan C', style: TextStyle(fontWeight: FontWeight.bold)),),
             DataColumn2(label: Text('Pilgan D', style: TextStyle(fontWeight: FontWeight.bold)),),
             DataColumn2(label: Text('Kunci Jawaban', style: TextStyle(fontWeight: FontWeight.bold)),),
-            DataColumn2(label: Text('Aksi', style: TextStyle(fontWeight: FontWeight.bold)), fixedWidth: 50),
+            DataColumn2(label: Text('Aksi', style: TextStyle(fontWeight: FontWeight.bold))),
           ],
           rows: List<DataRow>.generate(
             widget.listQuiz.length,
