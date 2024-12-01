@@ -271,9 +271,10 @@ class _MateriScreenState extends State<MateriScreen> {
             final poinSnapshot = await poinRef.get();
             int poin = poinSnapshot.exists ? poinSnapshot.value as int : 0;
 
-            if (timeLearn <= 480) {
+
+            if (timeLearn > 180 && timeLearn <= 480) {
               poin += 3;
-            } else if (timeLearn > 480 && timeLearn <= 1080) {
+            } else if (timeLearn > 480 && timeLearn <= 1080 ) {
               poin += 10;
             } else {
               poin += 1;
