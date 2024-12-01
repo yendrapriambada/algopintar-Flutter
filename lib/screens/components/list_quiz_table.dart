@@ -75,7 +75,9 @@ class _ListQuizTableState extends State<ListQuizTable> {
                   DataCell(Text(quiz.kunciJawaban)),
                   DataCell(
                     Wrap(
-                      spacing: 8,
+                      spacing: 8, // Jarak horizontal antar elemen
+                      runSpacing: 4, // Jarak vertikal antar elemen
+                      alignment: WrapAlignment.center, // Posisi elemen di tengah
                       children: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(

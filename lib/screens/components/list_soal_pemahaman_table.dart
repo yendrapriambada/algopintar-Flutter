@@ -75,8 +75,9 @@ class _ListSoalPemahamanTableState extends State<ListSoalPemahamanTable> {
                   DataCell(Text(quiz.kunciJawaban)),
                   DataCell(
                     Wrap(
-                      spacing: 8, // Jarak antar tombol
-                      alignment: WrapAlignment.center, // Untuk memastikan tombol berada di tengah
+                      spacing: 8, // Jarak horizontal antar elemen
+                      runSpacing: 4, // Jarak vertikal antar elemen
+                      alignment: WrapAlignment.center, // Posisi elemen di tengah
                       children: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
