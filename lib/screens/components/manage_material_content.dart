@@ -40,8 +40,14 @@ class _DashboardContentState extends State<ManageMaterialContent> {
     _pertemuanRef.onValue.listen((event) {
       if (event.snapshot.value != null) {
         print("data ada");
-        Map<String, dynamic> pertemuanMap = event.snapshot.value as Map<String, dynamic>;
-        _updatePertemuanList(pertemuanMap);
+        if (event.snapshot.value is Map<Object?, Object?>) {
+          Map<String, dynamic> pertemuanMap = (event.snapshot.value as Map).map((key, value) => MapEntry(key.toString(), value));
+          _updatePertemuanList(pertemuanMap);
+        } else {
+          print("Tipe data tidak sesuai: ${event.snapshot.value.runtimeType}");
+        }
+      } else {
+        print("Tidak ada data");
       }
     });
   }
@@ -49,9 +55,17 @@ class _DashboardContentState extends State<ManageMaterialContent> {
   void _updatePertemuanList(Map<String, dynamic> pertemuanMap) {
     _pertemuan.clear();
     pertemuanMap.forEach((key, value) {
-      Map<String, dynamic> pertemuanData = value as Map<String, dynamic>;
-      PertemuanModel pertemuan = PertemuanModel.fromJson(pertemuanData, key);
-      _pertemuan.add(pertemuan);
+      if (value is Map) {
+        Map<String, dynamic> pertemuanData = value.map((k, v) => MapEntry(k.toString(), v));
+        try {
+          PertemuanModel pertemuan = PertemuanModel.fromJson(pertemuanData, key);
+          _pertemuan.add(pertemuan);
+        } catch (e) {
+          print("Error parsing data: $e");
+        }
+      } else{
+        print("Tipe data tidak sesuai: ${value.runtimeType}");
+      }
     });
     _pertemuan.sort((a, b) => a.namaPertemuan.compareTo(b.namaPertemuan));
 

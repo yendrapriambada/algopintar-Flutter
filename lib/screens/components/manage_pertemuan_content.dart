@@ -27,36 +27,64 @@ class _DashboardContentState extends State<ManagePertemuanContent> {
   }
 
   Future<void> _initializeDatabase() async {
+    // Inisialisasi Firebase
     await Firebase.initializeApp();
     _pertemuanRef = FirebaseDatabase.instance.ref().child('pertemuan');
 
+    // Listener untuk data yang dihapus
     _pertemuanRef.onChildRemoved.listen((event) {
       _pertemuan.clear();
-      setState(() {}); // Trigger widget rebuild after updating data
+      setState(() {}); // Trigger widget rebuild setelah data diubah
     });
 
+    // Listener untuk data yang diupdate
     _pertemuanRef.onValue.listen((event) {
       if (event.snapshot.value != null) {
-        print("data ada");
-        Map<String, dynamic> pertemuanMap =
-            event.snapshot.value as Map<String, dynamic>;
-        _updatePertemuanList(pertemuanMap);
+        print("Data ada: ${event.snapshot.value.runtimeType}");
+        // Validasi tipe data sebelum di-cast
+        if (event.snapshot.value is Map<Object?, Object?>) {
+          // Konversi tipe data ke Map<String, dynamic>
+          Map<String, dynamic> pertemuanMap = (event.snapshot.value as Map)
+              .map((key, value) => MapEntry(key.toString(), value));
+
+          _updatePertemuanList(pertemuanMap);
+        } else {
+          print("Tipe data tidak sesuai: ${event.snapshot.value.runtimeType}");
+        }
+      } else {
+        print("Tidak ada data");
       }
     });
   }
 
   void _updatePertemuanList(Map<String, dynamic> pertemuanMap) {
     _pertemuan.clear();
+
+    // Iterasi data untuk memproses setiap item
     pertemuanMap.forEach((key, value) {
-      Map<String, dynamic> pertemuanData = value as Map<String, dynamic>;
-      PertemuanModel pertemuan = PertemuanModel.fromJson(pertemuanData, key);
-      _pertemuan.add(pertemuan);
+      if (value is Map) {
+        // Validasi tipe data sebelum parsing
+        Map<String, dynamic> pertemuanData =
+        value.map((k, v) => MapEntry(k.toString(), v));
+        try {
+          PertemuanModel pertemuan =
+          PertemuanModel.fromJson(pertemuanData, key);
+          _pertemuan.add(pertemuan);
+        } catch (e) {
+          print("Error parsing data untuk key $key: $e");
+        }
+      } else {
+        print("Data dengan key $key tidak valid: ${value.runtimeType}");
+      }
     });
+
+    // Sorting daftar pertemuan
     _pertemuan.sort((a, b) => a.namaPertemuan.compareTo(b.namaPertemuan));
 
-    print("Lenght: ${_pertemuan.length}");
-    setState(() {}); // Trigger widget rebuild after updating data
+    print("Jumlah data: ${_pertemuan.length}");
+    setState(() {}); // Trigger widget rebuild setelah data diperbarui
   }
+
 
   @override
   Widget build(BuildContext context) {

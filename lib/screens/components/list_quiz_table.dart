@@ -73,25 +73,20 @@ class _ListQuizTableState extends State<ListQuizTable> {
                   DataCell(Text(quiz.pilganC)),
                   DataCell(Text(quiz.pilganD)),
                   DataCell(Text(quiz.kunciJawaban)),
-                  DataCell(Column(
-                    children: [
-                      SizedBox(
-                        height: 8,
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(6), // <-- Radius
+                  DataCell(
+                    Wrap(
+                      spacing: 8,
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
                           ),
-                        ),
-                        child: Icon(
-                          Icons.edit,
-                          size: 16,
-                        ),
-                        onPressed: () {
-                          _showSimpleModalDialog(
+                          child: Icon(Icons.edit, size: 16),
+                          onPressed: () {
+                            _showSimpleModalDialog(
                               context,
                               quiz.id,
                               quiz.nomorSoal,
@@ -100,30 +95,77 @@ class _ListQuizTableState extends State<ListQuizTable> {
                               quiz.pilganB,
                               quiz.pilganC,
                               quiz.pilganD,
-                              quiz.kunciJawaban);
-                        },
-                      ),
-                      SizedBox(
-                        height: 8,
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(6), // <-- Radius
+                              quiz.kunciJawaban,
+                            );
+                          },
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
                           ),
+                          child: Icon(Icons.delete, size: 16),
+                          onPressed: () {
+                            _showDeleteConfirmationDialog(quiz.id);
+                          },
                         ),
-                        child: Icon(
-                          Icons.delete,
-                          size: 16,
-                        ),
-                        onPressed: () {
-                          _showDeleteConfirmationDialog(quiz.id);
-                        },
-                      ),
-                    ],
-                  )),
+                      ],
+                    ),
+                  ),
+
+                  // DataCell(Column(
+                  //   children: [
+                  //     SizedBox(
+                  //       height: 8,
+                  //     ),
+                  //     ElevatedButton(
+                  //       style: ElevatedButton.styleFrom(
+                  //         backgroundColor: Colors.orange,
+                  //         shape: RoundedRectangleBorder(
+                  //           borderRadius:
+                  //               BorderRadius.circular(6), // <-- Radius
+                  //         ),
+                  //       ),
+                  //       child: Icon(
+                  //         Icons.edit,
+                  //         size: 16,
+                  //       ),
+                  //       onPressed: () {
+                  //         _showSimpleModalDialog(
+                  //             context,
+                  //             quiz.id,
+                  //             quiz.nomorSoal,
+                  //             quiz.soal,
+                  //             quiz.pilganA,
+                  //             quiz.pilganB,
+                  //             quiz.pilganC,
+                  //             quiz.pilganD,
+                  //             quiz.kunciJawaban);
+                  //       },
+                  //     ),
+                  //     SizedBox(
+                  //       height: 8,
+                  //     ),
+                  //     ElevatedButton(
+                  //       style: ElevatedButton.styleFrom(
+                  //         backgroundColor: Colors.red,
+                  //         shape: RoundedRectangleBorder(
+                  //           borderRadius:
+                  //               BorderRadius.circular(6), // <-- Radius
+                  //         ),
+                  //       ),
+                  //       child: Icon(
+                  //         Icons.delete,
+                  //         size: 16,
+                  //       ),
+                  //       onPressed: () {
+                  //         _showDeleteConfirmationDialog(quiz.id);
+                  //       },
+                  //     ),
+                  //   ],
+                  // )),
                 ],
               );
             },

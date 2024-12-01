@@ -32,33 +32,65 @@ class _ManageSoalPemahamanContentState extends State<ManageSoalPemahamanContent>
     _listQuizRef = FirebaseDatabase.instance.ref().child('soalPemahamanList');
     _initializeDatabase();
   }
-
   Future<void> _initializeDatabase() async {
+    // Inisialisasi Firebase
     await Firebase.initializeApp();
+
+    // Listener untuk data yang dihapus
     _listQuizRef.onChildRemoved.listen((event) {
       _listQuiz.clear();
-      setState(() {}); // Trigger widget rebuild after updating data
+      setState(() {}); // Trigger widget rebuild setelah data diubah
     });
 
-    _listQuizRef.orderByChild('idMateri').equalTo(widget.idMateri).onValue.listen((event) {
+    // Listener untuk data sesuai dengan idMateri
+    _listQuizRef
+        .orderByChild('idMateri')
+        .equalTo(widget.idMateri)
+        .onValue
+        .listen((event) {
       if (event.snapshot.value != null) {
-        print("test bugging${event.snapshot.value}" );
-        Map<String, dynamic> listQuizMap = event.snapshot.value as Map<String, dynamic>;
-        _updateListQuiz(listQuizMap);
+        print("Debugging Data: ${event.snapshot.value.runtimeType}");
+        // Validasi tipe data sebelum di-cast
+        if (event.snapshot.value is Map<Object?, Object?>) {
+          // Konversi tipe data ke Map<String, dynamic>
+          Map<String, dynamic> listQuizMap = (event.snapshot.value as Map)
+              .map((key, value) => MapEntry(key.toString(), value));
+
+          _updateListQuiz(listQuizMap);
+        } else {
+          print("Tipe data tidak sesuai: ${event.snapshot.value.runtimeType}");
+        }
+      } else {
+        print("Tidak ada data");
       }
     });
   }
 
   void _updateListQuiz(Map<String, dynamic> listQuizMap) {
     _listQuiz.clear();
+
+    // Iterasi data untuk memproses setiap item
     listQuizMap.forEach((key, value) {
-      Map<String, dynamic> listQuizData = value as Map<String, dynamic>;
-      Quizmodel quiz = Quizmodel.fromJson(listQuizData, key);
-      _listQuiz.add(quiz);
+      if (value is Map) {
+        // Validasi tipe data sebelum parsing
+        Map<String, dynamic> listQuizData =
+        value.map((k, v) => MapEntry(k.toString(), v));
+        try {
+          Quizmodel quiz = Quizmodel.fromJson(listQuizData, key);
+          _listQuiz.add(quiz);
+        } catch (e) {
+          print("Error parsing data untuk key $key: $e");
+        }
+      } else {
+        print("Data dengan key $key tidak valid: ${value.runtimeType}");
+      }
     });
+
+    // Sorting daftar quiz berdasarkan nomorSoal
     _listQuiz.sort((a, b) => a.nomorSoal.compareTo(b.nomorSoal));
 
-    setState(() {}); // Trigger widget rebuild after updating data
+    print("Jumlah data quiz: ${_listQuiz.length}");
+    setState(() {}); // Trigger widget rebuild setelah data diperbarui
   }
 
   @override
