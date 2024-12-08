@@ -7,9 +7,10 @@ import 'package:flutter/material.dart';
 class QuizScreen extends StatefulWidget {
   final String? idPertemuan;
   final int jenisQuiz;
+  final String username;
   // final String? idMateri;
 
-  QuizScreen({Key? key, required this.idPertemuan, required this.jenisQuiz}) : super(key: key);
+  QuizScreen({Key? key, required this.idPertemuan, required this.jenisQuiz, required this.username}) : super(key: key);
 
   @override
   State<QuizScreen> createState() => _QuizScreenState();
@@ -24,10 +25,46 @@ class _QuizScreenState extends State<QuizScreen> {
   List<Map<dynamic, dynamic>> _soalPemahamanSiswa = [];
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  String? namaPertemuan; // Untuk menyimpan nama pertemuan
+  late Timer _timer;
+  int timeLearn = 0; // Untuk menyimpan durasi quiz
+
   @override
   void initState() {
     super.initState();
     _getQuizList();
+    _getNamaPertemuan(); // Memanggil namaPertemuan berdasarkan id
+    _startTimer();
+  }
+
+  void _startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(oneSec, (Timer timer) {
+      setState(() {
+        timeLearn++;
+      });
+    });
+  }
+
+  void _stopTimer() {
+    _timer.cancel();
+  }
+
+  @override
+  void dispose() {
+    _stopTimer();
+    super.dispose();
+  }
+
+  // Fungsi untuk mengambil namaPertemuan berdasarkan idPertemuan
+  Future<void> _getNamaPertemuan() async {
+    final pertemuanRef = FirebaseDatabase.instance.ref().child('pertemuan');
+    final snapshot = await pertemuanRef.child(widget.idPertemuan!).get();
+    if (snapshot.exists) {
+      setState(() {
+        namaPertemuan = snapshot.child('namaPertemuan').value.toString();
+      });
+    }
   }
 
   Future<void> _getQuizList() async {
@@ -76,6 +113,7 @@ class _QuizScreenState extends State<QuizScreen> {
     print("Hasil Akhir: $_quiz");
     setState(() {}); // Trigger widget rebuild after updating data
   }
+
   Future<void> _dialogBuilder(BuildContext context, int poin) async {
     User? user = _auth.currentUser;
     IconData iconData = Icons.workspace_premium;
@@ -90,6 +128,8 @@ class _QuizScreenState extends State<QuizScreen> {
       iconColor = Color(0xffCD7F32);
     }
 
+    _stopTimer();
+
     if (widget.jenisQuiz == 1) {
       // Tambahkan poin ke database
       final poinRef = FirebaseDatabase.instance.ref().child('users/${user?.uid}/score');
@@ -98,6 +138,16 @@ class _QuizScreenState extends State<QuizScreen> {
 
       // Tambahkan poin baru
       await poinRef.set(currentPoin + poin);
+
+      // Tambahkan data ke historyScoring
+      final historyScoringRef = FirebaseDatabase.instance.ref().child('historyScoring').push();
+      await historyScoringRef.set({
+        'idUser': user?.uid,
+        'namaMateri': 'Quiz - Pertemuan ${namaPertemuan} ',
+        'namaUser': widget.username,
+        'skor': poin, // Contoh skor tetap 100, bisa disesuaikan
+        'timeLearn': timeLearn,
+      });
 
       // Tampilkan dialog
       return showDialog<void>(

@@ -259,6 +259,7 @@ class _MateriScreenState extends State<MateriScreen> {
               builder: (context) => QuizScreen(
                 idPertemuan: materiId,
                 jenisQuiz: 2,
+                username: widget.username,
               ),
             ),
           );

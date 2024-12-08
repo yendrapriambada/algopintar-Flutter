@@ -356,6 +356,7 @@ class DetailWebPage extends StatelessWidget {
                                         builder: (context) => QuizScreen(
                                           idPertemuan: idPertemuan,
                                           jenisQuiz: 1,
+                                          username: username??"Unknown",
                                         ),
                                       ),
                                     );
@@ -606,6 +607,7 @@ class DetailMobilePage extends StatelessWidget {
                         builder: (context) => QuizScreen(
                           idPertemuan: idPertemuan,
                           jenisQuiz: 1,
+                          username: username??"Unknown",
                         ),
                       ),
                     );
