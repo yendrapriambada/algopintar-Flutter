@@ -62,6 +62,10 @@ class _StudentsTableState extends State<StudentsTable> {
               size: ColumnSize.S,
             ),
             DataColumn2(
+              label: Text('Skor', style: TextStyle(fontWeight: FontWeight.bold)),
+              size: ColumnSize.S,
+            ),
+            DataColumn2(
               label: Text('Aksi', style: TextStyle(fontWeight: FontWeight.bold)),
               size: ColumnSize.S,
             ),
@@ -81,7 +85,7 @@ class _StudentsTableState extends State<StudentsTable> {
                           ? ((student['subMaterialDone'].keys.length / widget.materiCount) * 100).toStringAsFixed(1) + '%'  // Menampilkan persentase dengan 1 angka desimal
                           : '0%'  // Jika subMaterialDone bukan Map, tampilkan 0%
                   ),),
-
+                  DataCell(Text(student['score'].toString())),
                   DataCell(
                     Row(
                       mainAxisSize: MainAxisSize.min,
