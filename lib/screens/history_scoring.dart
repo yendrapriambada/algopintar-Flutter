@@ -43,6 +43,9 @@ class _HistoryScoringState extends State<HistoryScoring> {
         };
       }).toList();
 
+      // Urutkan berdasarkan createdAt (descending)
+      historyList.sort((a, b) => b['id'].compareTo(a['id']));
+
       setState(() {
         _students = historyList;
         _filteredStudents = historyList;
