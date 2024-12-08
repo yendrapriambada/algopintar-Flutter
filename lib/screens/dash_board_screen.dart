@@ -7,6 +7,7 @@ import 'package:algopintar/constants/responsive.dart';
 import 'package:algopintar/controllers/controller.dart';
 import 'package:algopintar/screens/components/dashboard_content.dart';
 
+import 'about_screen.dart';
 import 'components/drawer_menu.dart';
 import 'package:provider/provider.dart';
 
@@ -82,6 +83,29 @@ class DashBoardScreen extends StatelessWidget {
               child: getContentWidget(),
             )
           ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Container(
+          height: 60,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AboutScreen()),
+                  );
+                },
+                icon: Icon(Icons.info, color: Color(0xff5D60E2)),
+                label: Text(
+                  'Tentang aplikasi ini',
+                  style: TextStyle(color: Color(0xff5D60E2), fontStyle: FontStyle.italic, fontSize: 11),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
