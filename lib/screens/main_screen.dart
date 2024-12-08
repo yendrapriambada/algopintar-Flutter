@@ -1,5 +1,6 @@
 import 'package:algopintar/data/data_static_subjects.dart';
 import 'package:algopintar/models/mata_pelajaran_model.dart';
+import 'package:algopintar/screens/about_screen.dart';
 import 'package:algopintar/screens/components/leaderboard_info_detail.dart';
 import 'package:algopintar/screens/landing_page_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -45,7 +46,6 @@ class _MainScreenState extends State<MainScreen> {
     _studentsRef = FirebaseDatabase.instance.ref('users');
     _pertemuanRef = FirebaseDatabase.instance.ref().child('pertemuan');
 
-
     _studentsRef.onValue.listen((event) {
       if (event.snapshot.value != null) {
         Map<dynamic, dynamic> studentsMap =
@@ -57,7 +57,8 @@ class _MainScreenState extends State<MainScreen> {
 
     _pertemuanRef.onValue.listen((event) {
       if (event.snapshot.value != null) {
-        Map<dynamic, dynamic> pertemuanMap = event.snapshot.value as Map<dynamic, dynamic>;
+        Map<dynamic, dynamic> pertemuanMap =
+            event.snapshot.value as Map<dynamic, dynamic>;
         _updatePertemuanList(pertemuanMap);
       }
     });
@@ -116,9 +117,6 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     print("username: ${username}");
@@ -159,8 +157,7 @@ class _MainScreenState extends State<MainScreen> {
               students: _students,
               currentPertemuan: currentPertemuan,
               currentProgress: currentProgress,
-              pertemuanLength: _pertemuan.length
-          );
+              pertemuanLength: _pertemuan.length);
         } else {
           return HomepageMobile(
               username: username,
@@ -205,373 +202,192 @@ class _HomepageWebState extends State<HomepageWeb> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-        body: SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 16,
-          horizontal: 16,
-        ),
-        child: Center(
-          child: SizedBox(
-            width: screenWidth <= 1200 ? 900 : 1200,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const SizedBox(height: 32),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              ClipRRect(
-                                child: Image.network(
-                                  'https://api.dicebear.com/7.x/adventurer/png?seed=${widget.username}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf',
-                                  height: 55,
-                                  width: 55,
-                                  fit: BoxFit.cover,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 16,
+            horizontal: 16,
+          ),
+          child: Center(
+            child: SizedBox(
+              width: screenWidth <= 1200 ? 900 : 1200,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const SizedBox(height: 32),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                ClipRRect(
+                                  child: Image.network(
+                                    'https://api.dicebear.com/7.x/adventurer/png?seed=${widget.username}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf',
+                                    height: 55,
+                                    width: 55,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.circular(30),
                                 ),
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              // screenWidth <= 1200
-                              //     ? const SizedBox()
-                              //     :
-                              Column(
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.only(left: 16.0),
-                                    child: Text(
-                                      "Halo, ${widget.username}!",
-                                      textAlign: TextAlign.start,
-                                      style: const TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        // Use the font family name specified in pubspec.yaml
-                                        fontWeight: FontWeight.bold,
-                                        // Set the fontWeight to bold
-                                        fontSize:
-                                            20, // Set the font size as needed
+                                // screenWidth <= 1200
+                                //     ? const SizedBox()
+                                //     :
+                                Column(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.only(left: 16.0),
+                                      child: Text(
+                                        "Halo, ${widget.username}!",
+                                        textAlign: TextAlign.start,
+                                        style: const TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          // Use the font family name specified in pubspec.yaml
+                                          fontWeight: FontWeight.bold,
+                                          // Set the fontWeight to bold
+                                          fontSize:
+                                              20, // Set the font size as needed
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        top: 8.0, left: 16.0),
-                                    child: const Text(
-                                      "Selamat Datang di Pintar Informatika 👋",
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 14,
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 8.0, left: 16.0),
+                                      child: const Text(
+                                        "Selamat Datang di Pintar Informatika 👋",
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 14,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(17.0),
+                                  ],
                                 ),
-                                surfaceTintColor: Colors.white,
-                                elevation: 4,
-                                child: IconButton(
-                                  icon: const Icon(
-                                    Icons.logout,
-                                    color: Colors.black,
+                                Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(17.0),
                                   ),
-                                  onPressed: () async {
-                                    FirebaseAuth.instance.signOut();
-                                    SharedPreferences prefs =
-                                        await SharedPreferences.getInstance();
-                                    prefs.remove('userId');
-                                    prefs.remove('username');
-                                    Navigator.pushNamed(
-                                        context, "/landingPage");
-                                  },
+                                  surfaceTintColor: Colors.white,
+                                  elevation: 4,
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.logout,
+                                      color: Colors.black,
+                                    ),
+                                    onPressed: () async {
+                                      FirebaseAuth.instance.signOut();
+                                      SharedPreferences prefs =
+                                          await SharedPreferences.getInstance();
+                                      prefs.remove('userId');
+                                      prefs.remove('username');
+                                      Navigator.pushNamed(
+                                          context, "/landingPage");
+                                    },
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              elevation: 5,
-                              child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const Text(
-                                            "Progress Belajar",
-                                            textAlign: TextAlign.start,
-                                            style: TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          Card(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(8.0),
-                                            ),
-                                            color: Color(0xff5D60E2),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(4.0),
-                                              child: Text(
-                                                "Skor: ${widget.score}",
-                                                textAlign: TextAlign.center,
-                                                style: const TextStyle(
-                                                  fontFamily: 'Montserrat',
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 11,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 10),
-                                      widget.currentPertemuan > widget.pertemuanLength ?
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          Expanded(
-                                            flex: 3,
-                                            child: Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: <Widget>[
-                                                  Text(
-                                                    "Selamat anda telah menyelesaikan seluruh materi! 👍",
-                                                    textAlign: TextAlign.start,
-                                                    style: TextStyle(
-                                                      fontFamily: 'Montserrat',
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ) :
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          Expanded(
-                                            flex: 1,
-                                            child: Hero(
-                                                tag:
-                                                    '${widget.currentPertemuan}-w',
-                                                child: Stack(
-                                                    alignment: Alignment.center,
-                                                    children: <Widget>[
-                                                      ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10.0),
-                                                        child: Image.asset(
-                                                          'images/pertemuan.png',
-                                                          fit: BoxFit.cover,
-                                                          width: 80,
-                                                          height: 80,
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(top: 8.0),
-                                                        child: Text(
-                                                          '${widget.currentPertemuan}',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontFamily:
-                                                                'Montserrat',
-                                                            fontSize: 22.0,
-                                                            color: Colors.white,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ])),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Expanded(
-                                            flex: 3,
-                                            child: Padding(
-                                              padding: EdgeInsets.all(8.0),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: <Widget>[
-                                                  Text(
-                                                    "Pertemuan ${widget.currentPertemuan}",
-                                                    textAlign: TextAlign.start,
-                                                    style: TextStyle(
-                                                      fontFamily: 'Montserrat',
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 8,
-                                                  ),
-                                                  Row(
-                                                    children: <Widget>[
-                                                      Expanded(
-                                                          child:
-                                                              LinearProgressIndicator(
-                                                        value: widget
-                                                            .currentProgress,
-                                                        color: Colors.green,
-                                                        backgroundColor:
-                                                            Colors.orangeAccent,
-                                                      )),
-                                                      SizedBox(width: 8),
-                                                      Center(
-                                                        // this widget is not nessesary
-                                                        child: Text(
-                                                          '${(widget.currentProgress * 100).toInt()}%',
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                'Montserrat',
-                                                            fontSize: 14,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )),
+                              ],
                             ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(
-                                left: 16.0, right: 16.0, bottom: 8.0),
-                            child: SizedBox(
-                              height: 400,
+                            Container(
+                              padding: const EdgeInsets.all(16.0),
                               child: Card(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                child: Leaderboard(
-                                  students: widget.students,
-                                ),
-                              ),
-                            ),
-                          ),
-                          // Container(
-                          //   margin: const EdgeInsets.only(
-                          //       left: 16.0, right: 16.0, bottom: 8.0),
-                          //   child: SizedBox(
-                          //     height: 372,
-                          //     child: Card(
-                          //       shape: RoundedRectangleBorder(
-                          //         borderRadius: BorderRadius.circular(10.0),
-                          //       ),
-                          //       child: LeaderboardInfoDetail(
-                          //             student: {
-                          //               'username': widget.username,
-                          //               'fullName': widget.fullName,
-                          //               'score': widget.score,
-                          //             },
-                          //             rank: widget.students.indexWhere((student) =>
-                          //                 student['username'] == widget.username) +
-                          //                 1,
-                          //           ),
-                          //     ),
-                          //   ),
-                          // ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 32),
-                    Expanded(
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: <Widget>[
-                              const Text(
-                                "Pertemuan",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 30.0,
-                                  fontFamily: 'Montserrat',
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                        height: 500,
-                                        child: FirebaseAnimatedList(
-                                            padding:
-                                                const EdgeInsets.only(top: 0),
-                                            query: FirebaseDatabase.instance
-                                                .ref('pertemuan'),
-                                            itemBuilder: (context, snapshot,
-                                                animation, index) {
-                                              Map<dynamic, dynamic>?
-                                                  dataPertemuan = snapshot.value
-                                                      as Map<dynamic, dynamic>?;
-                                              var idPertemuan = snapshot.key;
-
-                                              return Card(
-                                                surfaceTintColor: Colors.white,
-                                                elevation: 3,
-                                                child: ListTile(
-                                                  visualDensity: VisualDensity(
-                                                      horizontal: 3,
-                                                      vertical: 3),
-                                                  leading: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 6.0,
-                                                            bottom: 6.0),
+                                elevation: 5,
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const Text(
+                                              "Progress Belajar",
+                                              textAlign: TextAlign.start,
+                                              style: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            Card(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                              color: Color(0xff5D60E2),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(4.0),
+                                                child: Text(
+                                                  "Skor: ${widget.score}",
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 11,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10),
+                                        widget.currentPertemuan >
+                                                widget.pertemuanLength
+                                            ? Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Expanded(
+                                                    flex: 3,
+                                                    child: Padding(
+                                                      padding:
+                                                          EdgeInsets.all(8.0),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            "Selamat anda telah menyelesaikan seluruh materi! 👍",
+                                                            textAlign:
+                                                                TextAlign.start,
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'Montserrat',
+                                                              fontSize: 14,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            : Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Expanded(
+                                                    flex: 1,
                                                     child: Hero(
-                                                        tag: dataPertemuan?[
-                                                            'namaPertemuan'],
+                                                        tag:
+                                                            '${widget.currentPertemuan}-w',
                                                         child: Stack(
                                                             alignment: Alignment
                                                                 .center,
@@ -586,6 +402,8 @@ class _HomepageWebState extends State<HomepageWeb> {
                                                                   'images/pertemuan.png',
                                                                   fit: BoxFit
                                                                       .cover,
+                                                                  width: 80,
+                                                                  height: 80,
                                                                 ),
                                                               ),
                                                               Padding(
@@ -595,8 +413,7 @@ class _HomepageWebState extends State<HomepageWeb> {
                                                                         top:
                                                                             8.0),
                                                                 child: Text(
-                                                                  dataPertemuan?[
-                                                                      'namaPertemuan'],
+                                                                  '${widget.currentPertemuan}',
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
@@ -605,7 +422,7 @@ class _HomepageWebState extends State<HomepageWeb> {
                                                                     fontFamily:
                                                                         'Montserrat',
                                                                     fontSize:
-                                                                        12.0,
+                                                                        22.0,
                                                                     color: Colors
                                                                         .white,
                                                                     fontWeight:
@@ -616,46 +433,288 @@ class _HomepageWebState extends State<HomepageWeb> {
                                                               ),
                                                             ])),
                                                   ),
-                                                  title: Text(
-                                                      'Pertemuan ${dataPertemuan?['namaPertemuan'] as String}'),
-                                                  // subtitle: Text('4 Sub Materi'),
-                                                  enabled: dataPertemuan?['statusPertemuan'] == true &&
-                                                      int.parse(dataPertemuan?['namaPertemuan']) <= widget.currentPertemuan
-                                                      ? true
-                                                      : false,
-                                                  trailing:
-                                                      Icon(Icons.navigate_next),
-                                                  onTap: () {
-                                                    Navigator.push(context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) {
-                                                      return DetailMateri(
-                                                        dataPertemuan:
-                                                            dataPertemuan,
-                                                        idPertemuan:
-                                                            idPertemuan,
-                                                        username: widget
-                                                            .username,
-                                                      );
-                                                    }));
-                                                  },
-                                                ),
-                                              );
-                                            })),
-                                  ]),
-                            ],
+                                                  const SizedBox(width: 8),
+                                                  Expanded(
+                                                    flex: 3,
+                                                    child: Padding(
+                                                      padding:
+                                                          EdgeInsets.all(8.0),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            "Pertemuan ${widget.currentPertemuan}",
+                                                            textAlign:
+                                                                TextAlign.start,
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'Montserrat',
+                                                              fontSize: 14,
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 8,
+                                                          ),
+                                                          Row(
+                                                            children: <Widget>[
+                                                              Expanded(
+                                                                  child:
+                                                                      LinearProgressIndicator(
+                                                                value: widget
+                                                                    .currentProgress,
+                                                                color: Colors
+                                                                    .green,
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .orangeAccent,
+                                                              )),
+                                                              SizedBox(
+                                                                  width: 8),
+                                                              Center(
+                                                                // this widget is not nessesary
+                                                                child: Text(
+                                                                  '${(widget.currentProgress * 100).toInt()}%',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'Montserrat',
+                                                                    fontSize:
+                                                                        14,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                      ],
+                                    )),
+                              ),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(
+                                  left: 16.0, right: 16.0, bottom: 8.0),
+                              child: SizedBox(
+                                height: 400,
+                                child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  child: Leaderboard(
+                                    students: widget.students,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            // Container(
+                            //   margin: const EdgeInsets.only(
+                            //       left: 16.0, right: 16.0, bottom: 8.0),
+                            //   child: SizedBox(
+                            //     height: 372,
+                            //     child: Card(
+                            //       shape: RoundedRectangleBorder(
+                            //         borderRadius: BorderRadius.circular(10.0),
+                            //       ),
+                            //       child: LeaderboardInfoDetail(
+                            //             student: {
+                            //               'username': widget.username,
+                            //               'fullName': widget.fullName,
+                            //               'score': widget.score,
+                            //             },
+                            //             rank: widget.students.indexWhere((student) =>
+                            //                 student['username'] == widget.username) +
+                            //                 1,
+                            //           ),
+                            //     ),
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 32),
+                      Expanded(
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: <Widget>[
+                                const Text(
+                                  "Pertemuan",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 30.0,
+                                    fontFamily: 'Montserrat',
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                          height: 500,
+                                          child: FirebaseAnimatedList(
+                                              padding:
+                                                  const EdgeInsets.only(top: 0),
+                                              query: FirebaseDatabase.instance
+                                                  .ref('pertemuan'),
+                                              itemBuilder: (context, snapshot,
+                                                  animation, index) {
+                                                Map<dynamic, dynamic>?
+                                                    dataPertemuan =
+                                                    snapshot.value as Map<
+                                                        dynamic, dynamic>?;
+                                                var idPertemuan = snapshot.key;
+
+                                                return Card(
+                                                  surfaceTintColor:
+                                                      Colors.white,
+                                                  elevation: 3,
+                                                  child: ListTile(
+                                                    visualDensity:
+                                                        VisualDensity(
+                                                            horizontal: 3,
+                                                            vertical: 3),
+                                                    leading: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 6.0,
+                                                              bottom: 6.0),
+                                                      child: Hero(
+                                                          tag: dataPertemuan?[
+                                                              'namaPertemuan'],
+                                                          child: Stack(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              children: <Widget>[
+                                                                ClipRRect(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10.0),
+                                                                  child: Image
+                                                                      .asset(
+                                                                    'images/pertemuan.png',
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  ),
+                                                                ),
+                                                                Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .only(
+                                                                          top:
+                                                                              8.0),
+                                                                  child: Text(
+                                                                    dataPertemuan?[
+                                                                        'namaPertemuan'],
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style:
+                                                                        const TextStyle(
+                                                                      fontFamily:
+                                                                          'Montserrat',
+                                                                      fontSize:
+                                                                          12.0,
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ])),
+                                                    ),
+                                                    title: Text(
+                                                        'Pertemuan ${dataPertemuan?['namaPertemuan'] as String}'),
+                                                    // subtitle: Text('4 Sub Materi'),
+                                                    enabled: dataPertemuan?[
+                                                                    'statusPertemuan'] ==
+                                                                true &&
+                                                            int.parse(dataPertemuan?[
+                                                                    'namaPertemuan']) <=
+                                                                widget
+                                                                    .currentPertemuan
+                                                        ? true
+                                                        : false,
+                                                    trailing: Icon(
+                                                        Icons.navigate_next),
+                                                    onTap: () {
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                        return DetailMateri(
+                                                          dataPertemuan:
+                                                              dataPertemuan,
+                                                          idPertemuan:
+                                                              idPertemuan,
+                                                          username:
+                                                              widget.username,
+                                                        );
+                                                      }));
+                                                    },
+                                                  ),
+                                                );
+                                              })),
+                                    ]),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ));
+      bottomNavigationBar: BottomAppBar(
+        child: Container(
+          height: 60,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AboutScreen()),
+                  );
+                },
+                icon: Icon(Icons.info, color: Color(0xff5D60E2)),
+                label: Text(
+                  'Tentang aplikasi ini',
+                  style: TextStyle(color: Color(0xff5D60E2), fontStyle: FontStyle.italic, fontSize: 11),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -805,113 +864,117 @@ class _HomepageMobileState extends State<HomepageMobile> {
                           ],
                         ),
                         const SizedBox(height: 10),
-                        widget.currentPertemuan > widget.pertemuanLength ?
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Expanded(
-                              flex: 3,
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      "Selamat anda telah menyelesaikan seluruh materi! 👍",
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ):
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            Expanded(
-                              flex: 1,
-                              child: Hero(
-                                  tag: '${widget.currentPertemuan}-m',
-                                  child: Stack(
-                                      alignment: Alignment.center,
-                                      children: <Widget>[
-                                        ClipRRect(
-                                          borderRadius:
-                                          BorderRadius.circular(10.0),
-                                          child: Image.asset(
-                                            'images/pertemuan.png',
-                                            fit: BoxFit.cover,
-                                            width: 80,
-                                            height: 80,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding:
-                                          const EdgeInsets.only(top: 8.0),
-                                          child: Text(
-                                            '${widget.currentPertemuan}',
-                                            textAlign: TextAlign.center,
-                                            style: const TextStyle(
-                                              fontFamily: 'Montserrat',
-                                              fontSize: 22.0,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ])),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              flex: 3,
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      "Pertemuan ${widget.currentPertemuan}",
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        fontFamily: 'Montserrat',
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 8,
-                                    ),
-                                    Row(
-                                      children: <Widget>[
-                                        Expanded(
-                                            child: LinearProgressIndicator(
-                                              value: widget.currentProgress,
-                                              color: Colors.green,
-                                              backgroundColor: Colors.orangeAccent,
-                                            )),
-                                        SizedBox(width: 8),
-                                        Center(
-                                          // this widget is not nessesary
-                                          child: Text(
-                                            '${(widget.currentProgress * 100).toInt()}%',
+                        widget.currentPertemuan > widget.pertemuanLength
+                            ? Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 3,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            "Selamat anda telah menyelesaikan seluruh materi! 👍",
+                                            textAlign: TextAlign.start,
                                             style: TextStyle(
                                               fontFamily: 'Montserrat',
                                               fontSize: 14,
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
+                                  ),
+                                ],
+                              )
+                            : Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 1,
+                                    child: Hero(
+                                        tag: '${widget.currentPertemuan}-m',
+                                        child: Stack(
+                                            alignment: Alignment.center,
+                                            children: <Widget>[
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                                child: Image.asset(
+                                                  'images/pertemuan.png',
+                                                  fit: BoxFit.cover,
+                                                  width: 80,
+                                                  height: 80,
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 8.0),
+                                                child: Text(
+                                                  '${widget.currentPertemuan}',
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontSize: 22.0,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ])),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            "Pertemuan ${widget.currentPertemuan}",
+                                            textAlign: TextAlign.start,
+                                            style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 8,
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              Expanded(
+                                                  child:
+                                                      LinearProgressIndicator(
+                                                value: widget.currentProgress,
+                                                color: Colors.green,
+                                                backgroundColor:
+                                                    Colors.orangeAccent,
+                                              )),
+                                              SizedBox(width: 8),
+                                              Center(
+                                                // this widget is not nessesary
+                                                child: Text(
+                                                  '${(widget.currentProgress * 100).toInt()}%',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Montserrat',
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
                       ],
                     )),
               ),
@@ -982,10 +1045,13 @@ class _HomepageMobileState extends State<HomepageMobile> {
                             title: Text(
                                 'Pertemuan ${dataPertemuan?['namaPertemuan'] as String}'),
                             // subtitle: Text('4 Sub Materi'),
-                            enabled: dataPertemuan?['statusPertemuan'] == true &&
-                                int.parse(dataPertemuan?['namaPertemuan']) <= widget.currentPertemuan
-                                    ? true
-                                    : false,
+                            enabled: dataPertemuan?['statusPertemuan'] ==
+                                        true &&
+                                    int.parse(
+                                            dataPertemuan?['namaPertemuan']) <=
+                                        widget.currentPertemuan
+                                ? true
+                                : false,
                             trailing: Icon(Icons.navigate_next),
                             onTap: () {
                               Navigator.push(context,

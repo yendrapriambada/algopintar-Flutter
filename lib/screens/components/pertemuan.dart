@@ -214,7 +214,7 @@ class _PertemuanState extends State<Pertemuan> {
                                     }
                                   },
                                   child: const Text(
-                                    'Tambah Pertemuan',
+                                    'Simpan',
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
                                       fontFamily: 'Montserrat',

@@ -369,7 +369,7 @@ class _ListQuizTableState extends State<ListQuizTable> {
                                     }
                                   },
                                   child: const Text(
-                                    'Edit Soal',
+                                    'Simpan',
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
                                       fontFamily: 'Montserrat',

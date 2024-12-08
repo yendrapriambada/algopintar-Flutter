@@ -25,12 +25,53 @@ class _DetailMateriState extends State<DetailMateri> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   Map<dynamic, dynamic> _subMaterialDone = {};
 
+  bool _isQuizTaken = false; // Status apakah kuis sudah diambil
+  bool _isLoading = true; // Status loading
+
   @override
   void initState() {
     super.initState();
     _initializeDatabase();
     _getSubMaterialDoneByUserId();
+    _checkQuizStatus();
   }
+
+  Future<void> _checkQuizStatus() async {
+    final DatabaseReference historyRef =
+    FirebaseDatabase.instance.ref("historyScoring");
+
+    try {
+      // Ambil semua data dari tabel historyScoring
+      final snapshot = await historyRef.get();
+
+      if (snapshot.exists) {
+        final data = snapshot.value as Map<dynamic, dynamic>;
+
+        // Nama materi yang ingin diperiksa, misalnya "Quiz - Pertemuan 1"
+        final targetNamaMateri =
+            "Quiz - Pertemuan ${widget.dataPertemuan?['namaPertemuan']}";
+
+        // Cari apakah ada data yang memenuhi syarat
+        final isTaken = data.values.any((entry) {
+          return entry['namaMateri'] == targetNamaMateri &&
+              entry['namaUser'] == widget.username;
+        });
+        print("Is quiz taken: $isTaken");
+        print("Username: ${widget.username}");
+        print("Target nama materi: $targetNamaMateri");
+        setState(() {
+          _isQuizTaken = isTaken; // Update status jika kuis sudah diambil
+        });
+      }
+    } catch (e) {
+      print("Error fetching data: $e");
+    } finally {
+      setState(() {
+        _isLoading = false; // Loading selesai
+      });
+    }
+  }
+
 
   Future<void> _initializeDatabase() async {
     // for leaderboard
@@ -105,6 +146,8 @@ class _DetailMateriState extends State<DetailMateri> {
             materials: _materials,
             subMaterialDone: _subMaterialDone,
             username: widget.username,
+            isQuizTaken: _isQuizTaken,
+            isLoading: _isLoading,
           );
         } else {
           return DetailMobilePage(
@@ -113,6 +156,8 @@ class _DetailMateriState extends State<DetailMateri> {
             materials: _materials,
             subMaterialDone: _subMaterialDone,
             username: widget.username,
+            isQuizTaken: _isQuizTaken,
+            isLoading: _isLoading,
           );
         }
       },
@@ -126,6 +171,8 @@ class DetailWebPage extends StatelessWidget {
   final List<Map<dynamic, dynamic>> materials;
   final Map<dynamic, dynamic> subMaterialDone;
   final String? username;
+  final bool isQuizTaken;
+  final bool isLoading;
 
   const DetailWebPage(
       {Key? key,
@@ -133,7 +180,9 @@ class DetailWebPage extends StatelessWidget {
       required this.idPertemuan,
       required this.materials,
       required this.subMaterialDone,
-      required this.username})
+      required this.username,
+      required this.isQuizTaken,
+      required this.isLoading})
       : super(key: key);
 
   @override
@@ -343,13 +392,54 @@ class DetailWebPage extends StatelessWidget {
                               ),
                             ),
                           ),
+                          // Container(
+                          //   margin: const EdgeInsets.only(left: 16.0, right: 16.0),
+                          //   child: ButtonBar(
+                          //     alignment: MainAxisAlignment.center,
+                          //     children: <Widget>[
+                          //       ElevatedButton(
+                          //         onPressed: () {
+                          //           Navigator.push(
+                          //             context,
+                          //             MaterialPageRoute(
+                          //               builder: (context) => QuizScreen(
+                          //                 idPertemuan: idPertemuan,
+                          //                 jenisQuiz: 1,
+                          //                 username: username??"Unknown",
+                          //               ),
+                          //             ),
+                          //           );
+                          //         },
+                          //         style: ElevatedButton.styleFrom(
+                          //           backgroundColor: const Color(0xFF5D60E2),
+                          //           shape: RoundedRectangleBorder(
+                          //             borderRadius: BorderRadius.circular(12), // <-- Radius
+                          //           ),
+                          //           padding: EdgeInsets.all(18),
+                          //         ),
+                          //         child: const Text(
+                          //           'Mulai Quiz',
+                          //           textAlign: TextAlign.center,
+                          //           style: TextStyle(
+                          //             fontFamily: 'Montserrat',
+                          //             fontWeight: FontWeight.bold,
+                          //             fontSize: 14.0,
+                          //             color: Colors.white,
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                           Container(
                             margin: const EdgeInsets.only(left: 16.0, right: 16.0),
                             child: ButtonBar(
                               alignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: isQuizTaken
+                                      ? null // Nonaktifkan tombol jika kuis sudah dikerjakan
+                                      : () {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -362,16 +452,27 @@ class DetailWebPage extends StatelessWidget {
                                     );
                                   },
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF5D60E2),
+                                    backgroundColor: isQuizTaken
+                                        ? Colors.grey // Warna tombol jika dinonaktifkan
+                                        : const Color(0xFF5D60E2),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12), // <-- Radius
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
-                                    padding: EdgeInsets.all(18),
+                                    padding: const EdgeInsets.all(18),
                                   ),
-                                  child: const Text(
-                                    'Mulai Quiz',
+                                  child: isLoading
+                                      ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                      : Text(
+                                    isQuizTaken ? 'Quiz Sudah Dikerjakan' : 'Mulai Quiz',
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontFamily: 'Montserrat',
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14.0,
@@ -381,7 +482,7 @@ class DetailWebPage extends StatelessWidget {
                                 ),
                               ],
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),
@@ -402,6 +503,8 @@ class DetailMobilePage extends StatelessWidget {
   final List<Map<dynamic, dynamic>> materials;
   final Map<dynamic, dynamic> subMaterialDone;
   final String? username;
+  final bool isQuizTaken;
+  final bool isLoading;
 
   const DetailMobilePage(
       {Key? key,
@@ -409,7 +512,9 @@ class DetailMobilePage extends StatelessWidget {
       required this.idPertemuan,
       required this.materials,
       required this.subMaterialDone,
-      required this.username})
+      required this.username,
+      required this.isQuizTaken,
+      required this.isLoading})
       : super(key: key);
 
   @override
@@ -594,13 +699,54 @@ class DetailMobilePage extends StatelessWidget {
               ),
             ),
           ),
+          // Container(
+          //   margin: const EdgeInsets.only(left: 16.0, right: 16.0),
+          //   child: ButtonBar(
+          //     alignment: MainAxisAlignment.center,
+          //     children: <Widget>[
+          //       ElevatedButton(
+          //         onPressed: () {
+          //           Navigator.push(
+          //             context,
+          //             MaterialPageRoute(
+          //               builder: (context) => QuizScreen(
+          //                 idPertemuan: idPertemuan,
+          //                 jenisQuiz: 1,
+          //                 username: username??"Unknown",
+          //               ),
+          //             ),
+          //           );
+          //         },
+          //         style: ElevatedButton.styleFrom(
+          //           backgroundColor: const Color(0xFF5D60E2),
+          //           shape: RoundedRectangleBorder(
+          //             borderRadius: BorderRadius.circular(12), // <-- Radius
+          //           ),
+          //           padding: EdgeInsets.all(18),
+          //         ),
+          //         child: const Text(
+          //           'Mulai Quiz',
+          //           textAlign: TextAlign.center,
+          //           style: TextStyle(
+          //             fontFamily: 'Montserrat',
+          //             fontWeight: FontWeight.bold,
+          //             fontSize: 14.0,
+          //             color: Colors.white,
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           Container(
             margin: const EdgeInsets.only(left: 16.0, right: 16.0),
             child: ButtonBar(
               alignment: MainAxisAlignment.center,
               children: <Widget>[
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: isQuizTaken
+                      ? null // Nonaktifkan tombol jika kuis sudah dikerjakan
+                      : () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -613,16 +759,27 @@ class DetailMobilePage extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF5D60E2),
+                    backgroundColor: isQuizTaken
+                        ? Colors.grey // Warna tombol jika dinonaktifkan
+                        : const Color(0xFF5D60E2),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12), // <-- Radius
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    padding: EdgeInsets.all(18),
+                    padding: const EdgeInsets.all(18),
                   ),
-                  child: const Text(
-                    'Mulai Quiz',
+                  child: isLoading
+                      ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                      : Text(
+                    isQuizTaken ? 'Quiz Sudah Dikerjakan' : 'Mulai Quiz',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.bold,
                       fontSize: 14.0,
@@ -632,7 +789,7 @@ class DetailMobilePage extends StatelessWidget {
                 ),
               ],
             ),
-          ),
+          )
         ],
       )),
     );

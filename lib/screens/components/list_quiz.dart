@@ -288,7 +288,7 @@ class _ListQuizState extends State<ListQuiz> {
                                     }
                                   },
                                   child: const Text(
-                                    'Tambah Soal',
+                                    'Simpan',
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
                                       fontFamily: 'Montserrat',

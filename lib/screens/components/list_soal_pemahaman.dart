@@ -289,7 +289,7 @@ class _ListSoalPemahamanState extends State<ListSoalPemahaman> {
                                     }
                                   },
                                   child: const Text(
-                                    'Tambah Soal',
+                                    'Simpan',
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
                                       fontFamily: 'Montserrat',

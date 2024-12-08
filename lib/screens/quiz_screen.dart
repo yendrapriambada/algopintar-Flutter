@@ -143,7 +143,7 @@ class _QuizScreenState extends State<QuizScreen> {
       final historyScoringRef = FirebaseDatabase.instance.ref().child('historyScoring').push();
       await historyScoringRef.set({
         'idUser': user?.uid,
-        'namaMateri': 'Quiz - Pertemuan ${namaPertemuan} ',
+        'namaMateri': 'Quiz - Pertemuan ${namaPertemuan}',
         'namaUser': widget.username,
         'skor': poin, // Contoh skor tetap 100, bisa disesuaikan
         'timeLearn': timeLearn,
@@ -173,6 +173,7 @@ class _QuizScreenState extends State<QuizScreen> {
               TextButton(
                 child: const Text('Close'),
                 onPressed: () {
+                  Navigator.of(context).pop();
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 },

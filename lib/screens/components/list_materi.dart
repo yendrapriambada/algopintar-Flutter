@@ -226,7 +226,7 @@ class _ListMateriState extends State<ListMateri> {
                                     }
                                   },
                                   child: const Text(
-                                    'Tambah Materi',
+                                    'Simpan',
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
                                       fontFamily: 'Montserrat',

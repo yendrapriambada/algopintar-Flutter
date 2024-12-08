@@ -350,7 +350,7 @@ class _ListMateriTableState extends State<ListMateriTable> {
                                     }
                                   },
                                   child: const Text(
-                                    'Edit Materi',
+                                    'Simpan',
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
                                       fontFamily: 'Montserrat',

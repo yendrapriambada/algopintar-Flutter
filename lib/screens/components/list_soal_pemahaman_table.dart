@@ -318,7 +318,7 @@ class _ListSoalPemahamanTableState extends State<ListSoalPemahamanTable> {
                                     }
                                   },
                                   child: const Text(
-                                    'Edit Soal',
+                                    'Simpan',
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
                                       fontFamily: 'Montserrat',

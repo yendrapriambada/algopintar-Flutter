@@ -11,29 +11,29 @@ class ProfileInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(appPadding),
-          child: Stack(
-            children: [
-              SvgPicture.asset(
-                "assets/icons/Bell.svg",
-                height: 25,
-                color: textColor.withOpacity(0.8),
-              ),
-              Positioned(
-                right: 0,
-                child: Container(
-                  height: 10,
-                  width: 10,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: red,
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.all(appPadding),
+        //   child: Stack(
+        //     children: [
+        //       SvgPicture.asset(
+        //         "assets/icons/Bell.svg",
+        //         height: 25,
+        //         color: textColor.withOpacity(0.8),
+        //       ),
+        //       Positioned(
+        //         right: 0,
+        //         child: Container(
+        //           height: 10,
+        //           width: 10,
+        //           decoration: BoxDecoration(
+        //             shape: BoxShape.circle,
+        //             color: red,
+        //           ),
+        //         ),
+        //       )
+        //     ],
+        //   ),
+        // ),
         Container(
           margin: EdgeInsets.only(left: appPadding),
           padding: EdgeInsets.symmetric(

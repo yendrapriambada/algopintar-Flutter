@@ -285,7 +285,7 @@ class _QuizPertemuanTableState extends State<QuizPertemuanTable> {
                                   )
                                       : const SizedBox(),
                                   label: const Text(
-                                    'Edit Pertemuan',
+                                    'Simpan',
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
                                       fontFamily: 'Montserrat',

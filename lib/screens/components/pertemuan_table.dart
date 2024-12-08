@@ -318,7 +318,7 @@ class _PertemuanTableState extends State<PertemuanTable> {
                                   )
                                       : const SizedBox(),
                                   label: const Text(
-                                    'Edit Pertemuan',
+                                    'Simpan',
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
                                       fontFamily: 'Montserrat',
