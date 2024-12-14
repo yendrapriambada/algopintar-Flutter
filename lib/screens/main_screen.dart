@@ -216,83 +216,85 @@ class _HomepageWebState extends State<HomepageWeb> {
                 children: <Widget>[
                   const SizedBox(height: 32),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ClipRRect(
+                        child: Image.network(
+                          'https://api.dicebear.com/7.x/adventurer/png?seed=${widget.username}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf',
+                          height: 55,
+                          width: 55,
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      // screenWidth <= 1200
+                      //     ? const SizedBox()
+                      //     :
+                      Column(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(left: 16.0),
+                            child: Text(
+                              "Halo, ${widget.username}!",
+                              textAlign: TextAlign.start,
+                              style: const TextStyle(
+                                fontFamily: 'Montserrat',
+                                // Use the font family name specified in pubspec.yaml
+                                fontWeight: FontWeight.bold,
+                                // Set the fontWeight to bold
+                                fontSize:
+                                20, // Set the font size as needed
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(
+                                top: 8.0, left: 16.0),
+                            child: const Text(
+                              "Selamat Datang di Pintar Informatika 👋",
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(17.0),
+                        ),
+                        surfaceTintColor: Colors.white,
+                        elevation: 4,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.logout,
+                            color: Colors.black,
+                          ),
+                          onPressed: () async {
+                            FirebaseAuth.instance.signOut();
+                            SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                            prefs.remove('userId');
+                            prefs.remove('username');
+                            Navigator.pushNamed(
+                                context, "/landingPage");
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                ClipRRect(
-                                  child: Image.network(
-                                    'https://api.dicebear.com/7.x/adventurer/png?seed=${widget.username}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf',
-                                    height: 55,
-                                    width: 55,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                // screenWidth <= 1200
-                                //     ? const SizedBox()
-                                //     :
-                                Column(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(left: 16.0),
-                                      child: Text(
-                                        "Halo, ${widget.username}!",
-                                        textAlign: TextAlign.start,
-                                        style: const TextStyle(
-                                          fontFamily: 'Montserrat',
-                                          // Use the font family name specified in pubspec.yaml
-                                          fontWeight: FontWeight.bold,
-                                          // Set the fontWeight to bold
-                                          fontSize:
-                                              20, // Set the font size as needed
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 8.0, left: 16.0),
-                                      child: const Text(
-                                        "Selamat Datang di Pintar Informatika 👋",
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                          fontFamily: 'Montserrat',
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(17.0),
-                                  ),
-                                  surfaceTintColor: Colors.white,
-                                  elevation: 4,
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.logout,
-                                      color: Colors.black,
-                                    ),
-                                    onPressed: () async {
-                                      FirebaseAuth.instance.signOut();
-                                      SharedPreferences prefs =
-                                          await SharedPreferences.getInstance();
-                                      prefs.remove('userId');
-                                      prefs.remove('username');
-                                      Navigator.pushNamed(
-                                          context, "/landingPage");
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
+
                             Container(
                               padding: const EdgeInsets.all(16.0),
                               child: Card(
@@ -539,146 +541,150 @@ class _HomepageWebState extends State<HomepageWeb> {
                       ),
                       const SizedBox(width: 32),
                       Expanded(
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                              top: 16.0),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                const Text(
-                                  "Pertemuan",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 30.0,
-                                    fontFamily: 'Montserrat',
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              padding: const EdgeInsets.all(16),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  const Text(
+                                    "Pertemuan",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 30.0,
+                                      fontFamily: 'Montserrat',
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                          height: 500,
-                                          child: FirebaseAnimatedList(
-                                              padding:
-                                                  const EdgeInsets.only(top: 0),
-                                              query: FirebaseDatabase.instance
-                                                  .ref('pertemuan'),
-                                              itemBuilder: (context, snapshot,
-                                                  animation, index) {
-                                                Map<dynamic, dynamic>?
-                                                    dataPertemuan =
-                                                    snapshot.value as Map<
-                                                        dynamic, dynamic>?;
-                                                var idPertemuan = snapshot.key;
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                            height: 500,
+                                            child: FirebaseAnimatedList(
+                                                padding:
+                                                    const EdgeInsets.only(top: 0),
+                                                query: FirebaseDatabase.instance
+                                                    .ref('pertemuan'),
+                                                itemBuilder: (context, snapshot,
+                                                    animation, index) {
+                                                  Map<dynamic, dynamic>?
+                                                      dataPertemuan =
+                                                      snapshot.value as Map<
+                                                          dynamic, dynamic>?;
+                                                  var idPertemuan = snapshot.key;
 
-                                                return Card(
-                                                  surfaceTintColor:
-                                                      Colors.white,
-                                                  elevation: 3,
-                                                  child: ListTile(
-                                                    visualDensity:
-                                                        VisualDensity(
-                                                            horizontal: 3,
-                                                            vertical: 3),
-                                                    leading: Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 6.0,
-                                                              bottom: 6.0),
-                                                      child: Hero(
-                                                          tag: dataPertemuan?[
-                                                              'namaPertemuan'],
-                                                          child: Stack(
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
-                                                              children: <Widget>[
-                                                                ClipRRect(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10.0),
-                                                                  child: Image
-                                                                      .asset(
-                                                                    'images/pertemuan.png',
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                  ),
-                                                                ),
-                                                                Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .only(
-                                                                          top:
-                                                                              8.0),
-                                                                  child: Text(
-                                                                    dataPertemuan?[
-                                                                        'namaPertemuan'],
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .center,
-                                                                    style:
-                                                                        const TextStyle(
-                                                                      fontFamily:
-                                                                          'Montserrat',
-                                                                      fontSize:
-                                                                          12.0,
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
+                                                  return Card(
+                                                    surfaceTintColor:
+                                                        Colors.white,
+                                                    elevation: 3,
+                                                    child: ListTile(
+                                                      visualDensity:
+                                                          VisualDensity(
+                                                              horizontal: 3,
+                                                              vertical: 3),
+                                                      leading: Padding(
+                                                        padding:
+                                                            const EdgeInsets.only(
+                                                                top: 6.0,
+                                                                bottom: 6.0),
+                                                        child: Hero(
+                                                            tag: dataPertemuan?[
+                                                                'namaPertemuan'],
+                                                            child: Stack(
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
+                                                                children: <Widget>[
+                                                                  ClipRRect(
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(
+                                                                                10.0),
+                                                                    child: Image
+                                                                        .asset(
+                                                                      'images/pertemuan.png',
+                                                                      fit: BoxFit
+                                                                          .cover,
                                                                     ),
                                                                   ),
-                                                                ),
-                                                              ])),
+                                                                  Padding(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .only(
+                                                                            top:
+                                                                                8.0),
+                                                                    child: Text(
+                                                                      dataPertemuan?[
+                                                                          'namaPertemuan'],
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      style:
+                                                                          const TextStyle(
+                                                                        fontFamily:
+                                                                            'Montserrat',
+                                                                        fontSize:
+                                                                            12.0,
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ])),
+                                                      ),
+                                                      title: Text(
+                                                          'Pertemuan ${dataPertemuan?['namaPertemuan'] as String}'),
+                                                      // subtitle: Text('4 Sub Materi'),
+                                                      enabled: dataPertemuan?[
+                                                                      'statusPertemuan'] ==
+                                                                  true &&
+                                                              int.parse(dataPertemuan?[
+                                                                      'namaPertemuan']) <=
+                                                                  widget
+                                                                      .currentPertemuan
+                                                          ? true
+                                                          : false,
+                                                      trailing: Icon(
+                                                          Icons.navigate_next),
+                                                      onTap: () {
+                                                        Navigator.push(context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                          return DetailMateri(
+                                                            dataPertemuan:
+                                                                dataPertemuan,
+                                                            idPertemuan:
+                                                                idPertemuan,
+                                                            username:
+                                                                widget.username,
+                                                          );
+                                                        }));
+                                                      },
                                                     ),
-                                                    title: Text(
-                                                        'Pertemuan ${dataPertemuan?['namaPertemuan'] as String}'),
-                                                    // subtitle: Text('4 Sub Materi'),
-                                                    enabled: dataPertemuan?[
-                                                                    'statusPertemuan'] ==
-                                                                true &&
-                                                            int.parse(dataPertemuan?[
-                                                                    'namaPertemuan']) <=
-                                                                widget
-                                                                    .currentPertemuan
-                                                        ? true
-                                                        : false,
-                                                    trailing: Icon(
-                                                        Icons.navigate_next),
-                                                    onTap: () {
-                                                      Navigator.push(context,
-                                                          MaterialPageRoute(
-                                                              builder:
-                                                                  (context) {
-                                                        return DetailMateri(
-                                                          dataPertemuan:
-                                                              dataPertemuan,
-                                                          idPertemuan:
-                                                              idPertemuan,
-                                                          username:
-                                                              widget.username,
-                                                        );
-                                                      }));
-                                                    },
-                                                  ),
-                                                );
-                                              })),
-                                    ]),
-                              ],
+                                                  );
+                                                })),
+                                      ]),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -1082,6 +1088,29 @@ class _HomepageMobileState extends State<HomepageMobile> {
               ),
             ),
           ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Container(
+          height: 60,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AboutScreen()),
+                  );
+                },
+                icon: Icon(Icons.info, color: Color(0xff5D60E2)),
+                label: Text(
+                  'Tentang aplikasi ini',
+                  style: TextStyle(color: Color(0xff5D60E2), fontStyle: FontStyle.italic, fontSize: 11),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

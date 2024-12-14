@@ -49,18 +49,45 @@ class _AboutScreenState extends State<AboutScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Section Creator
+              // Tentang Aplikasi
+              Text(
+                'PintarInformatika',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              Text(
+                'Merupakan media dalam pembelajaran mobile yang menyajikan materi informatika dengan cara yang menyenangkan. '
+                    'Melalui konsep gamifikasi, belajar informatika jadi lebih seru dan efektif.',
+              ),
+              SizedBox(height: 16),
+
+              // Kreator
               Text(
                 'Kreator',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
-              Text('Nama: Abdul Ghani'),
-              Text('Jurusan: Pendidikan Ilmu Komputer'),
-              Text('Kampus: Universitas Pendidikan Indonesia'),
+              Text('Abdul Ghani AF (1900232)'),
+              Text('Mahasiswa S1 Pendidikan Ilmu Komputer'),
+              Text('Universitas Pendidikan Indonesia'),
               SizedBox(height: 16),
 
-              // Section Credits
+              // Daftar Pustaka
+              Text(
+                'Daftar Pustaka',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8),
+              Text(
+                '1. www.geeksforgeeks.org. (2024). “Bubble Sort Algorithm”. [Online]. Diakses pada tanggal 12 Oktober 2024 melalui laman https://www.geeksforgeeks.org/bubble-sort-algorithm/.\n'
+                    '2. www.geeksforgeeks.org. (2024). “Selection Sort”. [Online]. Diakses pada tanggal 12 Oktober 2024 melalui laman https://www.geeksforgeeks.org/selection-sort-algorithm-2/.\n'
+                    '3. Setiani T. D. (2022). “Kuasai Computational Thinking, Skill Penting Era Digital”. [Online]. Diakses pada tanggal 12 Oktober 2024 melalui laman https://www.dicoding.com/blog/kuasai-computational-thinking-skill-penting-era-digital/.\n'
+                    '4. Rozady, M. P., & Koten, Y. P. (2022). Scratch sebagai problem solving computational thinking dalam kurikulum prototipe. Increate-Inovasi dan Kreasi dalam Teknologi Informasi, 8(1), 11-17.\n'
+                    '5. Mueller, J., Beckett, D., Hennessey, E., and Shodiev, H. (2017). Assessing computational thinking across the curriculum. Emerging Research, Practice, and Policy on Computational Thinking (pp. 251–267). Springer.',
+              ),
+              SizedBox(height: 16),
+
+              // Kredit Aset
               Text(
                 'Kredit Aset',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -69,7 +96,7 @@ class _AboutScreenState extends State<AboutScreen> {
               _isLoading
                   ? Center(child: CircularProgressIndicator())
                   : _creditsList.isEmpty
-                  ? Text('Tidak ada credit asset ditemukan.')
+                  ? Text('Tidak ada kredit aset ditemukan.')
                   : ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -98,7 +125,7 @@ class Credit {
   factory Credit.fromMap(String id, Map<dynamic, dynamic> data) {
     return Credit(
       id: id,
-      name: data['name'] ?? 'Unknown', // Mengambil field 'name' dari data Firebase
+      name: data['name'] ?? 'Unknown',
     );
   }
 }
